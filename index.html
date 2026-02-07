@@ -180,6 +180,31 @@
       border-radius:18px;
     }
 
+    /* زر الصوت */
+    .audioBox{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      padding:12px 12px;
+      border-radius:14px;
+      border:1px solid var(--border);
+      background:rgba(255,255,255,.06);
+      margin-top:10px;
+    }
+    .audioBtn{
+      border:1px solid var(--border);
+      background:rgba(255,255,255,.08);
+      color:var(--text);
+      padding:10px 12px;
+      border-radius:14px;
+      cursor:pointer;
+      font-family:inherit;
+      font-weight:800;
+    }
+    .audioBtn:hover{ background:rgba(255,255,255,.12); }
+    .audioHint{ color:var(--muted); font-size:13px; margin:0; }
+
     /* ===== تخطيط الصفحة: اليسار (يوتيوب فوق + تواصل تحت) / اليمين (تعريف) ===== */
     .gridWrap{
       width:min(980px,100%);
@@ -229,7 +254,7 @@
 </head>
 
 <body>
-  <!-- فيديو الخلفية: عندك اسمه bg.mp4.mp4 -->
+  <!-- فيديو الخلفية -->
   <video class="bgVideo" autoplay muted loop playsinline>
     <source src="bg.mp4.mp4" type="video/mp4">
   </video>
@@ -244,7 +269,7 @@
         <img class="photo" src="avatar.jpg" alt="صورتي">
         <div>
           <h1>MUSAWI</h1>
-          <p class="subtitle">طالب جيولوجي — جامعة البصرة | كلية العلوم — البصرة</p>
+          <p class="subtitle">طالب جيلوجي — جامعة البصرة | كلية العلوم — البصرة</p>
 
           <div class="badges">
             <span class="badge">📚 تعلّم مستمر</span>
@@ -276,9 +301,20 @@
       </div>
     </section>
 
-    <!-- اليسار تحت: حسابات التواصل -->
+    <!-- اليسار تحت: حسابات التواصل + الصوت -->
     <aside class="card social">
       <h2 class="section-title">تواصل معي</h2>
+
+      <!-- زر الصوت -->
+      <div class="audioBox">
+        <p class="audioHint">🎵 صوت</p>
+        <button class="audioBtn" id="audioBtn">تشغيل</button>
+      </div>
+
+      <audio id="bgAudio" preload="metadata" loop>
+        <source src="audio.mp3" type="audio/mpeg">
+      </audio>
+
       <div class="links">
         <a class="link" href="https://t.me/Mu29_iq" target="_blank" rel="noopener">
           <span class="left"><span class="icon">✈️</span>تلغرام</span>
@@ -300,6 +336,26 @@
 
   <script>
     document.getElementById("y").textContent = new Date().getFullYear();
+
+    const audio = document.getElementById("bgAudio");
+    const btn = document.getElementById("audioBtn");
+    let playing = false;
+
+    btn.addEventListener("click", async () => {
+      try{
+        if(!playing){
+          await audio.play();
+          playing = true;
+          btn.textContent = "إيقاف";
+        }else{
+          audio.pause();
+          playing = false;
+          btn.textContent = "تشغيل";
+        }
+      }catch(e){
+        btn.textContent = "اضغط مرة ثانية";
+      }
+    });
   </script>
 </body>
 </html>
