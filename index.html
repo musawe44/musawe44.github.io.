@@ -19,6 +19,7 @@
     }
 
     *{ box-sizing:border-box; }
+
     body{
       margin:0;
       font-family:"Cairo", system-ui, Arial;
@@ -43,32 +44,16 @@
       filter: saturate(1.1) contrast(1.05);
     }
 
-    /* تغريش/تظليل فوق الفيديو حتى النص يبان */
-.overlay{
-  position:fixed;
-  inset:0;
-  z-index:-2;
-  background:
-    radial-gradient(900px 500px at 80% 20%, rgba(34,197,94,.14), transparent 60%),
-    radial-gradient(700px 450px at 20% 80%, rgba(59,130,246,.14), transparent 55%),
-    linear-gradient(120deg, rgba(11,18,32,.38), rgba(11,18,32,.30));
-  backdrop-filter: blur(0px);
-}
-
-    }
-
-    .wrap{
-      width:min(980px, 100%);
-      display:grid;
-      gap:16px;
-      grid-template-columns: 1.2fr .8fr;
-      align-items:start;
-      position:relative;
-    }
-
-    @media (max-width: 920px){
-      .wrap{ grid-template-columns:1fr; }
-      .divider{ display:none; }
+    /* تظليل خفيف فوق الفيديو حتى النص يبان (بدون blur) */
+    .overlay{
+      position:fixed;
+      inset:0;
+      z-index:-2;
+      background:
+        radial-gradient(900px 500px at 80% 20%, rgba(34,197,94,.14), transparent 60%),
+        radial-gradient(700px 450px at 20% 80%, rgba(59,130,246,.14), transparent 55%),
+        linear-gradient(120deg, rgba(11,18,32,.22), rgba(11,18,32,.16));
+      backdrop-filter: blur(0px);
     }
 
     .card{
@@ -138,40 +123,6 @@
       font-weight:600;
     }
 
-    /* فاصل (تغريش بسيط) بين العمودين */
-    .divider{
-      position:absolute;
-      top:0;
-      bottom:0;
-      right: calc(100% - (100% * 0)); /* placeholder to keep valid */
-      pointer-events:none;
-    }
-
-    .gridWrap{
-      position:relative;
-      display:grid;
-      gap:16px;
-      grid-template-columns: 1.2fr .8fr;
-    }
-    @media (max-width: 920px){
-      .gridWrap{ grid-template-columns:1fr; }
-    }
-
-    .vDivider{
-      position:absolute;
-      top:14px;
-      bottom:14px;
-      left: calc(40%); /* مكان الفاصل تقريبي */
-      width:1px;
-      background: linear-gradient(to bottom, transparent, rgba(255,255,255,.25), transparent);
-      box-shadow: 0 0 18px rgba(255,255,255,.12);
-      border-radius:999px;
-      pointer-events:none;
-    }
-    @media (max-width: 920px){
-      .vDivider{ display:none; }
-    }
-
     /* روابط التواصل */
     .links{
       display:grid;
@@ -228,27 +179,69 @@
       border:1px solid var(--border);
       border-radius:18px;
     }
+
+    /* ===== تخطيط الصفحة: اليسار (يوتيوب فوق + تواصل تحت) / اليمين (تعريف) ===== */
+    .gridWrap{
+      width:min(980px,100%);
+      position:relative;
+      display:grid;
+      gap:16px;
+
+      /* اليسار أصغر، اليمين أكبر */
+      grid-template-columns: .8fr 1.2fr;
+
+      grid-template-areas:
+        "youtube  profile"
+        "social   profile"
+        "footer   footer";
+    }
+
+    .profile{ grid-area: profile; }
+    .youtube{ grid-area: youtube; }
+    .social{ grid-area: social; }
+    .pageFooter{ grid-area: footer; }
+
+    /* فاصل عمودي (تغريش بسيط) */
+    .vDivider{
+      position:absolute;
+      top:14px;
+      bottom:14px;
+      left: 40%;
+      width:1px;
+      background: linear-gradient(to bottom, transparent, rgba(255,255,255,.25), transparent);
+      box-shadow: 0 0 18px rgba(255,255,255,.12);
+      border-radius:999px;
+      pointer-events:none;
+    }
+
+    @media (max-width: 920px){
+      .gridWrap{
+        grid-template-columns: 1fr;
+        grid-template-areas:
+          "profile"
+          "youtube"
+          "social"
+          "footer";
+      }
+      .vDivider{ display:none; }
+    }
   </style>
 </head>
 
 <body>
-  <!-- ✅ ضع فيديو الخلفية من اختيارك: ارفع ملف باسم bg.mp4 -->
-<video class="bgVideo" autoplay muted loop playsinline>
-  <source src="bg.mp4.mp4" type="video/mp4">
-</video>
-
+  <!-- فيديو الخلفية: عندك اسمه bg.mp4.mp4 -->
+  <video class="bgVideo" autoplay muted loop playsinline>
+    <source src="bg.mp4.mp4" type="video/mp4">
   </video>
   <div class="overlay"></div>
 
-  <main class="gridWrap" style="width:min(980px,100%);">
+  <main class="gridWrap">
     <div class="vDivider"></div>
 
-    <!-- بطاقة التعريف -->
-    <section class="card">
+    <!-- اليمين: بطاقة التعريف -->
+    <section class="card profile">
       <div class="hero">
-        <!-- ✅ ارفع صورتك (نفس صورة الانستغرام) باسم avatar.jpg -->
         <img class="photo" src="avatar.jpg" alt="صورتي">
-
         <div>
           <h1>MUSAWI</h1>
           <p class="subtitle">طالب جيلوجي — جامعة البصرة | كلية العلوم — البصرة</p>
@@ -268,11 +261,11 @@
         وَلِلْفَنَاءِ لَا لِلْبَقَاءِ، وَلِلْمَوْتِ لَا لِلْحَيَاةِ.
         <small>— الإمام علي عليه السلام</small>
       </blockquote>
+    </section>
 
-      <hr style="border:none;border-top:1px solid rgba(255,255,255,.14); margin:14px 0;">
-
+    <!-- اليسار فوق: اليوتيوب -->
+    <section class="card youtube">
       <h2 class="section-title">صورة موسيقى</h2>
-
       <div class="video">
         <iframe
           src="https://www.youtube.com/embed/BXChU6bMEXU"
@@ -283,10 +276,9 @@
       </div>
     </section>
 
-    <!-- بطاقة التواصل (تلغرام + انستغرام فقط) -->
-    <aside class="card">
+    <!-- اليسار تحت: حسابات التواصل -->
+    <aside class="card social">
       <h2 class="section-title">تواصل معي</h2>
-
       <div class="links">
         <a class="link" href="https://t.me/Mu29_iq" target="_blank" rel="noopener">
           <span class="left"><span class="icon">✈️</span>تلغرام</span>
@@ -300,7 +292,8 @@
       </div>
     </aside>
 
-    <footer style="grid-column:1/-1;">
+    <!-- الفوتر -->
+    <footer class="pageFooter">
       © <span id="y"></span> — فَإِنَّ مَعَ الْعُسْرِ يُسْرًا
     </footer>
   </main>
