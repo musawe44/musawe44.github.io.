@@ -3,20 +3,19 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>محمد — طالب جيو</title>
+  <title>MUSAWI</title>
 
-  <!-- خط عربي -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&display=swap" rel="stylesheet">
 
   <style>
     :root{
-      --card: rgba(255,255,255,.09);
-      --border: rgba(255,255,255,.16);
-      --text: #e5e7eb;
-      --muted:#cbd5e1;
-      --accent:#22c55e;
+      --card: rgba(255,255,255,.10);
+      --border: rgba(255,255,255,.18);
+      --text: #eef2ff;
+      --muted:#d1d5db;
+      --shadow: 0 18px 40px rgba(0,0,0,.38);
     }
 
     *{ box-sizing:border-box; }
@@ -25,44 +24,35 @@
       font-family:"Cairo", system-ui, Arial;
       color:var(--text);
       min-height:100vh;
-      padding:28px 14px;
       display:flex;
       align-items:center;
       justify-content:center;
+      padding:28px 14px;
       overflow-x:hidden;
-
-      /* خلفية متحركة */
-      background: linear-gradient(120deg, #0b1220, #0f2c2a, #1a1033, #081a2c);
-      background-size: 400% 400%;
-      animation: bgMove 14s ease-in-out infinite;
+      background:#0b1220;
     }
 
-    @keyframes bgMove{
-      0%{ background-position: 0% 50%; }
-      50%{ background-position: 100% 50%; }
-      100%{ background-position: 0% 50%; }
+    /* فيديو الخلفية */
+    .bgVideo{
+      position:fixed;
+      inset:0;
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      z-index:-3;
+      filter: saturate(1.1) contrast(1.05);
     }
 
-    /* دوائر متحركة فوق الخلفية */
-    .blob{
-      position: fixed;
-      inset: auto;
-      width: 520px;
-      height: 520px;
-      border-radius: 50%;
-      filter: blur(55px);
-      opacity: .30;
-      pointer-events:none;
-      z-index:0;
-      animation: floaty 10s ease-in-out infinite;
-    }
-    .b1{ left:-180px; top:-180px; background: #22c55e; animation-duration: 13s; }
-    .b2{ right:-200px; bottom:-200px; background: #3b82f6; animation-duration: 16s; }
-    .b3{ right:15%; top:8%; background: #a855f7; opacity:.22; animation-duration: 18s; }
-
-    @keyframes floaty{
-      0%,100%{ transform: translate(0,0) scale(1); }
-      50%{ transform: translate(40px, -30px) scale(1.08); }
+    /* تغريش/تظليل فوق الفيديو حتى النص يبان */
+    .overlay{
+      position:fixed;
+      inset:0;
+      z-index:-2;
+      background:
+        radial-gradient(900px 500px at 80% 20%, rgba(34,197,94,.22), transparent 60%),
+        radial-gradient(700px 450px at 20% 80%, rgba(59,130,246,.22), transparent 55%),
+        linear-gradient(120deg, rgba(11,18,32,.72), rgba(11,18,32,.60));
+      backdrop-filter: blur(6px);
     }
 
     .wrap{
@@ -70,14 +60,13 @@
       display:grid;
       gap:16px;
       grid-template-columns: 1.2fr .8fr;
-      position:relative;إعْلَمْ يَا بُنَيَّ أَنَّكَ إِنَّمَا خُلِقْتَ لِلْآخِرَةِ لَا لِلدُّنْيَا وَ لِلْفَنَاءِ لَا لِلْبَقَاءِ وَ لِلْمَوْتِ لَا لِلْحَيَاةِ
-
-- الامام علي عليه السلام 
-      z-index:1;
+      align-items:start;
+      position:relative;
     }
 
     @media (max-width: 920px){
       .wrap{ grid-template-columns:1fr; }
+      .divider{ display:none; }
     }
 
     .card{
@@ -85,7 +74,7 @@
       border:1px solid var(--border);
       border-radius:18px;
       padding:18px;
-      box-shadow: 0 18px 40px rgba(0,0,0,.35);
+      box-shadow: var(--shadow);
       backdrop-filter: blur(10px);
     }
 
@@ -106,7 +95,7 @@
       flex:0 0 auto;
     }
 
-    h1{ margin:0; font-size:28px; line-height:1.2; }
+    h1{ margin:0; font-size:30px; line-height:1.15; }
     .subtitle{ margin:6px 0 0; color:var(--muted); }
 
     .badges{
@@ -119,7 +108,7 @@
       padding:6px 10px;
       border-radius:999px;
       border:1px solid var(--border);
-      background:rgba(255,255,255,.05);
+      background:rgba(255,255,255,.06);
       font-size:14px;
       color:var(--text);
       white-space:nowrap;
@@ -131,7 +120,55 @@
       color:var(--text);
     }
 
-    .about{ color:var(--muted); margin:0; }
+    .quote{
+      margin:0;
+      padding:12px 14px;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06);
+      color: var(--text);
+      line-height: 1.9;
+    }
+    .quote small{
+      display:block;
+      margin-top:8px;
+      color: var(--muted);
+      font-weight:600;
+    }
+
+    /* فاصل (تغريش بسيط) بين العمودين */
+    .divider{
+      position:absolute;
+      top:0;
+      bottom:0;
+      right: calc(100% - (100% * 0)); /* placeholder to keep valid */
+      pointer-events:none;
+    }
+
+    .gridWrap{
+      position:relative;
+      display:grid;
+      gap:16px;
+      grid-template-columns: 1.2fr .8fr;
+    }
+    @media (max-width: 920px){
+      .gridWrap{ grid-template-columns:1fr; }
+    }
+
+    .vDivider{
+      position:absolute;
+      top:14px;
+      bottom:14px;
+      left: calc(40%); /* مكان الفاصل تقريبي */
+      width:1px;
+      background: linear-gradient(to bottom, transparent, rgba(255,255,255,.25), transparent);
+      box-shadow: 0 0 18px rgba(255,255,255,.12);
+      border-radius:999px;
+      pointer-events:none;
+    }
+    @media (max-width: 920px){
+      .vDivider{ display:none; }
+    }
 
     /* روابط التواصل */
     .links{
@@ -149,17 +186,17 @@
       padding:12px 12px;
       border-radius:14px;
       border:1px solid var(--border);
-      background:rgba(255,255,255,.05);
+      background:rgba(255,255,255,.06);
       transition:.15s transform, .15s background;
     }
-    .link:hover{ transform: translateY(-2px); background:rgba(255,255,255,.08); }
+    .link:hover{ transform: translateY(-2px); background:rgba(255,255,255,.09); }
 
     .left{ display:flex; align-items:center; gap:10px; font-weight:700; }
     .icon{
       width:34px; height:34px;
       border-radius:10px;
       display:grid; place-items:center;
-      background:rgba(255,255,255,.08);
+      background:rgba(255,255,255,.09);
       border:1px solid var(--border);
       font-size:16px;
     }
@@ -170,7 +207,7 @@
       border-radius:16px;
       overflow:hidden;
       border:1px solid var(--border);
-      background: rgba(0,0,0,.18);
+      background: rgba(0,0,0,.20);
       aspect-ratio: 16 / 9;
     }
     .video iframe{
@@ -181,12 +218,11 @@
     }
 
     footer{
-      grid-column:1/-1;
       text-align:center;
-      color:rgba(255,255,255,.65);
+      color:rgba(255,255,255,.85);
       font-size:13px;
       padding:12px;
-      background:rgba(255,255,255,.05);
+      background:rgba(255,255,255,.06);
       border:1px solid var(--border);
       border-radius:18px;
     }
@@ -194,27 +230,28 @@
 </head>
 
 <body>
-  <!-- عناصر خلفية متحركة -->
-  <div class="blob b1"></div>
-  <div class="blob b2"></div>
-  <div class="blob b3"></div>
+  <!-- ✅ ضع فيديو الخلفية من اختيارك: ارفع ملف باسم bg.mp4 -->
+  <video class="bgVideo" autoplay muted loop playsinline>
+    <source src="bg.mp4" type="video/mp4">
+  </video>
+  <div class="overlay"></div>
 
-  <main class="wrap">
+  <main class="gridWrap" style="width:min(980px,100%);">
+    <div class="vDivider"></div>
 
     <!-- بطاقة التعريف -->
     <section class="card">
       <div class="hero">
-        <!-- ضع صورتك: ارفع photo.jpg في نفس المستودع -->
-        <img class="photo" src="photo.jpg" alt="صورتي">
+        <!-- ✅ ارفع صورتك (نفس صورة الانستغرام) باسم avatar.jpg -->
+        <img class="photo" src="avatar.jpg" alt="صورتي">
 
         <div>
-          <h1>محمد — طالب جيو</h1>
-          <p class="subtitle">نبذة قصيرة: اكتب سطرين عنك هنا (اهتماماتك/مجالك/هدفك).</p>
+          <h1>MUSAWI</h1>
+          <p class="subtitle">طالب جيلوجي — جامعة البصرة | كلية العلوم — البصرة</p>
 
           <div class="badges">
-            <span class="badge">📍 العراق</span>
-            <span class="badge">💡 مهتم: تقنية / محتوى</span>
-            <span class="badge">🎯 هدف: تطوير مهاراتي</span>
+            <span class="badge">📚 تعلّم مستمر</span>
+            <span class="badge">💻 خبرة بالحاسبات</span>
           </div>
         </div>
       </div>
@@ -222,22 +259,19 @@
       <hr style="border:none;border-top:1px solid rgba(255,255,255,.14); margin:14px 0;">
 
       <h2 class="section-title">عنّي</h2>
-      <p class="about">
-إعْلَمْ يَا بُنَيَّ أَنَّكَ إِنَّمَا خُلِقْتَ لِلْآخِرَةِ لَا لِلدُّنْيَا وَ لِلْفَنَاءِ لَا لِلْبَقَاءِ وَ لِلْمَوْتِ لَا لِلْحَيَاةِ
-        
-- الامام علي عليه السلام         
-      </p>
+      <blockquote class="quote">
+        اِعْلَمْ يَا بُنَيَّ أَنَّكَ إِنَّمَا خُلِقْتَ لِلْآخِرَةِ لَا لِلدُّنْيَا،
+        وَلِلْفَنَاءِ لَا لِلْبَقَاءِ، وَلِلْمَوْتِ لَا لِلْحَيَاةِ.
+        <small>— الإمام علي عليه السلام</small>
+      </blockquote>
 
       <hr style="border:none;border-top:1px solid rgba(255,255,255,.14); margin:14px 0;">
 
-      <h2 class="section-title">اعلي رشم</h2>
-      <p class="about">  </p>
+      <h2 class="section-title">صورة موسيقى</h2>
 
-      <!-- ✅ غيّر رابط الفيديو هنا: ضع رابط EMBED -->
-      <!-- مثال: https://www.youtube.com/watch?v=AGXL_2koumQ -->
       <div class="video">
         <iframe
-          src="https://www.youtube.com/watch?v=AGXL_2koumQ"
+          src="https://www.youtube.com/embed/BXChU6bMEXU"
           title="YouTube video"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
           allowfullscreen>
@@ -245,8 +279,8 @@
       </div>
     </section>
 
-    <!-- بطاقة التواصل (فقط تلغرام + انستغرام) -->
-    <aside class="card" id="social">
+    <!-- بطاقة التواصل (تلغرام + انستغرام فقط) -->
+    <aside class="card">
       <h2 class="section-title">تواصل معي</h2>
 
       <div class="links">
@@ -260,14 +294,10 @@
           <span>↗</span>
         </a>
       </div>
-
-      <p style="color:var(--muted); font-size:13px; margin:12px 0 0;">
-
-      </p>
     </aside>
 
-    <footer>
-      © <span id="y"></span> —   وَاصْبِرْ لِحُكْمِ رَبِّكَ فَإِنَّكَ بِأَعْيُنِنَا 
+    <footer style="grid-column:1/-1;">
+      © <span id="y"></span> — فَإِنَّ مَعَ الْعُسْرِ يُسْرًا
     </footer>
   </main>
 
