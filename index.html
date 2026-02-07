@@ -180,7 +180,7 @@
       border-radius:18px;
     }
 
-    /* زر الصوت */
+    /* ====== الصوت + الموجات ====== */
     .audioBox{
       display:flex;
       align-items:center;
@@ -192,6 +192,9 @@
       background:rgba(255,255,255,.06);
       margin-top:10px;
     }
+
+    .audioHint{ color:var(--muted); font-size:13px; margin:0; }
+
     .audioBtn{
       border:1px solid var(--border);
       background:rgba(255,255,255,.08);
@@ -203,7 +206,21 @@
       font-weight:800;
     }
     .audioBtn:hover{ background:rgba(255,255,255,.12); }
-    .audioHint{ color:var(--muted); font-size:13px; margin:0; }
+
+    .vizWrap{
+      margin-top:10px;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.05);
+      overflow:hidden;
+    }
+
+    /* الكانفس ياخذ العرض بالكامل وارتفاع ثابت */
+    #viz{
+      width:100%;
+      height:90px;
+      display:block;
+    }
 
     /* ===== تخطيط الصفحة: اليسار (يوتيوب فوق + تواصل تحت) / اليمين (تعريف) ===== */
     .gridWrap{
@@ -212,7 +229,6 @@
       display:grid;
       gap:16px;
 
-      /* اليسار أصغر، اليمين أكبر */
       grid-template-columns: .8fr 1.2fr;
 
       grid-template-areas:
@@ -301,14 +317,19 @@
       </div>
     </section>
 
-    <!-- اليسار تحت: حسابات التواصل + الصوت -->
+    <!-- اليسار تحت: حسابات التواصل + الصوت + الموجات -->
     <aside class="card social">
       <h2 class="section-title">تواصل معي</h2>
 
       <!-- زر الصوت -->
       <div class="audioBox">
-        <p class="audioHint">🎵 صوت</p>
+        <p class="audioHint">🎵 الصوت + موجات</p>
         <button class="audioBtn" id="audioBtn">تشغيل</button>
+      </div>
+
+      <!-- موجات تفاعلية -->
+      <div class="vizWrap">
+        <canvas id="viz"></canvas>
       </div>
 
       <audio id="bgAudio" preload="metadata" loop>
@@ -337,24 +358,145 @@
   <script>
     document.getElementById("y").textContent = new Date().getFullYear();
 
-    const audio = document.getElementById("bgAudio");
+    const audioEl = document.getElementById("bgAudio");
     const btn = document.getElementById("audioBtn");
+
+    const canvas = document.getElementById("viz");
+    const ctx = canvas.getContext("2d");
+
+    let audioCtx, analyser, srcNode, dataArray;
+    let rafId = null;
     let playing = false;
+
+    function resizeCanvas(){
+      const dpr = window.devicePixelRatio || 1;
+      const rect = canvas.getBoundingClientRect();
+      canvas.width = Math.floor(rect.width * dpr);
+      canvas.height = Math.floor(rect.height * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0); // نخلي الرسم بوحدات CSS
+    }
+
+    function drawIdle(){
+      // خط هادي إذا الصوت متوقف
+      const w = canvas.getBoundingClientRect().width;
+      const h = canvas.getBoundingClientRect().height;
+      ctx.clearRect(0,0,w,h);
+      ctx.globalAlpha = 1;
+
+      // خلفية خفيفة
+      ctx.fillStyle = "rgba(255,255,255,0.03)";
+      ctx.fillRect(0,0,w,h);
+
+      // خط وسط
+      ctx.strokeStyle = "rgba(255,255,255,0.35)";
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(10, h/2);
+      ctx.lineTo(w-10, h/2);
+      ctx.stroke();
+    }
+
+    function ensureAudioGraph(){
+      if(audioCtx) return;
+
+      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      analyser = audioCtx.createAnalyser();
+      analyser.fftSize = 2048; // موجة ناعمة
+      const bufferLength = analyser.frequencyBinCount;
+      dataArray = new Uint8Array(bufferLength);
+
+      srcNode = audioCtx.createMediaElementSource(audioEl);
+      srcNode.connect(analyser);
+      analyser.connect(audioCtx.destination);
+    }
+
+    function drawWave(){
+      const w = canvas.getBoundingClientRect().width;
+      const h = canvas.getBoundingClientRect().height;
+
+      ctx.clearRect(0,0,w,h);
+
+      // خلفية خفيفة
+      ctx.fillStyle = "rgba(255,255,255,0.03)";
+      ctx.fillRect(0,0,w,h);
+
+      analyser.getByteTimeDomainData(dataArray);
+
+      ctx.lineWidth = 2.5;
+      ctx.strokeStyle = "rgba(255,255,255,0.85)";
+      ctx.beginPath();
+
+      const sliceWidth = w / dataArray.length;
+      let x = 0;
+
+      for(let i=0;i<dataArray.length;i++){
+        const v = dataArray[i] / 128.0;   // 0..2
+        const y = (v * h) / 2;            // 0..h
+
+        if(i === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+
+        x += sliceWidth;
+      }
+
+      ctx.lineTo(w, h/2);
+      ctx.stroke();
+
+      // نقاط خفيفة تعطي “نبض”
+      ctx.fillStyle = "rgba(34,197,94,0.35)";
+      ctx.beginPath();
+      ctx.arc(w*0.18, h*0.5, 3, 0, Math.PI*2);
+      ctx.fill();
+
+      rafId = requestAnimationFrame(drawWave);
+    }
+
+    function startViz(){
+      if(rafId) cancelAnimationFrame(rafId);
+      drawWave();
+    }
+
+    function stopViz(){
+      if(rafId) cancelAnimationFrame(rafId);
+      rafId = null;
+      drawIdle();
+    }
+
+    window.addEventListener("resize", () => {
+      resizeCanvas();
+      if(!playing) drawIdle();
+    });
+
+    // إعداد أولي للكانفس
+    resizeCanvas();
+    drawIdle();
 
     btn.addEventListener("click", async () => {
       try{
+        ensureAudioGraph();
+        if(audioCtx.state === "suspended") await audioCtx.resume();
+
         if(!playing){
-          await audio.play();
+          await audioEl.play();
           playing = true;
           btn.textContent = "إيقاف";
+          startViz();
         }else{
-          audio.pause();
+          audioEl.pause();
           playing = false;
           btn.textContent = "تشغيل";
+          stopViz();
         }
       }catch(e){
         btn.textContent = "اضغط مرة ثانية";
       }
+    });
+
+    // إذا المستخدم وقف الصوت من أي مكان
+    audioEl.addEventListener("pause", () => {
+      playing = false;
+      btn.textContent = "تشغيل";
+      stopViz();
     });
   </script>
 </body>
