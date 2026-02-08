@@ -22,8 +22,6 @@
       --glass2: rgba(255,255,255,.05);
       --accent: rgba(34,197,94,.95);
     }
-
-    /* Light mode */
     body.light{
       --bg:#f4f6ff;
       --card: rgba(0,0,0,.06);
@@ -34,7 +32,6 @@
       --glass: rgba(255,255,255,.62);
       --glass2: rgba(255,255,255,.40);
     }
-
     *{ box-sizing:border-box; }
 
     body{
@@ -44,7 +41,7 @@
       min-height:100vh;
       background: var(--bg);
       overflow-x:hidden;
-      padding: 175px 14px 22px; /* مهم حتى ما تتداخل الساعة */
+      padding: 175px 14px 22px;
     }
 
     /* خلفية فيديو */
@@ -72,7 +69,7 @@
         linear-gradient(120deg, rgba(255,255,255,.28), rgba(255,255,255,.18));
     }
 
-    /* ===== رأس الصفحة: ساعة كبيرة + طقس + تاريخ ===== */
+    /* ===== HUD الساعة ===== */
     .topHUD{
       position: fixed;
       top: 10px;
@@ -82,8 +79,6 @@
       z-index: 70;
       pointer-events:none;
     }
-
-    /* ساعة كبيرة بدون ظل */
     .timeBig{
       text-align:center;
       font-weight: 900;
@@ -97,7 +92,6 @@
     }
     body.light .timeBig{ color: rgba(10,16,28,.88); }
 
-    /* طبقة باهتة مثل خلفية iPhone */
     .timeGhost{
       position:absolute;
       inset: -10px 0 auto 0;
@@ -133,24 +127,13 @@
       box-shadow: 0 10px 24px rgba(0,0,0,.08);
     }
 
-    .hudDate{
+    .hudDate, .hudWx{
       font-weight: 800;
       font-size: 14px;
       color: rgba(255,255,255,.92);
       white-space:nowrap;
     }
-    body.light .hudDate{ color: rgba(10,16,28,.82); }
-
-    .hudWx{
-      font-weight: 800;
-      font-size: 14px;
-      color: rgba(255,255,255,.92);
-      white-space:nowrap;
-      display:flex;
-      align-items:center;
-      gap:8px;
-    }
-    body.light .hudWx{ color: rgba(10,16,28,.82); }
+    body.light .hudDate, body.light .hudWx{ color: rgba(10,16,28,.82); }
 
     .previewBtn{
       pointer-events:auto;
@@ -190,7 +173,6 @@
       align-items:start;
       position:relative;
     }
-
     @media (max-width: 920px){
       .grid{ grid-template-columns: 1fr; }
     }
@@ -210,7 +192,6 @@
       from{ opacity:0; transform: translateY(18px) scale(.99); filter: blur(8px); }
       to{ opacity:1; transform: translateY(0) scale(1); filter: blur(0); }
     }
-
     .card::before{
       content:"";
       position:absolute; inset:-2px;
@@ -224,9 +205,8 @@
     .hero{
       display:flex;
       gap:14px;
-      align-items:flex-start; /* ✅ رفع الصورة */
+      align-items:flex-start;
     }
-
     .photo{
       width: 92px;
       height: 92px;
@@ -235,9 +215,8 @@
       object-fit: cover;
       background: rgba(255,255,255,.06);
       flex: 0 0 auto;
-      margin-top: 2px; /* ✅ صعدناها */
+      margin-top: 2px;
     }
-
     h1{
       margin:0;
       font-size: 32px;
@@ -245,14 +224,12 @@
       letter-spacing:.3px;
       line-height:1.05;
     }
-
     .subtitle{
       margin: 8px 0 0;
       color: var(--muted);
       font-weight: 900;
-      font-size: 17px; /* ✅ أكبر */
+      font-size: 17px;
     }
-
     .badges{
       margin-top: 12px;
       display:flex;
@@ -410,7 +387,6 @@
       background: rgba(255,255,255,.05);
     }
     body.light .vizWrap{ border-color: rgba(0,0,0,.10); background: rgba(0,0,0,.03); }
-
     #viz{ width:100%; height:120px; display:block; }
 
     /* ===== Footer ===== */
@@ -467,59 +443,36 @@
     .nightLabel{ font-weight: 900; font-size: 13px; color: rgba(255,255,255,.92); }
     body.light .nightLabel{ color: rgba(10,16,28,.82); }
 
-    /* ===== 11:11 Romantic overlay (60s) ===== */
-    .romance{
-      position:fixed; inset:0;
-      z-index: 200;
-      display:none;
-      align-items:center;
-      justify-content:center;
-      padding: 24px;
-      background: rgba(0,0,0,.35);
-      backdrop-filter: blur(2px);
+    /* =========================
+       11:11 BLACK FX Overlay
+    ========================= */
+    .fx1111{
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      background: #000;
+      display: none;
+      overflow: hidden;
     }
-    body.light .romance{ background: rgba(255,255,255,.30); }
-    .romance.show{ display:flex; animation: fadeIn .35s ease both; }
-    @keyframes fadeIn{ from{opacity:0} to{opacity:1} }
+    .fx1111.show{ display:block; }
 
-    .romBox{
-      width:min(720px, 100%);
-      text-align:center;
-      padding: 18px 16px;
-      border-radius: 18px;
-      border: 1px solid rgba(255,255,255,.18);
-      background: rgba(255,255,255,.08);
-      backdrop-filter: blur(12px);
-      box-shadow: 0 24px 70px rgba(0,0,0,.35);
-      animation: pop 700ms cubic-bezier(.2,.9,.2,1) both;
+    #fxCanvas{
+      width: 100%;
+      height: 100%;
+      display: block;
     }
-    @keyframes pop{
-      from{ transform: translateY(12px) scale(.985); opacity:.6; }
-      to{ transform: translateY(0) scale(1); opacity:1; }
-    }
-    .romBox h3{
-      margin:0 0 10px;
+
+    .fxHint{
+      position:absolute;
+      top: 18px;
+      left: 50%;
+      transform: translateX(-50%);
+      color: rgba(255,255,255,.72);
       font-weight: 900;
-      font-size: 22px;
-      letter-spacing:.2px;
-    }
-    .romBox p{
-      margin:0;
-      font-weight: 900;
-      font-size: 20px;
-      line-height: 2.0;
-    }
-    .romPulse{
-      margin-top: 12px;
-      height: 6px;
-      border-radius: 999px;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,.65), transparent);
-      animation: pulse 2.6s ease-in-out infinite;
-      opacity:.85;
-    }
-    @keyframes pulse{
-      0%,100%{ transform: scaleX(.6); opacity:.55; }
-      50%{ transform: scaleX(1); opacity:1; }
+      font-size: 18px;
+      letter-spacing: .4px;
+      user-select:none;
+      pointer-events:none;
     }
   </style>
 </head>
@@ -531,16 +484,14 @@
   </video>
   <div class="overlay"></div>
 
-  <!-- رأس الصفحة: ساعة + تاريخ + طقس + زر معاينة -->
+  <!-- رأس الصفحة -->
   <div class="topHUD">
     <div class="timeGhost" id="timeGhost">11:11</div>
     <div class="timeBig" id="timeNow">--:--</div>
 
     <div class="hudRow">
       <div class="hudDate" id="dateTxt">...</div>
-
       <button class="previewBtn" id="preview1111">ماذا يحدث عند 11:11؟</button>
-
       <div class="hudWx" id="wxTxt">جاري جلب طقس البصرة...</div>
     </div>
   </div>
@@ -567,12 +518,11 @@
       <h2 class="sectionTitle">كلمة</h2>
       <p class="bigNote" id="mainQuote">... تحميل</p>
 
-      <!-- التواصل تحت "كلمة" -->
       <div class="socialRow">
         <a class="socLink" href="https://t.me/Mu29_iq" target="_blank" rel="noopener">
           <span class="socLeft">
             <span class="socIco" aria-hidden="true">
-              <!-- Telegram logo (SVG) -->
+              <!-- Telegram SVG -->
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
                 <path d="M21.8 4.3c.3-1.2-.9-2-2-1.6L3.7 8.9c-1.1.4-1.1 2 .1 2.3l4.1 1.2 1.6 5c.3 1 1.6 1.3 2.4.6l2.3-2.1 4 3c.9.7 2.2.2 2.5-.9L21.8 4.3Z" fill="currentColor" opacity=".95"/>
                 <path d="M9.2 12.6l9.4-6.3c.2-.1.4.2.2.4l-7.8 7.5c-.3.3-.5.7-.4 1.1l.4 2.9c.1.5-.5.7-.8.3l-1.7-3.4c-.3-.5-.7-.9-1.2-1l-3.1-1c-.5-.2-.5-.9 0-1.1l16-6.2" fill="currentColor"/>
@@ -586,7 +536,7 @@
         <a class="socLink" href="https://www.instagram.com/mu29__/" target="_blank" rel="noopener">
           <span class="socLeft">
             <span class="socIco" aria-hidden="true">
-              <!-- Instagram logo (SVG) -->
+              <!-- Instagram SVG -->
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
                 <path d="M7.5 2h9A5.5 5.5 0 0 1 22 7.5v9A5.5 5.5 0 0 1 16.5 22h-9A5.5 5.5 0 0 1 2 16.5v-9A5.5 5.5 0 0 1 7.5 2Z" stroke="currentColor" stroke-width="2" opacity=".95"/>
                 <path d="M12 16.1A4.1 4.1 0 1 0 12 8a4.1 4.1 0 0 0 0 8.1Z" stroke="currentColor" stroke-width="2"/>
@@ -600,7 +550,7 @@
       </div>
     </section>
 
-    <!-- بطاقة يوتيوب -->
+    <!-- بطاقة يوتيوب + موسيقى -->
     <section class="card">
       <h2 class="sectionTitle">صورة موسيقى</h2>
       <div class="video">
@@ -650,19 +600,10 @@
     <button id="toggleTheme">تشغيل/إطفاء</button>
   </div>
 
-  <!-- 11:11 Overlay -->
-  <div class="romance" id="romance">
-    <div class="romBox">
-      <h3>11:11</h3>
-      <p>
-        في هذه الدقيقة…<br>
-        فكّر بالشخص الذي يعني لك أكثر مما تقول.
-      </p>
-      <div class="romPulse"></div>
-      <p style="margin-top:10px; font-size:13px; color:rgba(255,255,255,.85)">
-        (ستعود الصفحة لوضعها الطبيعي بعد دقيقة)
-      </p>
-    </div>
+  <!-- ===== 11:11 BLACK FX ===== -->
+  <div class="fx1111" id="fx1111" aria-hidden="true">
+    <canvas id="fxCanvas"></canvas>
+    <div class="fxHint">11:11</div>
   </div>
 
   <script>
@@ -676,7 +617,7 @@
     fetch(SHEET_CSV_URL, { cache: "no-store" })
       .then(res => res.text())
       .then(text => {
-        text = text.replace(/^\uFEFF/, ""); // remove BOM
+        text = text.replace(/^\uFEFF/, "");
         const commaIndex = text.indexOf(",");
         if (commaIndex === -1) return;
         let value = text.slice(commaIndex + 1).trim();
@@ -692,36 +633,23 @@
 
     function formatIraqTime(){
       const now = new Date();
-      const t = new Intl.DateTimeFormat("en-GB", {
+      return new Intl.DateTimeFormat("en-GB", {
         timeZone: "Asia/Baghdad",
         hour: "2-digit",
         minute: "2-digit"
       }).format(now);
-      return t;
     }
 
     function formatIraqDate(){
       const now = new Date();
-      // عربي مثل iPhone
-      const d = new Intl.DateTimeFormat("ar-IQ", {
+      return new Intl.DateTimeFormat("ar-IQ", {
         timeZone: "Asia/Baghdad",
         weekday: "long",
         day: "2-digit",
         month: "long",
         year: "numeric"
       }).format(now);
-      return d;
     }
-
-    function tick(){
-      const t = formatIraqTime();
-      timeNow.textContent = t;
-      timeGhost.textContent = t;
-      dateTxt.textContent = formatIraqDate();
-      check1111(t);
-    }
-    tick();
-    setInterval(tick, 1000);
 
     // ===== Basra Weather (Open-Meteo, no key) =====
     const wxTxt = document.getElementById("wxTxt");
@@ -762,7 +690,7 @@
     fetchWeather();
     setInterval(fetchWeather, 10 * 60 * 1000);
 
-    // ===== Theme toggle (night) =====
+    // ===== Theme toggle =====
     const toggleTheme = document.getElementById("toggleTheme");
     const savedTheme = localStorage.getItem("themeMode");
     if(savedTheme === "light") document.body.classList.add("light");
@@ -777,8 +705,6 @@
       { title: "المقطع 1", file: "audio.mp3.mp3.mp3" },
       { title: "المقطع 2", file: "audio1.mp3.mp3" }
     ];
-
-    // مقطع خاص 11:11 (مطابق لاسم ملفك)
     const elevenTrack = { title: "11:11 Special", file: "eleven.mp3.mp3" };
 
     const audioEl = document.getElementById("bgAudio");
@@ -791,7 +717,12 @@
     const canvas = document.getElementById("viz");
     const ctx = canvas.getContext("2d");
 
-    let audioCtx = null, analyser = null, srcNode = null, freqData = null;
+    // مهم: نخليهم global حتى FX يستخدمهم
+    window.audioCtx = null;
+    window.analyser = null;
+    window.freqData = null;
+    let srcNode = null;
+
     let rafId = null;
     let playing = false;
     let trackIndex = 0;
@@ -804,7 +735,6 @@
     }
     setTrack(0);
 
-    // Volume
     audioEl.volume = (Number(vol.value)||70)/100;
     vol.addEventListener("input", () => audioEl.volume = (Number(vol.value)||0)/100);
 
@@ -819,16 +749,16 @@
     resizeCanvas();
 
     function ensureAudioGraph(){
-      if(audioCtx) return;
-      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-      analyser = audioCtx.createAnalyser();
-      analyser.fftSize = 2048;
-      analyser.smoothingTimeConstant = 0.82;
-      freqData = new Uint8Array(analyser.frequencyBinCount);
+      if(window.audioCtx) return;
+      window.audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      window.analyser = window.audioCtx.createAnalyser();
+      window.analyser.fftSize = 2048;
+      window.analyser.smoothingTimeConstant = 0.82;
+      window.freqData = new Uint8Array(window.analyser.frequencyBinCount);
 
-      srcNode = audioCtx.createMediaElementSource(audioEl);
-      srcNode.connect(analyser);
-      analyser.connect(audioCtx.destination);
+      srcNode = window.audioCtx.createMediaElementSource(audioEl);
+      srcNode.connect(window.analyser);
+      window.analyser.connect(window.audioCtx.destination);
     }
 
     function drawBars(){
@@ -839,19 +769,19 @@
       ctx.fillStyle = "rgba(255,255,255,0.03)";
       ctx.fillRect(0,0,w,h);
 
-      if(!analyser || !freqData){
+      if(!window.analyser || !window.freqData){
         rafId = requestAnimationFrame(drawBars);
         return;
       }
 
-      analyser.getByteFrequencyData(freqData);
+      window.analyser.getByteFrequencyData(window.freqData);
 
       const bars = 64;
-      const step = Math.floor(freqData.length / bars);
+      const step = Math.floor(window.freqData.length / bars);
       const barW = w / bars;
 
       for(let i=0;i<bars;i++){
-        const v = freqData[i*step] / 255;
+        const v = window.freqData[i*step] / 255;
         const barH = Math.max(6, v * (h - 12));
         const x = i * barW;
         const y = h - barH;
@@ -880,7 +810,7 @@
     async function playPause(){
       try{
         ensureAudioGraph();
-        if(audioCtx.state === "suspended") await audioCtx.resume();
+        if(window.audioCtx.state === "suspended") await window.audioCtx.resume();
 
         if(!playing){
           await audioEl.play();
@@ -894,12 +824,12 @@
           stopViz();
         }
       }catch(e){
-        // iOS sometimes needs second click
         btnPlay.textContent = "اضغط مرة ثانية";
       }
     }
 
     btnPlay.addEventListener("click", playPause);
+
     prevBtn.addEventListener("click", async () => {
       const was = playing;
       if(was){ audioEl.pause(); playing=false; }
@@ -908,6 +838,7 @@
       stopViz();
       if(was) await playPause();
     });
+
     nextBtn.addEventListener("click", async () => {
       const was = playing;
       if(was){ audioEl.pause(); playing=false; }
@@ -917,8 +848,7 @@
       if(was) await playPause();
     });
 
-    // ===== Smooth volume fade =====
-    function fadeTo(targetVol, ms=1000){
+    function fadeTo(targetVol, ms=900){
       const start = audioEl.volume;
       const startT = performance.now();
       return new Promise(resolve=>{
@@ -932,74 +862,244 @@
       });
     }
 
-    // ===== 11:11 Romantic minute + switch to eleven track =====
-    const romance = document.getElementById("romance");
-    let lastKey = null;
+    // ===== 11:11 BLACK FX (Hearts more + heavy snow + audio reactive) =====
+    const fxWrap = document.getElementById("fx1111");
+    const fxCanvas = document.getElementById("fxCanvas");
+    const fxCtx = fxCanvas.getContext("2d");
 
-    async function run1111Sequence(isPreview=false){
-      // عرض overlay
-      romance.classList.add("show");
+    function setFxCanvasSize(){
+      const dpr = window.devicePixelRatio || 1;
+      fxCanvas.width  = Math.floor(window.innerWidth * dpr);
+      fxCanvas.height = Math.floor(window.innerHeight * dpr);
+      fxCtx.setTransform(dpr,0,0,dpr,0,0);
+    }
+    window.addEventListener("resize", setFxCanvasSize);
+    setFxCanvasSize();
 
-      const old = {
-        src: audioEl.src,
-        idx: trackIndex,
-        wasPlaying: playing,
-        vol: audioEl.volume
-      };
+    let fxRunning = false;
+    let fxRAF = null;
+    let particles = [];
+    let fxEndTimer = null;
+    let lastSpawn = 0;
 
-      try{
-        ensureAudioGraph();
-        if(audioCtx.state === "suspended") await audioCtx.resume();
+    function rand(min,max){ return Math.random()*(max-min)+min; }
+    function clamp(n,a,b){ return Math.max(a, Math.min(b,n)); }
 
-        // خفض تدريجي + تعتيم overlay أكثر
-        await fadeTo(Math.min(old.vol, 0.22), 900);
+    function drawHeart(ctx, x, y, size){
+      ctx.save();
+      ctx.translate(x,y);
+      ctx.beginPath();
+      const s = size;
+      ctx.moveTo(0, s*0.35);
+      ctx.bezierCurveTo(0, 0, -s, 0, -s, s*0.35);
+      ctx.bezierCurveTo(-s, s*0.85, 0, s, 0, s*1.25);
+      ctx.bezierCurveTo(0, s, s, s*0.85, s, s*0.35);
+      ctx.bezierCurveTo(s, 0, 0, 0, 0, s*0.35);
+      ctx.closePath();
+      ctx.fill();
+      ctx.restore();
+    }
 
-        // بدّل للمقطع الخاص
-        audioEl.src = elevenTrack.file;
-        titleEl.textContent = `🎁 11:11 — ${elevenTrack.title}`;
+    function getAudioIntensity(){
+      if(!window.analyser || !window.freqData) return 0.22;
+      window.analyser.getByteFrequencyData(window.freqData);
+      let sum = 0;
+      const take = Math.min(160, window.freqData.length);
+      for(let i=0;i<take;i++) sum += window.freqData[i];
+      return clamp((sum / take) / 255, 0, 1);
+    }
 
-        await audioEl.play();
-        playing = true;
-        btnPlay.textContent = "إيقاف";
-        startViz();
-
-        // مدة دقيقة
-        setTimeout(async ()=>{
-          try{
-            await fadeTo(0.18, 700);
-
-            // ارجع للمقطع السابق
-            audioEl.src = old.src || tracks[old.idx]?.file;
-            titleEl.textContent = `المقطع: ${old.idx+1} — ${tracks[old.idx]?.title || "المقطع"}`;
-            trackIndex = old.idx;
-
-            if(old.wasPlaying){
-              await audioEl.play();
-              playing = true;
-              btnPlay.textContent = "إيقاف";
-              startViz();
-            }else{
-              audioEl.pause();
-              playing = false;
-              btnPlay.textContent = "تشغيل";
-              stopViz();
-            }
-
-            // ارجع للصوت حسب السلايدر
-            const sliderVol = (Number(vol.value)||70)/100;
-            await fadeTo(sliderVol, 900);
-          } finally {
-            romance.classList.remove("show");
-          }
-        }, 60000);
-
-      }catch(e){
-        // إذا فشل تشغيل الصوت، نخلي بس overlay دقيقة
-        setTimeout(()=> romance.classList.remove("show"), 60000);
+    function spawnParticles(count, intensity){
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+      for(let i=0;i<count;i++){
+        const isHeart = Math.random() < 0.75; // ❤️ قلوب أكثر
+        particles.push({
+          x: rand(-20,w+20),
+          y: rand(-h, 0),
+          r: isHeart ? rand(9,18) : rand(6,14),
+          vy: isHeart ? rand(70,160) : rand(90,220), // ❄️ ثلج أثقل
+          vx: rand(-26,26),
+          wobble: rand(0, Math.PI*2),
+          wSpeed: rand(0.9, 2.6),
+          type: isHeart ? "heart" : "snow",
+          a: rand(0.65, 1),
+          spin: rand(-1, 1) * (0.6 + intensity*1.8)
+        });
       }
     }
 
-    // تحقق 11:11 بتوقيت العراق (مرة باليوم)
+    function fxLoop(t){
+      if(!fxRunning) return;
+
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+
+      const intensity = getAudioIntensity();       // 0..1
+      const speedBoost = 1 + intensity * 2.1;      // ✅ تفاعل قوي
+      const driftBoost = 1 + intensity * 3.0;
+
+      fxCtx.clearRect(0,0,w,h);
+      fxCtx.fillStyle = "#000";
+      fxCtx.fillRect(0,0,w,h);
+
+      // كثافة ديناميكية (ثلج ثقيل + قلوب كثيرة)
+      const now = performance.now();
+      if(now - lastSpawn > 45){ // spawn سريع
+        lastSpawn = now;
+        const extra = Math.floor(6 + intensity * 14);
+        spawnParticles(extra, intensity);
+      }
+
+      // حافظ على كثافة عالية
+      const maxP = 620;
+      if(particles.length > maxP) particles.splice(0, particles.length - maxP);
+
+      for(let p of particles){
+        p.wobble += 0.02 * p.wSpeed * driftBoost;
+
+        // حركة
+        p.y += (p.vy/60) * speedBoost;
+        p.x += ((p.vx/60) + Math.sin(p.wobble)*0.55) * driftBoost;
+
+        // لفّ بسيط
+        p.spin += (intensity*0.08);
+
+        // إعادة تدوير
+        if(p.y > h + 50){
+          p.y = rand(-160, -20);
+          p.x = rand(-20,w+20);
+        }
+        if(p.x < -60) p.x = w + 60;
+        if(p.x > w + 60) p.x = -60;
+
+        if(p.type === "snow"){
+          // ❄️ ثلج ثقيل ولمعة
+          const alpha = p.a * (0.55 + intensity*0.45);
+          fxCtx.globalAlpha = alpha;
+
+          fxCtx.fillStyle = "rgba(255,255,255,0.95)";
+          fxCtx.beginPath();
+          fxCtx.arc(p.x, p.y, p.r*0.46, 0, Math.PI*2);
+          fxCtx.fill();
+
+          fxCtx.globalAlpha = 0.12 + intensity*0.22;
+          fxCtx.fillStyle = "rgba(255,255,255,1)";
+          fxCtx.beginPath();
+          fxCtx.arc(p.x - p.r*0.10, p.y - p.r*0.10, p.r*0.18, 0, Math.PI*2);
+          fxCtx.fill();
+        }else{
+          // ❤️ قلوب مع توهج قوي يتغير مع الصوت
+          const glow = 0.12 + intensity*0.45;
+          fxCtx.globalAlpha = p.a * (0.70 + intensity*0.30);
+
+          fxCtx.fillStyle = "rgba(255, 30, 80, 0.90)";
+          fxCtx.shadowColor = `rgba(255, 30, 80, ${glow})`;
+          fxCtx.shadowBlur = 22 + intensity*40;
+
+          drawHeart(fxCtx, p.x, p.y, p.r);
+
+          fxCtx.shadowBlur = 0;
+          fxCtx.shadowColor = "transparent";
+        }
+      }
+
+      fxCtx.globalAlpha = 1;
+      fxRAF = requestAnimationFrame(fxLoop);
+    }
+
+    async function start1111FX(){
+      // اخفاء كلشي
+      document.documentElement.style.overflow = "hidden";
+      document.body.style.pointerEvents = "none";
+
+      // اظهر overlay
+      fxWrap.classList.add("show");
+      fxWrap.style.pointerEvents = "auto";
+
+      setFxCanvasSize();
+      particles = [];
+      lastSpawn = 0;
+
+      // إذا الصوت شغال: جهّز التفاعل، إذا لا: يبقى تأثير ثابت
+      try{
+        ensureAudioGraph();
+        if(window.audioCtx && window.audioCtx.state === "suspended"){
+          // ما نجبر تشغيل صوت، بس نخليها جاهزة
+          await window.audioCtx.resume().catch(()=>{});
+        }
+      }catch(e){}
+
+      // كثافة عالية بالبداية
+      const intensity = getAudioIntensity();
+      spawnParticles(520, intensity);
+
+      fxRunning = true;
+      if(fxRAF) cancelAnimationFrame(fxRAF);
+      fxLoop();
+
+      // شوية تفاعل على الفيديو/overlay (اختياري)
+      const video = document.querySelector(".bgVideo");
+      const overlay = document.querySelector(".overlay");
+      if(video) video.style.opacity = "0"; // نخفي الفيديو وقت الحدث
+      if(overlay) overlay.style.opacity = "0";
+
+      // شغل مقطع 11:11 إذا تقدر (لازم المستخدم كان ضغط تشغيل قبل)
+      const oldState = { src: audioEl.src, idx: trackIndex, wasPlaying: playing, vol: audioEl.volume };
+      try{
+        // لو كان شغال، نبدّل للمقطع الخاص
+        if(oldState.wasPlaying){
+          await fadeTo(Math.min(oldState.vol, 0.25), 700);
+          audioEl.src = elevenTrack.file;
+          titleEl.textContent = `🎁 11:11 — ${elevenTrack.title}`;
+          await audioEl.play();
+          playing = true;
+          btnPlay.textContent = "إيقاف";
+          startViz();
+        }
+      }catch(e){}
+
+      // نهاية دقيقة
+      clearTimeout(fxEndTimer);
+      fxEndTimer = setTimeout(async ()=>{
+        fxRunning = false;
+        if(fxRAF) cancelAnimationFrame(fxRAF);
+        fxRAF = null;
+
+        fxWrap.classList.remove("show");
+        document.documentElement.style.overflow = "";
+        document.body.style.pointerEvents = "";
+
+        if(video) video.style.opacity = "";
+        if(overlay) overlay.style.opacity = "";
+
+        // ارجع للمقطع السابق إذا كان شغال
+        try{
+          if(oldState.wasPlaying){
+            await fadeTo(0.18, 500);
+            audioEl.src = oldState.src || tracks[oldState.idx]?.file;
+            trackIndex = oldState.idx;
+
+            await audioEl.play();
+            playing = true;
+            btnPlay.textContent = "إيقاف";
+            titleEl.textContent = `المقطع: ${trackIndex + 1} — ${tracks[trackIndex]?.title || ""}`;
+            startViz();
+
+            const sliderVol = (Number(vol.value)||70)/100;
+            await fadeTo(sliderVol, 800);
+          }
+        }catch(e){}
+      }, 60000);
+    }
+
+    // زر المعاينة
+    document.getElementById("preview1111").addEventListener("click", () => {
+      start1111FX();
+    });
+
+    // تحقق 11:11 مرة باليوم
+    let lastKey = null;
     function check1111(t){
       const [hh, mm] = t.split(":");
       if(hh === "11" && mm === "11"){
@@ -1009,18 +1109,22 @@
           year:"numeric", month:"2-digit", day:"2-digit"
         }).format(now);
 
-        // مرة واحدة باليوم
         if(lastKey !== key){
           lastKey = key;
-          run1111Sequence(false);
+          start1111FX();
         }
       }
     }
 
-    // زر المعاينة
-    document.getElementById("preview1111").addEventListener("click", () => {
-      run1111Sequence(true);
-    });
+    function tick(){
+      const t = formatIraqTime();
+      timeNow.textContent = t;
+      timeGhost.textContent = t;
+      dateTxt.textContent = formatIraqDate();
+      check1111(t);
+    }
+    tick();
+    setInterval(tick, 1000);
   </script>
 </body>
 </html>
