@@ -366,6 +366,63 @@
     }
   </style>
 </head>
+/* ===== iPhone-like Top Bar ===== */
+.topbar{
+  position: fixed;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(980px, calc(100% - 20px));
+  z-index: 50;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+
+  padding: 10px 12px;
+  border-radius: 16px;
+  border: 1px solid rgba(255,255,255,.18);
+  background: rgba(255,255,255,.08);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 12px 28px rgba(0,0,0,.25);
+
+  font-weight: 800;
+}
+
+.topbar-left{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  letter-spacing: .3px;
+}
+
+#iqTime{
+  font-size: 16px;
+  line-height: 1;
+}
+
+.topbar-right{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.wx{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  color: rgba(255,255,255,.92);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.wx-ico{
+  font-size: 16px;
+}
+
+/* حتى ما يغطي الشريط محتوى الصفحة */
+body{ padding-top: 70px; }
 
 <body>
   <!-- فيديو الخلفية -->
@@ -373,6 +430,20 @@
     <source src="bg.mp4.mp4" type="video/mp4">
   </video>
   <div class="overlay"></div>
+  <!-- Top Bar -->
+<div class="topbar" dir="ltr">
+  <div class="topbar-left">
+    <span id="iqTime">--:--</span>
+  </div>
+
+  <div class="topbar-right" dir="rtl">
+    <span class="wx" id="basraWx">
+      <span class="wx-ico" id="basraWxIco">⛅</span>
+      <span id="basraWxTxt">جاري جلب طقس البصرة...</span>
+    </span>
+  </div>
+</div>
+
 
   <main class="gridWrap">
     <div class="vDivider"></div>
@@ -422,6 +493,72 @@
           <button class="navBtn" id="prevTrack" title="السابق">◀</button>
           <button class="navBtn" id="nextTrack" title="التالي">▶</button>
         </div>
+        
+/* ===== Iraq Clock + Basra Weather (Free) ===== */
+(function clockAndWeather(){
+  // ---- Iraq clock ----
+  const timeEl = document.getElementById("iqTime");
+  function tick(){
+    const now = new Date();
+    // وقت العراق
+    const parts = new Intl.DateTimeFormat("en-GB", {
+      timeZone: "Asia/Baghdad",
+      hour: "2-digit",
+      minute: "2-digit"
+    }).format(now);
+    timeEl.textContent = parts;
+  }
+  tick();
+  setInterval(tick, 1000);
+
+  // ---- Basra weather (Open-Meteo, no key) ----
+  const wxTxt = document.getElementById("basraWxTxt");
+  const wxIco = document.getElementById("basraWxIco");
+
+  // Basra coordinates
+  const lat = 30.5085;
+  const lon = 47.7804;
+
+  function codeToArabic(code){
+    // تبسيط للأكواد (Open-Meteo WMO)
+    if (code === 0) return ["☀️","صحو"];
+    if ([1,2].includes(code)) return ["🌤️","غائم جزئياً"];
+    if (code === 3) return ["☁️","غائم"];
+    if ([45,48].includes(code)) return ["🌫️","ضباب"];
+    if ([51,53,55].includes(code)) return ["🌦️","رذاذ"];
+    if ([61,63,65].includes(code)) return ["🌧️","مطر"];
+    if ([71,73,75,77].includes(code)) return ["🌨️","ثلج"];
+    if ([80,81,82].includes(code)) return ["🌧️","زخات"];
+    if ([95,96,99].includes(code)) return ["⛈️","عاصفة رعدية"];
+    return ["⛅","طقس متغير"];
+  }
+
+  async function fetchWeather(){
+    try{
+      const url =
+        `https://api.open-meteo.com/v1/forecast` +
+        `?latitude=${lat}&longitude=${lon}` +
+        `&current=temperature_2m,weather_code` +
+        `&timezone=Asia%2FBaghdad`;
+
+      const res = await fetch(url, { cache: "no-store" });
+      const data = await res.json();
+
+      const temp = Math.round(data.current.temperature_2m);
+      const code = data.current.weather_code;
+
+      const [ico, desc] = codeToArabic(code);
+      wxIco.textContent = ico;
+      wxTxt.textContent = `البصرة: ${temp}° — ${desc}`;
+    }catch(e){
+      wxTxt.textContent = "تعذر جلب طقس البصرة";
+      wxIco.textContent = "⚠️";
+    }
+  }
+
+  fetchWeather();
+  setInterval(fetchWeather, 10 * 60 * 1000); // كل 10 دقائق
+})();
 
         <p class="trackTitle" id="trackTitle">المقطع: 1</p>
 
