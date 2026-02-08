@@ -56,6 +56,7 @@
       backdrop-filter: blur(0px);
     }
 
+    /* ===== Cards ===== */
     .card{
       background:var(--card);
       border:1px solid var(--border);
@@ -63,7 +64,42 @@
       padding:18px;
       box-shadow: var(--shadow);
       backdrop-filter: blur(10px);
+
+      position:relative;
+      overflow:hidden;
+      will-change: transform, opacity;
+      transition: transform .2s ease, box-shadow .2s ease, background .2s ease;
+      animation: enter .65s ease both;
     }
+
+    @keyframes enter {
+      from { opacity: 0; transform: translateY(14px) scale(.99); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    /* تأخير بسيط لكل كارت */
+    .profile{ animation-delay: .05s; }
+    .youtube{ animation-delay: .15s; }
+    .social{  animation-delay: .25s; }
+    .pageFooter{ animation-delay: .35s; }
+
+    /* لمعة خفيفة داخل الكارت */
+    .card::before{
+      content:"";
+      position:absolute;
+      inset:-2px;
+      background: radial-gradient(600px 200px at 20% 0%, rgba(255,255,255,.12), transparent 60%);
+      opacity: 0;
+      transition: opacity .25s ease;
+      pointer-events:none;
+    }
+
+    /* Hover للكروت */
+    .card:hover{
+      transform: translateY(-4px);
+      box-shadow: 0 22px 55px rgba(0,0,0,.45);
+    }
+    .card:hover::before{ opacity: 1; }
 
     .hero{
       display:flex;
@@ -71,7 +107,6 @@
       align-items:center;
     }
 
-    /* الصورة */
     .photo{
       width:92px;
       height:92px;
@@ -123,7 +158,7 @@
       font-weight:600;
     }
 
-    /* روابط التواصل */
+    /* ===== Links ===== */
     .links{
       display:grid;
       gap:10px;
@@ -141,8 +176,24 @@
       border:1px solid var(--border);
       background:rgba(255,255,255,.06);
       transition:.15s transform, .15s background;
+      position:relative;
+      overflow:hidden;
     }
     .link:hover{ transform: translateY(-2px); background:rgba(255,255,255,.09); }
+
+    /* لمعة تمر على الرابط */
+    .link::after{
+      content:"";
+      position:absolute;
+      top:0; bottom:0;
+      left:-120%;
+      width:120%;
+      background: linear-gradient(120deg, transparent, rgba(255,255,255,.18), transparent);
+      transform: skewX(-18deg);
+      transition: left .45s ease;
+      pointer-events:none;
+    }
+    .link:hover::after{ left:120%; }
 
     .left{ display:flex; align-items:center; gap:10px; font-weight:700; }
     .icon{
@@ -154,7 +205,7 @@
       font-size:16px;
     }
 
-    /* فيديو يوتيوب */
+    /* ===== YouTube ===== */
     .video{
       margin-top:12px;
       border-radius:16px;
@@ -170,17 +221,7 @@
       display:block;
     }
 
-    footer{
-      text-align:center;
-      color:rgba(255,255,255,.85);
-      font-size:13px;
-      padding:12px;
-      background:rgba(255,255,255,.06);
-      border:1px solid var(--border);
-      border-radius:18px;
-    }
-
-    /* ====== الصوت + الموجات ====== */
+    /* ===== Audio + Visualizer ===== */
     .audioBox{
       display:flex;
       align-items:center;
@@ -192,7 +233,6 @@
       background:rgba(255,255,255,.06);
       margin-top:10px;
     }
-
     .audioHint{ color:var(--muted); font-size:13px; margin:0; }
 
     .audioBtn{
@@ -207,6 +247,35 @@
     }
     .audioBtn:hover{ background:rgba(255,255,255,.12); }
 
+    .audioRow{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      margin-top:10px;
+    }
+
+    .volumeWrap{
+      flex:1;
+      display:flex;
+      align-items:center;
+      gap:10px;
+      padding:10px 12px;
+      border-radius:14px;
+      border:1px solid var(--border);
+      background:rgba(255,255,255,.06);
+    }
+
+    .volumeLabel{
+      font-size:13px;
+      color:var(--muted);
+      white-space:nowrap;
+    }
+
+    .volume{
+      width:100%;
+      accent-color: rgba(34,197,94,.95);
+    }
+
     .vizWrap{
       margin-top:10px;
       border-radius:14px;
@@ -214,15 +283,24 @@
       background: rgba(255,255,255,.05);
       overflow:hidden;
     }
-
-    /* الكانفس ياخذ العرض بالكامل وارتفاع ثابت */
     #viz{
       width:100%;
       height:90px;
       display:block;
     }
 
-    /* ===== تخطيط الصفحة: اليسار (يوتيوب فوق + تواصل تحت) / اليمين (تعريف) ===== */
+    /* ===== Footer ===== */
+    footer{
+      text-align:center;
+      color:rgba(255,255,255,.85);
+      font-size:13px;
+      padding:12px;
+      background:rgba(255,255,255,.06);
+      border:1px solid var(--border);
+      border-radius:18px;
+    }
+
+    /* ===== Layout (YouTube يسار فوق + Social يسار تحت / Profile يمين) ===== */
     .gridWrap{
       width:min(980px,100%);
       position:relative;
@@ -242,7 +320,7 @@
     .social{ grid-area: social; }
     .pageFooter{ grid-area: footer; }
 
-    /* فاصل عمودي (تغريش بسيط) */
+    /* فاصل عمودي */
     .vDivider{
       position:absolute;
       top:14px;
@@ -279,7 +357,7 @@
   <main class="gridWrap">
     <div class="vDivider"></div>
 
-    <!-- اليمين: بطاقة التعريف -->
+    <!-- يمين: التعريف -->
     <section class="card profile">
       <div class="hero">
         <img class="photo" src="avatar.jpg" alt="صورتي">
@@ -304,7 +382,7 @@
       </blockquote>
     </section>
 
-    <!-- اليسار فوق: اليوتيوب -->
+    <!-- يسار فوق: يوتيوب -->
     <section class="card youtube">
       <h2 class="section-title">صورة موسيقى</h2>
       <div class="video">
@@ -317,40 +395,43 @@
       </div>
     </section>
 
-    <!-- اليسار تحت: حسابات التواصل + الصوت + الموجات -->
+    <!-- يسار تحت: تواصل + صوت + موجات -->
     <aside class="card social">
       <h2 class="section-title">تواصل معي</h2>
 
-    <!-- زر الصوت -->
-<div class="audioBox">
-  <p class="audioHint">🎵 الصوت + موجات</p>
-  <button class="audioBtn" id="audioBtn">تشغيل</button>
-</div>
+      <div class="audioBox">
+        <p class="audioHint">🎵 الصوت + موجات</p>
+        <button class="audioBtn" id="audioBtn">تشغيل</button>
+      </div>
 
-<!-- موجات تفاعلية -->
-<div class="vizWrap">
-  <canvas id="viz"></canvas>
-</div>
+      <div class="audioRow">
+        <div class="volumeWrap">
+          <span class="volumeLabel">خفض الصوت</span>
+          <input class="volume" id="volume" type="range" min="0" max="100" value="70">
+        </div>
+      </div>
 
-<audio id="bgAudio" preload="metadata" loop>
-  <source src="audio.mp3.mp3" type="audio/mpeg">
-</audio>
+      <div class="vizWrap">
+        <canvas id="viz"></canvas>
+      </div>
 
+      <audio id="bgAudio" preload="metadata" loop>
+        <source src="audio.mp3.mp3" type="audio/mpeg">
+      </audio>
 
       <div class="links">
         <a class="link" href="https://t.me/Mu29_iq" target="_blank" rel="noopener">
-          <span class="left"><span class="icon">✈️</span>telegram</span>
+          <span class="left"><span class="icon">✈️</span>تلغرام</span>
           <span>↗</span>
         </a>
 
         <a class="link" href="https://www.instagram.com/mu29__/" target="_blank" rel="noopener">
-          <span class="left"><span class="icon">📸</span>instagram</span>
+          <span class="left"><span class="icon">📸</span>إنستغرام</span>
           <span>↗</span>
         </a>
       </div>
     </aside>
 
-    <!-- الفوتر -->
     <footer class="pageFooter">
       © <span id="y"></span> — فَإِنَّ مَعَ الْعُسْرِ يُسْرًا
     </footer>
@@ -361,6 +442,7 @@
 
     const audioEl = document.getElementById("bgAudio");
     const btn = document.getElementById("audioBtn");
+    const vol = document.getElementById("volume");
 
     const canvas = document.getElementById("viz");
     const ctx = canvas.getContext("2d");
@@ -369,26 +451,28 @@
     let rafId = null;
     let playing = false;
 
+    // volume default
+    audioEl.volume = (Number(vol.value) || 70) / 100;
+    vol.addEventListener("input", () => {
+      audioEl.volume = (Number(vol.value) || 0) / 100;
+    });
+
     function resizeCanvas(){
       const dpr = window.devicePixelRatio || 1;
       const rect = canvas.getBoundingClientRect();
       canvas.width = Math.floor(rect.width * dpr);
       canvas.height = Math.floor(rect.height * dpr);
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0); // نخلي الرسم بوحدات CSS
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     }
 
     function drawIdle(){
-      // خط هادي إذا الصوت متوقف
       const w = canvas.getBoundingClientRect().width;
       const h = canvas.getBoundingClientRect().height;
       ctx.clearRect(0,0,w,h);
-      ctx.globalAlpha = 1;
 
-      // خلفية خفيفة
       ctx.fillStyle = "rgba(255,255,255,0.03)";
       ctx.fillRect(0,0,w,h);
 
-      // خط وسط
       ctx.strokeStyle = "rgba(255,255,255,0.35)";
       ctx.lineWidth = 2;
       ctx.beginPath();
@@ -402,7 +486,8 @@
 
       audioCtx = new (window.AudioContext || window.webkitAudioContext)();
       analyser = audioCtx.createAnalyser();
-      analyser.fftSize = 2048; // موجة ناعمة
+      analyser.fftSize = 2048;
+
       const bufferLength = analyser.frequencyBinCount;
       dataArray = new Uint8Array(bufferLength);
 
@@ -416,8 +501,6 @@
       const h = canvas.getBoundingClientRect().height;
 
       ctx.clearRect(0,0,w,h);
-
-      // خلفية خفيفة
       ctx.fillStyle = "rgba(255,255,255,0.03)";
       ctx.fillRect(0,0,w,h);
 
@@ -431,23 +514,15 @@
       let x = 0;
 
       for(let i=0;i<dataArray.length;i++){
-        const v = dataArray[i] / 128.0;   // 0..2
-        const y = (v * h) / 2;            // 0..h
-
+        const v = dataArray[i] / 128.0;
+        const y = (v * h) / 2;
         if(i === 0) ctx.moveTo(x, y);
         else ctx.lineTo(x, y);
-
         x += sliceWidth;
       }
 
       ctx.lineTo(w, h/2);
       ctx.stroke();
-
-      // نقاط خفيفة تعطي “نبض”
-      ctx.fillStyle = "rgba(34,197,94,0.35)";
-      ctx.beginPath();
-      ctx.arc(w*0.18, h*0.5, 3, 0, Math.PI*2);
-      ctx.fill();
 
       rafId = requestAnimationFrame(drawWave);
     }
@@ -468,7 +543,6 @@
       if(!playing) drawIdle();
     });
 
-    // إعداد أولي للكانفس
     resizeCanvas();
     drawIdle();
 
@@ -493,7 +567,6 @@
       }
     });
 
-    // إذا المستخدم وقف الصوت من أي مكان
     audioEl.addEventListener("pause", () => {
       playing = false;
       btn.textContent = "تشغيل";
