@@ -1,5 +1,8 @@
 <!doctype html>
 <html lang="ar" dir="rtl">
+  <link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0b1220">
+
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -287,6 +290,13 @@ audio.src=tracks[0].file;
 document.getElementById("audioBtn").onclick=()=>audio.paused?audio.play():audio.pause();
 document.getElementById("prevTrack").onclick=()=>{i=(i-1+tracks.length)%tracks.length;audio.src=tracks[i].file;audio.play()};
 document.getElementById("nextTrack").onclick=()=>{i=(i+1)%tracks.length;audio.src=tracks[i].file;audio.play()};
+  // ===== Register Service Worker =====
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("sw.js");
+  });
+}
+
 </script>
 
 </body>
