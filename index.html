@@ -17,6 +17,7 @@
       --muted:#d1d5db;
       --shadow: 0 18px 40px rgba(0,0,0,.38);
     }
+
     *{ box-sizing:border-box; }
 
     body{
@@ -28,9 +29,9 @@
       align-items:center;
       justify-content:center;
       padding:28px 14px;
-      padding-top: 86px; /* مساحة للـ Topbar */
       overflow-x:hidden;
       background:#0b1220;
+      padding-top: 80px; /* حتى ما يغطي الشريط محتوى الصفحة */
     }
 
     /* فيديو الخلفية */
@@ -55,9 +56,11 @@
         radial-gradient(700px 450px at 20% 80%, rgba(59,130,246,.14), transparent 55%),
         linear-gradient(120deg, rgba(11,18,32,.22), rgba(11,18,32,.16));
       backdrop-filter: blur(0px);
+      opacity: 1;
+      transition: opacity .2s ease;
     }
 
-    /* ===== Top Bar (iPhone-like) ===== */
+    /* ===== iPhone-like Top Bar ===== */
     .topbar{
       position: fixed;
       top: 10px;
@@ -65,35 +68,28 @@
       transform: translateX(-50%);
       width: min(980px, calc(100% - 20px));
       z-index: 50;
+
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 12px;
+
       padding: 10px 12px;
       border-radius: 16px;
       border: 1px solid rgba(255,255,255,.18);
       background: rgba(255,255,255,.08);
       backdrop-filter: blur(10px);
       box-shadow: 0 12px 28px rgba(0,0,0,.25);
+
       font-weight: 800;
     }
-    .topbar-left{
-      display:flex;
-      align-items:center;
-      gap:10px;
-      letter-spacing: .3px;
-    }
+
     #iqTime{
       font-size: 16px;
       line-height: 1;
-      direction:ltr;
+      letter-spacing: .3px;
     }
-    .topbar-right{
-      display:flex;
-      align-items:center;
-      gap:10px;
-      direction: rtl;
-    }
+
     .wx{
       display:flex;
       align-items:center;
@@ -101,8 +97,8 @@
       color: rgba(255,255,255,.92);
       font-size: 13px;
       font-weight: 700;
-      white-space:nowrap;
     }
+
     .wx-ico{ font-size: 16px; }
 
     /* ===== Cards ===== */
@@ -120,10 +116,12 @@
       transition: transform .2s ease, box-shadow .2s ease, background .2s ease;
       animation: enter .65s ease both;
     }
+
     @keyframes enter {
       from { opacity: 0; transform: translateY(14px) scale(.99); }
       to   { opacity: 1; transform: translateY(0) scale(1); }
     }
+
     .profile{ animation-delay: .05s; }
     .youtube{ animation-delay: .15s; }
     .social{  animation-delay: .25s; }
@@ -138,6 +136,7 @@
       transition: opacity .25s ease;
       pointer-events:none;
     }
+
     .card:hover{
       transform: translateY(-4px);
       box-shadow: 0 22px 55px rgba(0,0,0,.45);
@@ -149,6 +148,7 @@
       gap:16px;
       align-items:center;
     }
+
     .photo{
       width:92px;
       height:92px;
@@ -158,6 +158,7 @@
       background: rgba(255,255,255,.06);
       flex:0 0 auto;
     }
+
     h1{ margin:0; font-size:30px; line-height:1.15; }
     .subtitle{ margin:6px 0 0; color:var(--muted); }
 
@@ -191,18 +192,21 @@
       border:1px solid rgba(255,255,255,.16);
       background: rgba(255,255,255,.07);
       line-height: 2.05;
-      font-size: 22px;
+      font-size: 20px;
       font-weight: 800;
       letter-spacing: .2px;
       text-align: right;
-      word-break: break-word;
     }
     @media (max-width: 520px){
       .bigNote{ font-size:18px; }
     }
 
     /* ===== Links ===== */
-    .links{ display:grid; gap:10px; margin-top:10px; }
+    .links{
+      display:grid;
+      gap:10px;
+      margin-top:10px;
+    }
     .link{
       text-decoration:none;
       color:var(--text);
@@ -219,6 +223,7 @@
       overflow:hidden;
     }
     .link:hover{ transform: translateY(-2px); background:rgba(255,255,255,.09); }
+
     .link::after{
       content:"";
       position:absolute;
@@ -251,7 +256,12 @@
       background: rgba(0,0,0,.20);
       aspect-ratio: 16 / 9;
     }
-    .video iframe{ width:100%; height:100%; border:0; display:block; }
+    .video iframe{
+      width:100%;
+      height:100%;
+      border:0;
+      display:block;
+    }
 
     /* ===== Audio Player + Visualizer ===== */
     .audioBox{
@@ -265,19 +275,17 @@
       background:rgba(255,255,255,.06);
       margin-top:10px;
     }
+
     .trackTitle{
       margin:0;
-      color: rgba(255,255,255,.88);
-      font-size: 13px;
+      color:var(--muted);
+      font-size:13px;
       line-height:1.4;
       flex:1;
       text-align:right;
-      font-weight: 800;
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow: ellipsis;
     }
-    .audioBtn{
+
+    .audioBtn, .navBtn{
       border:1px solid var(--border);
       background:rgba(255,255,255,.08);
       color:var(--text);
@@ -286,27 +294,23 @@
       cursor:pointer;
       font-family:inherit;
       font-weight:800;
-      white-space:nowrap;
-      min-width: 92px;
-    }
-    .audioBtn:hover{ background:rgba(255,255,255,.12); }
-
-    .navBtns{ display:flex; gap:8px; align-items:center; }
-    .navBtn{
-      border:1px solid var(--border);
-      background:rgba(255,255,255,.08);
-      color:var(--text);
-      width: 42px;
-      height: 42px;
-      border-radius:14px;
-      cursor:pointer;
-      font-family:inherit;
-      font-weight:900;
       line-height:1;
+      white-space:nowrap;
     }
-    .navBtn:hover{ background:rgba(255,255,255,.12); }
+    .audioBtn:hover, .navBtn:hover{ background:rgba(255,255,255,.12); }
 
-    .audioRow{ display:flex; align-items:center; gap:10px; margin-top:10px; }
+    .navBtns{
+      display:flex;
+      gap:8px;
+      align-items:center;
+    }
+
+    .audioRow{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      margin-top:10px;
+    }
     .volumeWrap{
       flex:1;
       display:flex;
@@ -317,8 +321,15 @@
       border:1px solid var(--border);
       background:rgba(255,255,255,.06);
     }
-    .volumeLabel{ font-size:13px; color:var(--muted); white-space:nowrap; }
-    .volume{ width:100%; accent-color: rgba(34,197,94,.95); }
+    .volumeLabel{
+      font-size:13px;
+      color:var(--muted);
+      white-space:nowrap;
+    }
+    .volume{
+      width:100%;
+      accent-color: rgba(34,197,94,.95);
+    }
 
     .vizWrap{
       margin-top:10px;
@@ -327,7 +338,11 @@
       background: rgba(255,255,255,.05);
       overflow:hidden;
     }
-    #viz{ width:100%; height:110px; display:block; }
+    #viz{
+      width:100%;
+      height:110px;
+      display:block;
+    }
 
     footer{
       text-align:center;
@@ -345,12 +360,15 @@
       position:relative;
       display:grid;
       gap:16px;
+
       grid-template-columns: .8fr 1.2fr;
+
       grid-template-areas:
-        "youtube profile"
-        "social profile"
-        "footer footer";
+        "youtube  profile"
+        "social   profile"
+        "footer   footer";
     }
+
     .profile{ grid-area: profile; }
     .youtube{ grid-area: youtube; }
     .social{ grid-area: social; }
@@ -378,7 +396,6 @@
           "footer";
       }
       .vDivider{ display:none; }
-      .wx{ font-size: 12px; }
     }
   </style>
 </head>
@@ -386,22 +403,16 @@
 <body>
   <!-- فيديو الخلفية -->
   <video class="bgVideo" autoplay muted loop playsinline>
-    <!-- غيّر الاسم إذا ملفك اسمه bg.mp4.mp4 -->
     <source src="bg.mp4.mp4" type="video/mp4">
   </video>
   <div class="overlay"></div>
 
   <!-- Top Bar -->
-  <div class="topbar">
-    <div class="topbar-left">
-      <span id="iqTime">--:--</span>
-    </div>
-
-    <div class="topbar-right">
-      <span class="wx" id="basraWx">
-        <span class="wx-ico" id="basraWxIco">⛅</span>
-        <span id="basraWxTxt">جاري جلب طقس البصرة...</span>
-      </span>
+  <div class="topbar" dir="ltr">
+    <div><span id="iqTime">--:--</span></div>
+    <div class="wx" dir="rtl">
+      <span class="wx-ico" id="basraWxIco">⛅</span>
+      <span id="basraWxTxt">جاري جلب طقس البصرة...</span>
     </div>
   </div>
 
@@ -426,8 +437,6 @@
       <hr style="border:none;border-top:1px solid rgba(255,255,255,.14); margin:14px 0;">
 
       <h2 class="section-title">كلمة</h2>
-
-      <!-- ✅ هذا النص يجي من Google Sheet (B1) -->
       <p class="bigNote" id="mainQuote">... تحميل</p>
     </section>
 
@@ -450,8 +459,8 @@
 
       <div class="audioBox">
         <div class="navBtns">
-          <button class="navBtn" id="prevTrack" title="السابق">⟵</button>
-          <button class="navBtn" id="nextTrack" title="التالي">⟶</button>
+          <button class="navBtn" id="prevTrack" title="السابق">◀</button>
+          <button class="navBtn" id="nextTrack" title="التالي">▶</button>
         </div>
 
         <p class="trackTitle" id="trackTitle">المقطع: 1</p>
@@ -470,8 +479,7 @@
         <canvas id="viz"></canvas>
       </div>
 
-      <!-- مشغل الصوت: بدون loop حتى ننتقل للتراك اللي بعده -->
-      <audio id="bgAudio" preload="metadata"></audio>
+      <audio id="bgAudio" preload="metadata" loop></audio>
 
       <div class="links">
         <a class="link" href="https://t.me/Mu29_iq" target="_blank" rel="noopener">
@@ -492,12 +500,10 @@
   </main>
 
   <script>
-    // سنة الفوتر
     document.getElementById("y").textContent = new Date().getFullYear();
 
-    // ===== Iraq Clock + Basra Weather (Open-Meteo, no key) =====
+    // ===== Iraq Clock + Basra Weather =====
     (function clockAndWeather(){
-      // ---- Iraq clock ----
       const timeEl = document.getElementById("iqTime");
       function tick(){
         const now = new Date();
@@ -511,7 +517,6 @@
       tick();
       setInterval(tick, 1000);
 
-      // ---- Basra weather ----
       const wxTxt = document.getElementById("basraWxTxt");
       const wxIco = document.getElementById("basraWxIco");
 
@@ -534,8 +539,10 @@
       async function fetchWeather(){
         try{
           const url =
-            `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}` +
-            `&current=temperature_2m,weather_code&timezone=Asia%2FBaghdad`;
+            `https://api.open-meteo.com/v1/forecast` +
+            `?latitude=${lat}&longitude=${lon}` +
+            `&current=temperature_2m,weather_code` +
+            `&timezone=Asia%2FBaghdad`;
 
           const res = await fetch(url, { cache: "no-store" });
           const data = await res.json();
@@ -556,85 +563,54 @@
       setInterval(fetchWeather, 10 * 60 * 1000);
     })();
 
-    // ===== Google Sheet: نقرأ B1 ونخليه النص الرئيسي =====
+    // ===== Google Sheet: B1 => النص الرئيسي =====
     const SHEET_CSV_URL =
       "https://docs.google.com/spreadsheets/d/e/2PACX-1vSXkdu2p1KVIjDPGdb97HfmkKa2WuvKN349Z5qdZOd_RTCyT__xNLL44swa0EUAnq614hxS9p52NSlL/pub?gid=0&single=true&output=csv";
-
-    function parseCsvFirstRowSecondCol(csvText){
-      const lines = csvText.replace(/^\uFEFF/, "").split(/\r?\n/).filter(Boolean);
-      if(!lines.length) return "";
-      const line = lines[0];
-
-      const out = [];
-      let cur = "";
-      let inQ = false;
-
-      for(let i=0;i<line.length;i++){
-        const ch = line[i];
-        if(ch === '"'){
-          if(inQ && line[i+1] === '"'){ cur += '"'; i++; }
-          else inQ = !inQ;
-        } else if(ch === ',' && !inQ){
-          out.push(cur); cur = "";
-        } else cur += ch;
-      }
-      out.push(cur);
-
-      return (out[1] ?? "").trim();
-    }
 
     fetch(SHEET_CSV_URL)
       .then(res => res.text())
       .then(text => {
-        const value = parseCsvFirstRowSecondCol(text);
-        document.getElementById("mainQuote").textContent = value || "مرحباً بيك ✨";
+        text = text.replace(/^\uFEFF/, "");
+        const commaIndex = text.indexOf(",");
+        if (commaIndex === -1) return;
+        const value = text.slice(commaIndex + 1).trim().replace(/^"|"$/g, "");
+        if (value) document.getElementById("mainQuote").textContent = value;
       })
-      .catch(()=>{
-        document.getElementById("mainQuote").textContent = "مرحباً بيك ✨";
-      });
+      .catch(()=>{});
 
-    // ===== Playlist =====
-    // غيّر أسماء الملفات هنا حسب اللي عندك
+    // ===== Playlist (حسب ملفاتك) =====
     const tracks = [
-      { title: "المقطع 1", file: "audio1.mp3" },
-      { title: "المقطع 2", file: "track2.mp3" },
-      { title: "المقطع 3", file: "track3.mp3" }
+      { title: "You Know", file: "audio.mp3.mp3" },
+      { title: "Track 2", file: "audio1.mp3.mp3" }
     ];
 
-    const audioEl  = document.getElementById("bgAudio");
-    const btn      = document.getElementById("audioBtn");
-    const vol      = document.getElementById("volume");
-    const titleEl  = document.getElementById("trackTitle");
-    const prevBtn  = document.getElementById("prevTrack");
-    const nextBtn  = document.getElementById("nextTrack");
+    const audioEl = document.getElementById("bgAudio");
+    const btn = document.getElementById("audioBtn");
+    const vol = document.getElementById("volume");
+    const titleEl = document.getElementById("trackTitle");
+    const prevBtn = document.getElementById("prevTrack");
+    const nextBtn = document.getElementById("nextTrack");
 
     const canvas = document.getElementById("viz");
-    const ctx    = canvas.getContext("2d");
+    const ctx = canvas.getContext("2d");
 
     let audioCtx = null, analyser = null, srcNode = null, freqData = null;
     let rafId = null;
     let playing = false;
     let trackIndex = 0;
 
-    // حفظ الصوت
-    const savedVol = localStorage.getItem("siteVol");
-    if(savedVol !== null){
-      vol.value = String(Math.max(0, Math.min(100, Number(savedVol) || 70)));
-    }
-    audioEl.volume = (Number(vol.value) || 70) / 100;
-    vol.addEventListener("input", () => {
-      const v = (Number(vol.value) || 0);
-      audioEl.volume = v / 100;
-      localStorage.setItem("siteVol", String(v));
-    });
-
     function setTrack(i){
       trackIndex = (i + tracks.length) % tracks.length;
       const t = tracks[trackIndex];
       audioEl.src = t.file;
       titleEl.textContent = `المقطع: ${trackIndex + 1} — ${t.title}`;
-      audioEl.load();
     }
+    setTrack(0);
+
+    audioEl.volume = (Number(vol.value) || 70) / 100;
+    vol.addEventListener("input", () => {
+      audioEl.volume = (Number(vol.value) || 0) / 100;
+    });
 
     function resizeCanvas(){
       const dpr = window.devicePixelRatio || 1;
@@ -658,26 +634,6 @@
       analyser.connect(audioCtx.destination);
     }
 
-    function drawIdle(){
-      const w = canvas.getBoundingClientRect().width;
-      const h = canvas.getBoundingClientRect().height;
-      ctx.clearRect(0,0,w,h);
-      ctx.fillStyle = "rgba(255,255,255,0.03)";
-      ctx.fillRect(0,0,w,h);
-
-      const barW = 4, gap = 2;
-      const count = Math.floor(w / (barW + gap));
-      const baseH = Math.max(10, h * 0.18);
-
-      ctx.fillStyle = "rgba(255,255,255,0.18)";
-      for(let i=0;i<count;i++){
-        const x = i * (barW + gap);
-        const y = (h - baseH) / 2;
-        ctx.fillRect(x, y, barW, baseH);
-      }
-    }
-
-    // Visualizer: أعمدة طولية (Bars)
     function drawBars(){
       const w = canvas.getBoundingClientRect().width;
       const h = canvas.getBoundingClientRect().height;
@@ -693,27 +649,18 @@
 
       analyser.getByteFrequencyData(freqData);
 
-      const barW = 4, gap = 2;
-      const count = Math.max(10, Math.floor(w / (barW + gap)));
+      const bars = 64;
+      const step = Math.floor(freqData.length / bars);
+      const barW = w / bars;
 
-      const startBin = 2;
-      const endBin = Math.min(freqData.length - 1, startBin + count * 3);
-      const binsPerBar = Math.max(1, Math.floor((endBin - startBin) / count));
-
-      ctx.fillStyle = "rgba(255,255,255,0.78)";
-      for(let i=0;i<count;i++){
-        let sum = 0;
-        const from = startBin + i * binsPerBar;
-        const to = Math.min(endBin, from + binsPerBar);
-
-        for(let b=from; b<to; b++) sum += freqData[b];
-        const avg = sum / Math.max(1, (to - from)); // 0..255
-
-        const barH = Math.max(6, (avg / 255) * (h - 10));
-        const x = i * (barW + gap);
+      for(let i=0; i<bars; i++){
+        const v = freqData[i * step] / 255;
+        const barH = Math.max(6, v * (h - 12));
+        const x = i * barW;
         const y = h - barH;
 
-        ctx.fillRect(x, y, barW, barH);
+        ctx.fillStyle = "rgba(255,255,255,0.78)";
+        ctx.fillRect(x + barW*0.18, y, barW*0.64, barH);
       }
 
       rafId = requestAnimationFrame(drawBars);
@@ -723,73 +670,68 @@
       if(rafId) cancelAnimationFrame(rafId);
       drawBars();
     }
+
     function stopViz(){
       if(rafId) cancelAnimationFrame(rafId);
       rafId = null;
-      drawIdle();
+      const w = canvas.getBoundingClientRect().width;
+      const h = canvas.getBoundingClientRect().height;
+      ctx.clearRect(0,0,w,h);
+      ctx.fillStyle = "rgba(255,255,255,0.03)";
+      ctx.fillRect(0,0,w,h);
     }
 
-    window.addEventListener("resize", () => {
-      resizeCanvas();
-      if(!playing) drawIdle();
-    });
-
+    window.addEventListener("resize", resizeCanvas);
     resizeCanvas();
-    drawIdle();
-    setTrack(0);
+    stopViz();
 
-    async function play(){
-      ensureAudioGraph();
-      if(audioCtx.state === "suspended") await audioCtx.resume();
-      await audioEl.play();
-      playing = true;
-      btn.textContent = "إيقاف";
-      startViz();
-    }
-
-    function pause(){
-      audioEl.pause();
-      playing = false;
-      btn.textContent = "تشغيل";
-      stopViz();
-    }
-
-    btn.addEventListener("click", async () => {
+    async function playPause(){
       try{
-        if(!playing) await play();
-        else pause();
+        ensureAudioGraph();
+        if(audioCtx.state === "suspended") await audioCtx.resume();
+
+        if(!playing){
+          await audioEl.play();
+          playing = true;
+          btn.textContent = "إيقاف";
+          startViz();
+        }else{
+          audioEl.pause();
+          playing = false;
+          btn.textContent = "تشغيل";
+          stopViz();
+        }
       }catch(e){
         btn.textContent = "اضغط مرة ثانية";
       }
-    });
+    }
+
+    btn.addEventListener("click", playPause);
 
     async function changeTrack(dir){
       const wasPlaying = playing;
-      if(wasPlaying) pause();
+      if(wasPlaying){
+        audioEl.pause();
+        playing = false;
+      }
 
       setTrack(trackIndex + dir);
 
       if(wasPlaying){
-        try{ await play(); } catch(e){}
-      } else {
+        await playPause();
+      }else{
         btn.textContent = "تشغيل";
-        stopViz();
       }
     }
 
     prevBtn.addEventListener("click", () => changeTrack(-1));
     nextBtn.addEventListener("click", () => changeTrack(+1));
 
-    // انتقال تلقائي للمقطع التالي
-    audioEl.addEventListener("ended", () => {
-      setTrack(trackIndex + 1);
-      play().catch(()=>{});
-    });
-
-    // تأثير بسيط على الخلفية حسب الصوت (اختياري)
-    (function audioReactiveBackground(){
+    /* === AUDIO REACTIVE EFFECT (DELETE THIS BLOCK TO REMOVE) START === */
+    (function audioReactiveEffect(){
       const video = document.querySelector(".bgVideo");
       const overlay = document.querySelector(".overlay");
+
       function clamp(n,a,b){ return Math.max(a, Math.min(b,n)); }
 
       function tick(){
@@ -797,10 +739,10 @@
           requestAnimationFrame(tick);
           return;
         }
-
         analyser.getByteFrequencyData(freqData);
+
         let sum = 0;
-        const take = Math.min(80, freqData.length);
+        const take = 80;
         for(let i=0;i<take;i++) sum += freqData[i];
         const intensity = clamp((sum / take) / 255, 0, 1);
 
@@ -815,8 +757,10 @@
 
         requestAnimationFrame(tick);
       }
+
       requestAnimationFrame(tick);
     })();
+    /* === AUDIO REACTIVE EFFECT (DELETE THIS BLOCK TO REMOVE) END === */
   </script>
 </body>
 </html>
