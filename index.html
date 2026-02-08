@@ -7,7 +7,7 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;800&display=swap" rel="stylesheet">
 
   <style>
     :root{
@@ -45,7 +45,7 @@
       transform: scale(1.02);
     }
 
-    /* تغطية/تظليل خفيف فوق الفيديو */
+    /* تغطية/تظليل خفيف */
     .overlay{
       position:fixed;
       inset:0;
@@ -140,35 +140,21 @@
       color:var(--text);
     }
 
-    .quote{
+    /* ===== النص الرئيسي (بديل الحكمة) ===== */
+    .bigNote{
       margin:0;
-      padding:12px 14px;
-      border-radius:14px;
-      border:1px solid rgba(255,255,255,.14);
-      background: rgba(255,255,255,.06);
-      color: var(--text);
-      line-height: 1.9;
-    }
-
-    /* === النص الكبير القادم من Google Sheet (بديل الحكمة) === */
-    .bigQuote{
-      font-size: 26px;
+      padding:14px 16px;
+      border-radius:16px;
+      border:1px solid rgba(255,255,255,.16);
+      background: rgba(255,255,255,.07);
+      line-height: 2.05;
+      font-size: 20px;
       font-weight: 800;
-      line-height: 1.85;
-      color: var(--text);
       letter-spacing: .2px;
-      word-break: break-word;
+      text-align: right;
     }
-    @media (min-width: 921px){
-      .bigQuote{ font-size: 30px; }
-    }
-
-    .quoteSub{
-      display:block;
-      margin-top:10px;
-      color: var(--muted);
-      font-weight: 700;
-      font-size: 14px;
+    @media (max-width: 520px){
+      .bigNote{ font-size:18px; }
     }
 
     /* ===== Links ===== */
@@ -233,7 +219,7 @@
       display:block;
     }
 
-    /* ===== Audio + Visualizer ===== */
+    /* ===== Audio Player + Visualizer ===== */
     .audioBox{
       display:flex;
       align-items:center;
@@ -245,24 +231,14 @@
       background:rgba(255,255,255,.06);
       margin-top:10px;
     }
-    .audioHint{ color:var(--muted); font-size:13px; margin:0; }
 
-    .trackName{
-      margin-top:4px;
-      color: rgba(255,255,255,.88);
-      font-size: 13px;
-      font-weight: 800;
-      max-width: 220px;
-      overflow:hidden;
-      text-overflow: ellipsis;
-      white-space:nowrap;
-    }
-
-    .audioControls{
-      display:flex;
-      align-items:center;
-      gap:8px;
-      flex: 0 0 auto;
+    .trackTitle{
+      margin:0;
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.4;
+      flex:1;
+      text-align:right;
     }
 
     .audioBtn{
@@ -274,20 +250,25 @@
       cursor:pointer;
       font-family:inherit;
       font-weight:800;
-      min-width: 92px;
+      white-space:nowrap;
     }
     .audioBtn:hover{ background:rgba(255,255,255,.12); }
 
+    .navBtns{
+      display:flex;
+      gap:8px;
+      align-items:center;
+    }
     .navBtn{
       border:1px solid var(--border);
       background:rgba(255,255,255,.08);
       color:var(--text);
-      width:42px;
-      height:42px;
+      padding:10px 12px;
       border-radius:14px;
       cursor:pointer;
       font-family:inherit;
-      font-weight:900;
+      font-weight:800;
+      line-height:1;
     }
     .navBtn:hover{ background:rgba(255,255,255,.12); }
 
@@ -297,7 +278,6 @@
       gap:10px;
       margin-top:10px;
     }
-
     .volumeWrap{
       flex:1;
       display:flex;
@@ -308,13 +288,11 @@
       border:1px solid var(--border);
       background:rgba(255,255,255,.06);
     }
-
     .volumeLabel{
       font-size:13px;
       color:var(--muted);
       white-space:nowrap;
     }
-
     .volume{
       width:100%;
       accent-color: rgba(34,197,94,.95);
@@ -351,6 +329,7 @@
       gap:16px;
 
       grid-template-columns: .8fr 1.2fr;
+
       grid-template-areas:
         "youtube  profile"
         "social   profile"
@@ -384,7 +363,6 @@
           "footer";
       }
       .vDivider{ display:none; }
-      .trackName{ max-width: 170px; }
     }
   </style>
 </head>
@@ -392,8 +370,7 @@
 <body>
   <!-- فيديو الخلفية -->
   <video class="bgVideo" autoplay muted loop playsinline>
-    <!-- غيّر الاسم إذا تحب -->
-    <source src="bg.mp4" type="video/mp4">
+    <source src="bg.mp4.mp4" type="video/mp4">
   </video>
   <div class="overlay"></div>
 
@@ -417,13 +394,10 @@
 
       <hr style="border:none;border-top:1px solid rgba(255,255,255,.14); margin:14px 0;">
 
-      <h2 class="section-title">عنّي</h2>
+      <h2 class="section-title">كلمة</h2>
 
-      <blockquote class="quote">
-        <!-- النص المتغيّر من Google Sheet (بديل الحكمة) -->
-        <div class="bigQuote" id="noteText">Loading...</div>
-        <small class="quoteSub" id="noteSub">— MUSAWI</small>
-      </blockquote>
+      <!-- ✅ هذا النص يجي من Google Sheet (B1) -->
+      <p class="bigNote" id="mainQuote">... تحميل</p>
     </section>
 
     <!-- يسار فوق: يوتيوب -->
@@ -439,21 +413,19 @@
       </div>
     </section>
 
-    <!-- يسار تحت: تواصل + صوت + موجات -->
+    <!-- يسار تحت: تواصل + موسيقى + موجات -->
     <aside class="card social">
       <h2 class="section-title">تواصل معي</h2>
 
       <div class="audioBox">
-        <div>
-          <p class="audioHint">🎵 موسيقى + موجات</p>
-          <div class="trackName" id="trackName">—</div>
+        <div class="navBtns">
+          <button class="navBtn" id="prevTrack" title="السابق">◀</button>
+          <button class="navBtn" id="nextTrack" title="التالي">▶</button>
         </div>
 
-        <div class="audioControls">
-          <button class="navBtn" id="prevBtn" title="السابق">⟵</button>
-          <button class="audioBtn" id="audioBtn">تشغيل</button>
-          <button class="navBtn" id="nextBtn" title="التالي">⟶</button>
-        </div>
+        <p class="trackTitle" id="trackTitle">المقطع: 1</p>
+
+        <button class="audioBtn" id="audioBtn">تشغيل</button>
       </div>
 
       <div class="audioRow">
@@ -467,10 +439,8 @@
         <canvas id="viz"></canvas>
       </div>
 
-      <!-- مهم: بدون loop حتى يشتغل انتقال التراكات -->
-      <audio id="bgAudio" preload="metadata">
-        <source id="audioSource" src="audio1.mp3" type="audio/mpeg">
-      </audio>
+      <!-- مشغل الصوت -->
+      <audio id="bgAudio" preload="metadata" loop></audio>
 
       <div class="links">
         <a class="link" href="https://t.me/Mu29_iq" target="_blank" rel="noopener">
@@ -493,93 +463,59 @@
   <script>
     document.getElementById("y").textContent = new Date().getFullYear();
 
-    // ===== Google Sheet: نص متغيّر (CSV) =====
+    // ===== Google Sheet: نقرأ B1 ونخليه النص الرئيسي =====
     const SHEET_CSV_URL =
       "https://docs.google.com/spreadsheets/d/e/2PACX-1vSXkdu2p1KVIjDPGdb97HfmkKa2WuvKN349Z5qdZOd_RTCyT__xNLL44swa0EUAnq614hxS9p52NSlL/pub?gid=0&single=true&output=csv";
-
-    function parseCsvFirstRowSecondCol(csvText){
-      // يأخذ أول سطر غير فارغ، ويحاول يرجّع العمود الثاني (B)
-      const lines = csvText.replace(/^\uFEFF/, "").split(/\r?\n/).filter(Boolean);
-      if(!lines.length) return "";
-      const line = lines[0];
-
-      // CSV بسيط: يدعم اقتباس مزدوج
-      const out = [];
-      let cur = "";
-      let inQ = false;
-
-      for(let i=0; i<line.length; i++){
-        const ch = line[i];
-        if(ch === '"'){
-          // double quote escape
-          if(inQ && line[i+1] === '"'){ cur += '"'; i++; }
-          else inQ = !inQ;
-        } else if(ch === ',' && !inQ){
-          out.push(cur);
-          cur = "";
-        } else {
-          cur += ch;
-        }
-      }
-      out.push(cur);
-
-      return (out[1] ?? "").trim();
-    }
 
     fetch(SHEET_CSV_URL)
       .then(res => res.text())
       .then(text => {
-        const value = parseCsvFirstRowSecondCol(text);
-        const el = document.getElementById("noteText");
-        if (value) el.textContent = value;
-        else el.textContent = "مرحباً بيك ✨"; // fallback لطيف
+        text = text.replace(/^\uFEFF/, ""); // remove BOM
+        const commaIndex = text.indexOf(",");
+        if (commaIndex === -1) return;
+        const value = text.slice(commaIndex + 1).trim().replace(/^"|"$/g, "");
+        if (value) document.getElementById("mainQuote").textContent = value;
       })
-      .catch(()=>{
-        const el = document.getElementById("noteText");
-        el.textContent = "مرحباً بيك ✨";
-      });
+      .catch(()=>{});
 
-    // ===== Playlist (مقاطع متعددة) =====
-    const playlist = [
-      { title: "Track 1", src: "audio1.mp3" },
-      { title: "Track 2", src: "audio2.mp3" },
-      { title: "Track 3", src: "audio3.mp3" }
+    // ===== Playlist (ضيف ملفات mp3 عندك بالمستودع) =====
+    // IMPORTANT: ارفع الملفات بهذه الأسماء أو غيّرها هنا
+    const tracks = [
+      { title: "المقطع 1", file: "audio.mp3.mp3" },  // موجود عندك
+      { title: "المقطع 2", file: "track2.mp3" },     // ارفعه إذا تريده
+      { title: "المقطع 3", file: "track3.mp3" }      // ارفعه إذا تريده
     ];
 
-    let trackIndex = 0;
-
     const audioEl = document.getElementById("bgAudio");
-    const audioSource = document.getElementById("audioSource");
-
     const btn = document.getElementById("audioBtn");
-    const prevBtn = document.getElementById("prevBtn");
-    const nextBtn = document.getElementById("nextBtn");
-    const trackNameEl = document.getElementById("trackName");
-
     const vol = document.getElementById("volume");
+    const titleEl = document.getElementById("trackTitle");
+    const prevBtn = document.getElementById("prevTrack");
+    const nextBtn = document.getElementById("nextTrack");
 
     const canvas = document.getElementById("viz");
     const ctx = canvas.getContext("2d");
 
-    window.audioCtx = null;
-    window.analyser = null;
-    window.srcNode = null;
-    window.freqArray = null;
-
+    let audioCtx = null, analyser = null, srcNode = null, freqData = null;
     let rafId = null;
     let playing = false;
+    let trackIndex = 0;
 
-    // Volume init + حفظ اختيار المستخدم
-    const savedVol = localStorage.getItem("siteVol");
-    if(savedVol !== null){
-      vol.value = String(Math.max(0, Math.min(100, Number(savedVol) || 70)));
+    function setTrack(i){
+      trackIndex = (i + tracks.length) % tracks.length;
+      const t = tracks[trackIndex];
+
+      // إذا الملف غير موجود بالمستودع، ما راح يشتغل
+      audioEl.src = t.file;
+      titleEl.textContent = `المقطع: ${trackIndex + 1} — ${t.title}`;
     }
-    audioEl.volume = (Number(vol.value) || 70) / 100;
 
+    setTrack(0);
+
+    // Volume
+    audioEl.volume = (Number(vol.value) || 70) / 100;
     vol.addEventListener("input", () => {
-      const v = (Number(vol.value) || 0);
-      audioEl.volume = v / 100;
-      localStorage.setItem("siteVol", String(v));
+      audioEl.volume = (Number(vol.value) || 0) / 100;
     });
 
     function resizeCanvas(){
@@ -590,45 +526,23 @@
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     }
 
-    function drawIdleBars(){
-      const w = canvas.getBoundingClientRect().width;
-      const h = canvas.getBoundingClientRect().height;
-
-      ctx.clearRect(0,0,w,h);
-      ctx.fillStyle = "rgba(255,255,255,0.03)";
-      ctx.fillRect(0,0,w,h);
-
-      // أعمدة خفيفة ثابتة
-      const barW = 4;
-      const gap = 2;
-      const count = Math.floor(w / (barW + gap));
-      const baseH = Math.max(10, h * 0.18);
-
-      ctx.fillStyle = "rgba(255,255,255,0.18)";
-      for(let i=0;i<count;i++){
-        const x = i * (barW + gap);
-        const y = (h - baseH) / 2;
-        ctx.fillRect(x, y, barW, baseH);
-      }
-    }
-
     function ensureAudioGraph(){
-      if(window.audioCtx) return;
+      if(audioCtx) return;
+      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      analyser = audioCtx.createAnalyser();
 
-      window.audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-      window.analyser = window.audioCtx.createAnalyser();
-      window.analyser.fftSize = 2048;                 // دقة جيدة
-      window.analyser.smoothingTimeConstant = 0.82;   // نعومة للحركة
+      // أنسب للأعمدة (موجات طولية)
+      analyser.fftSize = 2048;
+      analyser.smoothingTimeConstant = 0.82;
 
-      const bufferLength = window.analyser.frequencyBinCount;
-      window.freqArray = new Uint8Array(bufferLength);
+      freqData = new Uint8Array(analyser.frequencyBinCount);
 
-      window.srcNode = window.audioCtx.createMediaElementSource(audioEl);
-      window.srcNode.connect(window.analyser);
-      window.analyser.connect(window.audioCtx.destination);
+      srcNode = audioCtx.createMediaElementSource(audioEl);
+      srcNode.connect(analyser);
+      analyser.connect(audioCtx.destination);
     }
 
-    // Visualizer: أعمدة طولية (Bars)
+    // رسم أعمدة (Frequency Bars)
     function drawBars(){
       const w = canvas.getBoundingClientRect().width;
       const h = canvas.getBoundingClientRect().height;
@@ -637,34 +551,27 @@
       ctx.fillStyle = "rgba(255,255,255,0.03)";
       ctx.fillRect(0,0,w,h);
 
-      window.analyser.getByteFrequencyData(window.freqArray);
+      if(!analyser || !freqData){
+        rafId = requestAnimationFrame(drawBars);
+        return;
+      }
 
-      const barW = 4;
-      const gap = 2;
-      const count = Math.max(10, Math.floor(w / (barW + gap)));
+      analyser.getByteFrequencyData(freqData);
 
-      // ناخذ نطاق ترددات "مسموع/موسيقي" أكثر (تقريب)
-      const startBin = 2;
-      const endBin = Math.min(window.freqArray.length - 1, startBin + count * 3);
+      // نستخدم جزء من الترددات حتى شكلها يصير “موسيقي”
+      const bars = 64;
+      const step = Math.floor(freqData.length / bars);
+      const barW = w / bars;
 
-      const binsPerBar = Math.max(1, Math.floor((endBin - startBin) / count));
-
-      for(let i=0;i<count;i++){
-        let sum = 0;
-        const from = startBin + i * binsPerBar;
-        const to = Math.min(endBin, from + binsPerBar);
-
-        for(let b=from; b<to; b++) sum += window.freqArray[b];
-        const avg = sum / Math.max(1, (to - from)); // 0..255
-
-        // تحويل الارتفاع
-        const barH = Math.max(6, (avg / 255) * (h * 0.92));
-        const x = i * (barW + gap);
+      for(let i=0; i<bars; i++){
+        const v = freqData[i * step] / 255;        // 0..1
+        const barH = Math.max(6, v * (h - 12));    // ارتفاع
+        const x = i * barW;
         const y = h - barH;
 
-        // لون الأعمدة
-        ctx.fillStyle = "rgba(255,255,255,0.85)";
-        ctx.fillRect(x, y, barW, barH);
+        // عمود أبيض شفاف
+        ctx.fillStyle = "rgba(255,255,255,0.78)";
+        ctx.fillRect(x + barW*0.18, y, barW*0.64, barH);
       }
 
       rafId = requestAnimationFrame(drawBars);
@@ -678,129 +585,94 @@
     function stopViz(){
       if(rafId) cancelAnimationFrame(rafId);
       rafId = null;
-      drawIdleBars();
+      // رسم حالة هادئة
+      const w = canvas.getBoundingClientRect().width;
+      const h = canvas.getBoundingClientRect().height;
+      ctx.clearRect(0,0,w,h);
+      ctx.fillStyle = "rgba(255,255,255,0.03)";
+      ctx.fillRect(0,0,w,h);
     }
 
-    window.addEventListener("resize", () => {
-      resizeCanvas();
-      if(!playing) drawIdleBars();
-    });
-
-    function setTrack(index, autoPlay=false){
-      trackIndex = (index + playlist.length) % playlist.length;
-
-      const t = playlist[trackIndex];
-      trackNameEl.textContent = t.title;
-
-      const wasPlaying = playing;
-
-      audioEl.pause();
-      playing = false;
-      btn.textContent = "تشغيل";
-      stopViz();
-
-      audioSource.src = t.src;
-      audioEl.load();
-
-      // إذا المستخدم كان مشغل أو autoPlay true
-      if (autoPlay || wasPlaying){
-        playAudio().catch(()=>{});
-      }
-    }
-
-    async function playAudio(){
-      ensureAudioGraph();
-      if(window.audioCtx.state === "suspended") await window.audioCtx.resume();
-
-      await audioEl.play();
-      playing = true;
-      btn.textContent = "إيقاف";
-      startViz();
-    }
-
-    function pauseAudio(){
-      audioEl.pause();
-      playing = false;
-      btn.textContent = "تشغيل";
-      stopViz();
-    }
-
-    // init
+    window.addEventListener("resize", resizeCanvas);
     resizeCanvas();
-    drawIdleBars();
-    setTrack(0, false);
+    stopViz();
 
-    // أزرار التحكم
-    btn.addEventListener("click", async () => {
+    async function playPause(){
       try{
-        if(!playing) await playAudio();
-        else pauseAudio();
+        ensureAudioGraph();
+        if(audioCtx.state === "suspended") await audioCtx.resume();
+
+        if(!playing){
+          await audioEl.play();
+          playing = true;
+          btn.textContent = "إيقاف";
+          startViz();
+        }else{
+          audioEl.pause();
+          playing = false;
+          btn.textContent = "تشغيل";
+          stopViz();
+        }
       }catch(e){
         btn.textContent = "اضغط مرة ثانية";
       }
-    });
+    }
 
-    prevBtn.addEventListener("click", () => {
-      setTrack(trackIndex - 1, playing);
-    });
+    btn.addEventListener("click", playPause);
 
-    nextBtn.addEventListener("click", () => {
-      setTrack(trackIndex + 1, playing);
-    });
-
-    // عند انتهاء التراك ينتقل للّي بعده
-    audioEl.addEventListener("ended", () => {
-      setTrack(trackIndex + 1, true);
-    });
-
-    audioEl.addEventListener("pause", () => {
-      // إذا توقف بسبب user أو تغيير تراك
-      if(!audioEl.ended){
+    // أسهم التنقّل
+    async function changeTrack(dir){
+      const wasPlaying = playing;
+      if(wasPlaying){
+        audioEl.pause();
         playing = false;
-        btn.textContent = "تشغيل";
-        stopViz();
       }
+
+      setTrack(trackIndex + dir);
+
+      // إذا كان شغّال يرجع يشتغل تلقائي
+      if(wasPlaying){
+        await playPause(); // يشغل
+      }else{
+        // يبقى مطفي بس نجهز المصدر
+        btn.textContent = "تشغيل";
+      }
+    }
+
+    prevBtn.addEventListener("click", () => changeTrack(-1));
+    nextBtn.addEventListener("click", () => changeTrack(+1));
+
+    audioEl.addEventListener("ended", () => {
+      // بما أن loop مفعّل، غالبًا ما ينتهي
+      // بس تركناه احتياط
     });
 
-    /* === AUDIO REACTIVE EFFECT (اختياري) START === */
+    /* === AUDIO REACTIVE EFFECT (DELETE THIS BLOCK TO REMOVE) START === */
     (function audioReactiveEffect(){
-      const cards = document.querySelectorAll(".card");
       const video = document.querySelector(".bgVideo");
       const overlay = document.querySelector(".overlay");
 
-      function clamp(n, a, b){ return Math.max(a, Math.min(b, n)); }
+      function clamp(n,a,b){ return Math.max(a, Math.min(b,n)); }
 
       function tick(){
-        if (!window.analyser || !window.freqArray) {
+        if(!analyser || !freqData){
           requestAnimationFrame(tick);
           return;
         }
+        analyser.getByteFrequencyData(freqData);
 
-        // نستخدم متوسط طاقة الترددات بدل الـ timeDomain حتى يصير طبيعي ويا الأعمدة
-        window.analyser.getByteFrequencyData(window.freqArray);
-
+        // شدة تقريبية من أول جزء من التردد
         let sum = 0;
-        for (let i=0; i<window.freqArray.length; i++){
-          const v = window.freqArray[i] / 255;
-          sum += v*v;
-        }
-        const rms = Math.sqrt(sum / window.freqArray.length);
-        const intensity = clamp(rms * 1.25, 0, 1);
+        const take = 80;
+        for(let i=0;i<take;i++) sum += freqData[i];
+        const intensity = clamp((sum / take) / 255, 0, 1);
 
-        const scale = 1 + intensity * 0.012;
-        const lift  = intensity * 3.2;
-
-        cards.forEach((c) => {
-          c.style.transform = `translateY(${-lift}px) scale(${scale})`;
-        });
-
-        if (video){
+        if(video){
           const bright = 1 + intensity * 0.10;
           const sat = 1.1 + intensity * 0.22;
           video.style.filter = `saturate(${sat}) contrast(1.05) brightness(${bright})`;
         }
-
-        if (overlay){
+        if(overlay){
           overlay.style.opacity = String(0.92 + intensity * 0.08);
         }
 
@@ -809,7 +681,8 @@
 
       requestAnimationFrame(tick);
     })();
-    /* === AUDIO REACTIVE EFFECT (اختياري) END === */
+    /* === AUDIO REACTIVE EFFECT (DELETE THIS BLOCK TO REMOVE) END === */
   </script>
 </body>
 </html>
+
