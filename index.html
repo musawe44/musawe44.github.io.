@@ -4,13 +4,8 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>MUSAWI</title>
-
-  <!-- iPhone / PWA nice -->
   <meta name="theme-color" content="#0b1220">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
-  <!-- خط عربي واضح -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;800;900&display=swap" rel="stylesheet">
@@ -23,701 +18,564 @@
       --text: #eef2ff;
       --muted:#d1d5db;
       --shadow: 0 18px 40px rgba(0,0,0,.38);
+      --glass: rgba(255,255,255,.07);
+      --glass2: rgba(255,255,255,.05);
       --accent: rgba(34,197,94,.95);
+    }
+
+    /* Light mode */
+    body.light{
+      --bg:#f4f6ff;
+      --card: rgba(0,0,0,.06);
+      --border: rgba(0,0,0,.12);
+      --text:#0b1220;
+      --muted:#334155;
+      --shadow: 0 18px 40px rgba(0,0,0,.12);
+      --glass: rgba(255,255,255,.62);
+      --glass2: rgba(255,255,255,.40);
     }
 
     *{ box-sizing:border-box; }
 
-    /* ===== Cinematic Page Intro ===== */
     body{
       margin:0;
       font-family:"Cairo", system-ui, Arial;
       color:var(--text);
       min-height:100vh;
-      padding: 140px 14px 24px; /* مساحة للساعة الكبيرة */
-      overflow-x:hidden;
       background: var(--bg);
-      animation: cinemaIn 1.1s ease both;
-    }
-    @keyframes cinemaIn{
-      from{ opacity:0; filter:blur(10px); transform:scale(1.03); }
-      to{ opacity:1; filter:blur(0); transform:scale(1); }
+      overflow-x:hidden;
+      padding: 175px 14px 22px; /* مهم حتى ما تتداخل الساعة */
     }
 
-    /* فيديو الخلفية */
+    /* خلفية فيديو */
     .bgVideo{
-      position:fixed;
-      inset:0;
-      width:100%;
-      height:100%;
+      position:fixed; inset:0;
+      width:100%; height:100%;
       object-fit:cover;
-      z-index:-5;
+      z-index:-6;
       transform: scale(1.02);
       filter: saturate(1.08) contrast(1.05);
     }
-
-    /* تغطية خفيفة (بدون تغبيش قوي) */
     .overlay{
-      position:fixed;
-      inset:0;
-      z-index:-4;
+      position:fixed; inset:0;
+      z-index:-5;
       background:
-        radial-gradient(900px 500px at 80% 20%, rgba(34,197,94,.12), transparent 60%),
-        radial-gradient(700px 450px at 20% 80%, rgba(59,130,246,.12), transparent 55%),
-        linear-gradient(120deg, rgba(11,18,32,.28), rgba(11,18,32,.18));
-      transition: opacity .25s ease;
+        radial-gradient(900px 520px at 80% 20%, rgba(34,197,94,.12), transparent 60%),
+        radial-gradient(750px 450px at 20% 80%, rgba(59,130,246,.12), transparent 55%),
+        linear-gradient(120deg, rgba(11,18,32,.30), rgba(11,18,32,.18));
+      transition: opacity .25s ease, filter .25s ease;
+    }
+    body.light .overlay{
+      background:
+        radial-gradient(900px 520px at 80% 20%, rgba(34,197,94,.14), transparent 60%),
+        radial-gradient(750px 450px at 20% 80%, rgba(59,130,246,.14), transparent 55%),
+        linear-gradient(120deg, rgba(255,255,255,.28), rgba(255,255,255,.18));
     }
 
-    /* ===== iPhone-like Big Clock Header ===== */
-    .headerClock{
+    /* ===== رأس الصفحة: ساعة كبيرة + طقس + تاريخ ===== */
+    .topHUD{
       position: fixed;
       top: 10px;
       left: 50%;
       transform: translateX(-50%);
       width: min(980px, calc(100% - 20px));
-      z-index: 60;
-      pointer-events: none; /* حتى ما تعيق الضغط على العناصر */
+      z-index: 70;
+      pointer-events:none;
     }
 
-    .bigTime{
+    /* ساعة كبيرة بدون ظل */
+    .timeBig{
+      text-align:center;
       font-weight: 900;
       letter-spacing: .5px;
-      font-size: 76px;
+      font-size: 68px;
       line-height: 1;
-      text-align: center;
       color: rgba(255,255,255,.92);
-      text-shadow: none; /* طلبت بدون ظل */
+      text-shadow:none;
+      filter:none;
+      pointer-events:none;
     }
-    .bigTimeGhost{
+    body.light .timeBig{ color: rgba(10,16,28,.88); }
+
+    /* طبقة باهتة مثل خلفية iPhone */
+    .timeGhost{
       position:absolute;
-      inset: -8px 0 auto 0;
+      inset: -10px 0 auto 0;
       text-align:center;
       font-weight: 900;
       font-size: 92px;
       line-height: 1;
       color: rgba(255,255,255,.10);
-      filter: blur(.2px);
-      transform: translateY(26px);
-      pointer-events:none;
+      text-shadow:none;
+      filter:none;
+      transform: translateY(22px);
       user-select:none;
+      pointer-events:none;
     }
+    body.light .timeGhost{ color: rgba(10,16,28,.10); }
 
-    .headerRow{
+    .hudRow{
       margin-top: 10px;
       display:flex;
       align-items:center;
       justify-content:space-between;
-      gap: 12px;
+      gap: 10px;
       padding: 10px 12px;
       border-radius: 16px;
       border: 1px solid rgba(255,255,255,.16);
-      background: rgba(255,255,255,.07);
+      background: var(--glass);
       backdrop-filter: blur(10px);
-      pointer-events: auto;
+      box-shadow: 0 10px 24px rgba(0,0,0,.14);
+      pointer-events:auto;
+    }
+    body.light .hudRow{
+      border-color: rgba(0,0,0,.10);
+      box-shadow: 0 10px 24px rgba(0,0,0,.08);
     }
 
-    .wxBox{
+    .hudDate{
+      font-weight: 800;
+      font-size: 14px;
+      color: rgba(255,255,255,.92);
+      white-space:nowrap;
+    }
+    body.light .hudDate{ color: rgba(10,16,28,.82); }
+
+    .hudWx{
+      font-weight: 800;
+      font-size: 14px;
+      color: rgba(255,255,255,.92);
+      white-space:nowrap;
       display:flex;
       align-items:center;
-      gap: 10px;
-      font-weight: 800;
-      color: rgba(255,255,255,.92);
-      font-size: 14px;
-      text-shadow:none; /* بدون ظل */
-      white-space: nowrap;
+      gap:8px;
     }
-    .wxIco{ font-size: 16px; }
-    .dateBox{
-      font-weight: 800;
+    body.light .hudWx{ color: rgba(10,16,28,.82); }
+
+    .previewBtn{
+      pointer-events:auto;
+      border: 1px solid rgba(255,255,255,.18);
+      background: rgba(255,255,255,.10);
       color: rgba(255,255,255,.92);
-      font-size: 14px;
-      text-shadow:none; /* بدون ظل */
-      white-space: nowrap;
+      padding: 8px 12px;
+      border-radius: 14px;
+      font-family: inherit;
+      font-weight: 900;
+      cursor: pointer;
+      white-space:nowrap;
+    }
+    .previewBtn:hover{ background: rgba(255,255,255,.14); }
+    body.light .previewBtn{
+      border-color: rgba(0,0,0,.10);
+      background: rgba(0,0,0,.04);
+      color: rgba(10,16,28,.86);
     }
 
-    @media (max-width: 520px){
-      body{ padding-top: 148px; }
-      .bigTime{ font-size: 60px; }
-      .bigTimeGhost{ font-size: 74px; transform: translateY(22px); }
-      .wxBox, .dateBox{ font-size: 13px; }
+    @media (max-width: 560px){
+      body{ padding-top: 185px; }
+      .timeBig{ font-size: 56px; }
+      .timeGhost{ font-size: 78px; }
+      .hudRow{ gap:8px; }
+      .previewBtn{ padding: 8px 10px; font-size: 13px; }
+      .hudDate, .hudWx{ font-size: 13px; }
     }
 
     /* ===== Layout ===== */
-    .gridWrap{
+    .grid{
       width:min(980px, 100%);
       margin: 0 auto;
-      position:relative;
       display:grid;
       gap:16px;
-      grid-template-columns: .8fr 1.2fr;
-      grid-template-areas:
-        "youtube  profile"
-        "social   profile"
-        "footer   footer";
+      grid-template-columns: 1.2fr .8fr;
       align-items:start;
+      position:relative;
     }
-    .profile{ grid-area: profile; }
-    .youtube{ grid-area: youtube; }
-    .social{ grid-area: social; }
-    .pageFooter{ grid-area: footer; }
 
-    .vDivider{
-      position:absolute;
-      top: 14px;
-      bottom: 14px;
-      left: 40%;
-      width: 1px;
-      background: linear-gradient(to bottom, transparent, rgba(255,255,255,.25), transparent);
-      box-shadow: 0 0 18px rgba(255,255,255,.12);
-      border-radius:999px;
-      pointer-events:none;
-    }
     @media (max-width: 920px){
-      .gridWrap{
-        grid-template-columns: 1fr;
-        grid-template-areas:
-          "profile"
-          "youtube"
-          "social"
-          "footer";
-      }
-      .vDivider{ display:none; }
+      .grid{ grid-template-columns: 1fr; }
     }
 
-    /* ===== Cards ===== */
     .card{
-      background:var(--card);
-      border:1px solid var(--border);
-      border-radius:18px;
-      padding:18px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 18px;
       box-shadow: var(--shadow);
       backdrop-filter: blur(10px);
       position:relative;
       overflow:hidden;
-      transition: transform .18s ease, box-shadow .18s ease, background .18s ease;
-      animation: enter .65s ease both;
+      animation: enter 820ms cubic-bezier(.2,.9,.2,1) both;
     }
-    @keyframes enter {
-      from { opacity: 0; transform: translateY(14px) scale(.99); }
-      to   { opacity: 1; transform: translateY(0) scale(1); }
+    @keyframes enter{
+      from{ opacity:0; transform: translateY(18px) scale(.99); filter: blur(8px); }
+      to{ opacity:1; transform: translateY(0) scale(1); filter: blur(0); }
     }
-    .profile{ animation-delay: .05s; }
-    .youtube{ animation-delay: .15s; }
-    .social{  animation-delay: .25s; }
-    .pageFooter{ animation-delay: .35s; }
 
     .card::before{
       content:"";
-      position:absolute;
-      inset:-2px;
-      background: radial-gradient(600px 200px at 20% 0%, rgba(255,255,255,.12), transparent 60%);
-      opacity: 0;
+      position:absolute; inset:-2px;
+      background: radial-gradient(680px 220px at 15% 0%, rgba(255,255,255,.12), transparent 60%);
+      opacity:0;
       transition: opacity .25s ease;
       pointer-events:none;
     }
-    .card:hover{
-      transform: translateY(-4px);
-      box-shadow: 0 22px 55px rgba(0,0,0,.45);
-    }
-    .card:hover::before{ opacity: 1; }
+    .card:hover::before{ opacity:1; }
 
-    /* ===== Profile header ===== */
     .hero{
       display:flex;
-      align-items:center;
-      justify-content:space-between; /* صورة بنفس صف MUSAWI */
-      gap: 14px;
+      gap:14px;
+      align-items:flex-start; /* ✅ رفع الصورة */
     }
-    .titleBox{
-      display:flex;
-      flex-direction:column;
-      gap: 6px;
-      min-width: 0;
-    }
-    h1{
-      margin:0;
-      font-size: 34px;
-      line-height:1.05;
-      font-weight: 900;
-      letter-spacing: .7px;
-    }
-    .subtitle{
-      margin:0;
-      color: rgba(255,255,255,.92);
-      font-size: 18px; /* أكبر من قبل */
-      font-weight: 800;
-    }
-    .subtitle span{ color: rgba(255,255,255,.86); font-weight: 800; }
 
     .photo{
-      width: 82px;
-      height: 82px;
-      border-radius: 18px;
-      border:1px solid var(--border);
+      width: 92px;
+      height: 92px;
+      border-radius: 20px;
+      border: 1px solid var(--border);
       object-fit: cover;
       background: rgba(255,255,255,.06);
       flex: 0 0 auto;
-      transform: translateY(-2px); /* صعدناها شوي */
+      margin-top: 2px; /* ✅ صعدناها */
+    }
+
+    h1{
+      margin:0;
+      font-size: 32px;
+      font-weight: 900;
+      letter-spacing:.3px;
+      line-height:1.05;
+    }
+
+    .subtitle{
+      margin: 8px 0 0;
+      color: var(--muted);
+      font-weight: 900;
+      font-size: 17px; /* ✅ أكبر */
     }
 
     .badges{
-      margin-top:10px;
+      margin-top: 12px;
       display:flex;
       flex-wrap:wrap;
       gap:8px;
     }
     .badge{
-      padding:6px 10px;
-      border-radius:999px;
-      border:1px solid var(--border);
-      background:rgba(255,255,255,.06);
-      font-size:14px;
-      font-weight: 800;
-      color:var(--text);
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.16);
+      background: rgba(255,255,255,.06);
+      font-size: 14px;
+      font-weight: 900;
+      color: var(--text);
       white-space:nowrap;
     }
-
-    .section-title{
-      margin:0 0 10px;
-      font-size:18px;
-      font-weight: 900;
-      color:var(--text);
+    body.light .badge{
+      border-color: rgba(0,0,0,.10);
+      background: rgba(0,0,0,.03);
     }
 
-    /* ===== Google Note (بديل الحكمة) ===== */
+    .sectionTitle{
+      margin: 0 0 10px;
+      font-size: 18px;
+      font-weight: 900;
+    }
+
+    /* ===== كلمة من Google Sheet ===== */
     .bigNote{
       margin:0;
-      padding:14px 16px;
-      border-radius:16px;
-      border:1px solid rgba(255,255,255,.16);
-      background: rgba(255,255,255,.07);
-      line-height: 2.05;
-      font-size: 22px;
+      padding: 14px 16px;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,.16);
+      background: var(--glass2);
+      line-height: 2.1;
+      font-size: 21px;
       font-weight: 900;
       letter-spacing: .2px;
-      text-align: right;
     }
-    @media (max-width: 520px){
-      .bigNote{ font-size: 19px; }
+    body.light .bigNote{
+      border-color: rgba(0,0,0,.10);
+      background: rgba(255,255,255,.55);
     }
 
-    /* ===== YouTube ===== */
-    .video{
-      margin-top:10px;
-      border-radius:16px;
-      overflow:hidden;
-      border:1px solid var(--border);
-      background: rgba(0,0,0,.20);
-      aspect-ratio: 16 / 9;
-    }
-    .video iframe{ width:100%; height:100%; border:0; display:block; }
-
-    /* ===== Music + Visualizer ===== */
-    .audioHeader{
+    /* ===== تواصل تحت الكلمة ===== */
+    .socialRow{
+      margin-top: 12px;
       display:flex;
-      align-items:center;
-      justify-content:space-between;
       gap:10px;
-      margin-bottom: 10px;
+      flex-wrap:wrap;
     }
-    .trackLine{
-      margin:0;
-      color: rgba(255,255,255,.92);
-      font-weight: 900;
-      font-size: 14px;
-      white-space:nowrap;
-    }
-
-    .controlsRow{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:10px;
-      margin-top: 10px;
-    }
-    .navBtns{ display:flex; gap:8px; align-items:center; }
-
-    .btn{
-      border:1px solid var(--border);
-      background:rgba(255,255,255,.08);
-      color:var(--text);
-      padding:10px 12px;
-      border-radius:14px;
-      cursor:pointer;
-      font-family:inherit;
-      font-weight:900;
-      line-height:1;
-      transition: background .15s ease, transform .15s ease;
-    }
-    .btn:hover{ background:rgba(255,255,255,.12); transform: translateY(-1px); }
-
-    .volumeWrap{
-      flex:1;
-      display:flex;
-      align-items:center;
-      gap:10px;
-      padding:10px 12px;
-      border-radius:14px;
-      border:1px solid var(--border);
-      background:rgba(255,255,255,.06);
-    }
-    .volumeLabel{
-      font-size:13px;
-      font-weight: 900;
-      color:rgba(255,255,255,.88);
-      white-space:nowrap;
-    }
-    .volume{ width:100%; accent-color: var(--accent); }
-
-    .vizWrap{
-      margin-top:10px;
-      border-radius:14px;
-      border:1px solid rgba(255,255,255,.14);
-      background: rgba(255,255,255,.05);
-      overflow:hidden;
-    }
-    #viz{ width:100%; height: 110px; display:block; }
-
-    /* ===== Social links ===== */
-    .socialPhrase{
-      margin: 10px 0 12px;
-      color: rgba(255,255,255,.92);
-      font-weight: 900;
-      font-size: 14px;
-    }
-    .links{
-      display:grid;
-      gap:10px;
-      margin-top:8px;
-    }
-    .link{
+    .socLink{
+      flex: 1 1 180px;
       text-decoration:none;
-      color:var(--text);
+      color: var(--text);
       display:flex;
       align-items:center;
       justify-content:space-between;
       gap:10px;
-      padding:12px 12px;
-      border-radius:14px;
-      border:1px solid var(--border);
-      background:rgba(255,255,255,.06);
-      transition:.15s transform, .15s background;
+      padding: 12px 12px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,.06);
+      transition: transform .18s ease, background .18s ease;
       position:relative;
       overflow:hidden;
       font-weight: 900;
     }
-    .link:hover{ transform: translateY(-2px); background:rgba(255,255,255,.09); }
-    .left{ display:flex; align-items:center; gap:10px; }
-    .icon{
-      width: 36px; height:36px;
+    .socLink:hover{ transform: translateY(-2px); background: rgba(255,255,255,.10); }
+
+    .socLeft{ display:flex; align-items:center; gap:10px; }
+    .socIco{
+      width: 34px; height:34px;
       border-radius: 12px;
       display:grid; place-items:center;
-      background:rgba(255,255,255,.08);
-      border:1px solid var(--border);
+      background: rgba(255,255,255,.10);
+      border: 1px solid var(--border);
+    }
+    body.light .socLink{ background: rgba(0,0,0,.03); }
+    body.light .socIco{ background: rgba(0,0,0,.04); }
+
+    /* ===== YouTube ===== */
+    .video{
+      border-radius: 16px;
       overflow:hidden;
+      border: 1px solid var(--border);
+      background: rgba(0,0,0,.20);
+      aspect-ratio: 16/9;
     }
-    .icon svg{ width:18px; height:18px; display:block; }
+    .video iframe{ width:100%; height:100%; border:0; display:block; }
 
-    /* ===== Footer ===== */
-    footer{
-      text-align:center;
-      color:rgba(255,255,255,.90);
-      font-weight: 900;
-      font-size: 14px;
-      padding:12px;
-      background:rgba(255,255,255,.06);
-      border:1px solid var(--border);
-      border-radius:18px;
-    }
-
-    /* ===== Dark/Light Toggle (bottom-left) ===== */
-    .themeToggle{
-      position: fixed;
-      left: 14px;
-      bottom: 14px;
-      z-index: 70;
+    /* ===== Audio ===== */
+    .audioTop{
       display:flex;
       align-items:center;
-      gap:8px;
-    }
-    .themeToggle .btn{ padding: 10px 12px; }
-
-    /* Light mode */
-    body.light{
-      --card: rgba(0,0,0,.06);
-      --border: rgba(0,0,0,.14);
-      --text: #0f172a;
-      --muted:#334155;
-      --shadow: 0 18px 40px rgba(0,0,0,.15);
-    }
-    body.light .overlay{ opacity: .28; }
-    body.light .bigTime{ color: rgba(15,23,42,.88); }
-    body.light .bigTimeGhost{ color: rgba(15,23,42,.10); }
-    body.light .wxBox, body.light .dateBox{ color: rgba(15,23,42,.88); }
-    body.light .headerRow{ background: rgba(255,255,255,.72); border-color: rgba(0,0,0,.08); }
-
-    /* ===== 11:11 Info Button + Modal ===== */
-    .elevenInfoBtn{
-      position: fixed;
-      top: 112px; /* تحت منطقة الساعة */
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 65;
-      border: 1px solid rgba(255,255,255,.16);
-      background: rgba(255,255,255,.07);
-      color: var(--text);
-      padding: 10px 14px;
-      border-radius: 16px;
-      backdrop-filter: blur(10px);
-      font-family: inherit;
-      font-weight: 900;
-      cursor: pointer;
-      transition: transform .15s ease, background .15s ease;
-    }
-    .elevenInfoBtn:hover{ transform: translateX(-50%) translateY(-2px); background: rgba(255,255,255,.12); }
-
-    .modal{
-      position: fixed;
-      inset: 0;
-      display: none;
-      place-items: center;
-      z-index: 999;
-      background: rgba(0,0,0,.45);
-    }
-    .modal.show{ display: grid; }
-
-    .modalCard{
-      width: min(520px, calc(100% - 26px));
-      background: rgba(15, 23, 42, .88);
-      border: 1px solid rgba(255,255,255,.18);
-      border-radius: 18px;
-      padding: 16px;
-      backdrop-filter: blur(14px);
-      box-shadow: 0 24px 80px rgba(0,0,0,.45);
-      color: var(--text);
-    }
-
-    .modalTop{
-      display:flex;
-      align-items:flex-start;
       justify-content:space-between;
-      gap: 12px;
-    }
-    .modalTitle{
-      font-size: 24px;
-      font-weight: 900;
-      letter-spacing: .5px;
-    }
-    .modalSub{
-      color: var(--muted);
-      font-size: 13px;
-      margin-top: 2px;
-      font-weight: 800;
-    }
-
-    .modalClose{
-      border: 1px solid rgba(255,255,255,.18);
-      background: rgba(255,255,255,.08);
-      color: var(--text);
-      width: 40px;
-      height: 40px;
+      gap:10px;
+      padding: 12px;
       border-radius: 14px;
-      cursor:pointer;
-      font-weight: 900;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,.06);
     }
+    body.light .audioTop{ background: rgba(0,0,0,.03); }
 
-    .modalText{
-      margin: 14px 0 0;
-      color: rgba(255,255,255,.9);
-      line-height: 1.9;
-      font-size: 15px;
-      font-weight: 800;
-    }
-
-    .modalActions{
-      display:flex;
-      gap: 10px;
-      margin-top: 14px;
-    }
-    .modalBtn{
-      border: 1px solid rgba(255,255,255,.18);
-      background: rgba(255,255,255,.12);
+    .navBtns{ display:flex; gap:8px; align-items:center; }
+    .navBtn, .playBtn{
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,.10);
       color: var(--text);
       padding: 10px 12px;
       border-radius: 14px;
       cursor:pointer;
+      font-family:inherit;
       font-weight: 900;
-      font-family: inherit;
+      line-height:1;
+      white-space:nowrap;
     }
-    .modalBtn.ghost{ background: rgba(255,255,255,.06); }
+    .navBtn:hover, .playBtn:hover{ background: rgba(255,255,255,.14); }
+    body.light .navBtn, body.light .playBtn{
+      background: rgba(0,0,0,.04);
+      color: rgba(10,16,28,.86);
+      border-color: rgba(0,0,0,.10);
+    }
 
-    .modalHint{
-      margin: 12px 0 0;
+    .trackTitle{
+      margin:0;
+      font-size: 13px;
+      font-weight: 900;
       color: var(--muted);
-      font-size: 12px;
-      font-weight: 800;
+      flex:1;
+      text-align:right;
+      line-height:1.3;
     }
 
-    /* ===== Hearts Rain ===== */
-    #heartsLayer{
+    .volWrap{
+      margin-top: 10px;
+      display:flex;
+      align-items:center;
+      gap:10px;
+      padding: 10px 12px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,.06);
+    }
+    body.light .volWrap{ background: rgba(0,0,0,.03); }
+
+    .volLabel{ font-weight: 900; font-size: 13px; color: var(--muted); white-space:nowrap; }
+    .volume{ width:100%; accent-color: var(--accent); }
+
+    .vizWrap{
+      margin-top: 10px;
+      border-radius: 14px;
+      overflow:hidden;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.05);
+    }
+    body.light .vizWrap{ border-color: rgba(0,0,0,.10); background: rgba(0,0,0,.03); }
+
+    #viz{ width:100%; height:120px; display:block; }
+
+    /* ===== Footer ===== */
+    footer{
+      margin-top: 16px;
+      width:min(980px, 100%);
+      margin-left:auto; margin-right:auto;
+      text-align:center;
+      color: rgba(255,255,255,.88);
+      font-weight: 900;
+      font-size: 14px;
+      padding: 12px;
+      border-radius: 18px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,.06);
+    }
+    body.light footer{ color: rgba(10,16,28,.82); background: rgba(0,0,0,.03); }
+
+    /* ===== Night toggle bottom-left ===== */
+    .nightToggle{
       position: fixed;
-      inset: 0;
-      pointer-events: none;
-      z-index: 55; /* فوق الخلفية وتحت المحتوى */
-      overflow: hidden;
+      left: 12px;
+      bottom: 12px;
+      z-index: 80;
+      display:flex;
+      align-items:center;
+      gap:10px;
+      padding: 10px 12px;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,.16);
+      background: rgba(255,255,255,.08);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 10px 24px rgba(0,0,0,.12);
+    }
+    body.light .nightToggle{
+      border-color: rgba(0,0,0,.10);
+      background: rgba(255,255,255,.65);
+    }
+    .nightToggle button{
+      border: 1px solid rgba(255,255,255,.16);
+      background: rgba(255,255,255,.10);
+      color: rgba(255,255,255,.92);
+      padding: 8px 10px;
+      border-radius: 14px;
+      cursor:pointer;
+      font-family: inherit;
+      font-weight: 900;
+    }
+    body.light .nightToggle button{
+      border-color: rgba(0,0,0,.10);
+      background: rgba(0,0,0,.04);
+      color: rgba(10,16,28,.86);
+    }
+    .nightLabel{ font-weight: 900; font-size: 13px; color: rgba(255,255,255,.92); }
+    body.light .nightLabel{ color: rgba(10,16,28,.82); }
+
+    /* ===== 11:11 Romantic overlay (60s) ===== */
+    .romance{
+      position:fixed; inset:0;
+      z-index: 200;
       display:none;
+      align-items:center;
+      justify-content:center;
+      padding: 24px;
+      background: rgba(0,0,0,.35);
+      backdrop-filter: blur(2px);
     }
-    .heart{
-      position:absolute;
-      top:-30px;
-      font-size: 18px;
-      opacity: .95;
-      filter: drop-shadow(0 10px 18px rgba(0,0,0,.25));
-      animation: fall linear forwards;
-      will-change: transform, opacity;
+    body.light .romance{ background: rgba(255,255,255,.30); }
+    .romance.show{ display:flex; animation: fadeIn .35s ease both; }
+    @keyframes fadeIn{ from{opacity:0} to{opacity:1} }
+
+    .romBox{
+      width:min(720px, 100%);
+      text-align:center;
+      padding: 18px 16px;
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,.18);
+      background: rgba(255,255,255,.08);
+      backdrop-filter: blur(12px);
+      box-shadow: 0 24px 70px rgba(0,0,0,.35);
+      animation: pop 700ms cubic-bezier(.2,.9,.2,1) both;
     }
-    @keyframes fall{
-      from{ transform: translateY(-40px) translateX(0) rotate(0deg); opacity: .0; }
-      8%  { opacity: 1; }
-      to  { transform: translateY(110vh) translateX(var(--drift)) rotate(var(--rot)); opacity: .98; }
+    @keyframes pop{
+      from{ transform: translateY(12px) scale(.985); opacity:.6; }
+      to{ transform: translateY(0) scale(1); opacity:1; }
+    }
+    .romBox h3{
+      margin:0 0 10px;
+      font-weight: 900;
+      font-size: 22px;
+      letter-spacing:.2px;
+    }
+    .romBox p{
+      margin:0;
+      font-weight: 900;
+      font-size: 20px;
+      line-height: 2.0;
+    }
+    .romPulse{
+      margin-top: 12px;
+      height: 6px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,.65), transparent);
+      animation: pulse 2.6s ease-in-out infinite;
+      opacity:.85;
+    }
+    @keyframes pulse{
+      0%,100%{ transform: scaleX(.6); opacity:.55; }
+      50%{ transform: scaleX(1); opacity:1; }
     }
   </style>
 </head>
 
 <body>
-  <!-- BG -->
+  <!-- فيديو الخلفية -->
   <video class="bgVideo" autoplay muted loop playsinline>
     <source src="bg.mp4.mp4" type="video/mp4">
   </video>
   <div class="overlay"></div>
 
-  <!-- Hearts layer -->
-  <div id="heartsLayer"></div>
+  <!-- رأس الصفحة: ساعة + تاريخ + طقس + زر معاينة -->
+  <div class="topHUD">
+    <div class="timeGhost" id="timeGhost">11:11</div>
+    <div class="timeBig" id="timeNow">--:--</div>
 
-  <!-- Big clock header -->
-  <div class="headerClock">
-    <div class="bigTimeGhost" id="bigTimeGhost">--:--</div>
-    <div class="bigTime" id="bigTime">--:--</div>
+    <div class="hudRow">
+      <div class="hudDate" id="dateTxt">...</div>
 
-    <div class="headerRow" dir="rtl">
-      <div class="wxBox">
-        <span class="wxIco" id="basraWxIco">⛅</span>
-        <span id="basraWxTxt">جاري جلب طقس البصرة...</span>
-      </div>
-      <div class="dateBox" id="iqDate">—</div>
+      <button class="previewBtn" id="preview1111">ماذا يحدث عند 11:11؟</button>
+
+      <div class="hudWx" id="wxTxt">جاري جلب طقس البصرة...</div>
     </div>
   </div>
 
-  <!-- 11:11 Info Button -->
-  <button id="elevenInfoBtn" class="elevenInfoBtn" type="button">
-    ماذا يحدث عند 11:11؟
-  </button>
-
-  <!-- Modal -->
-  <div id="elevenModal" class="modal" aria-hidden="true">
-    <div class="modalCard" role="dialog" aria-modal="true" aria-labelledby="mTitle">
-      <div class="modalTop">
-        <div>
-          <div id="mTitle" class="modalTitle">11:11</div>
-          <div class="modalSub">بتوقيت العراق (Asia/Baghdad)</div>
-        </div>
-        <button id="closeModal" class="modalClose" type="button">✕</button>
-      </div>
-
-      <p class="modalText">
-        عند وصول الساعة إلى <b>11:11</b> يبدأ <b>مطر قلوب</b> بالخلفية لمدة <b>دقيقة كاملة</b>.
-      </p>
-
-      <div class="modalActions">
-        <button id="previewHearts" class="modalBtn" type="button">معاينة الآن</button>
-        <button id="okModal" class="modalBtn ghost" type="button">تمام</button>
-      </div>
-
-      <p class="modalHint">تقدر تحذف هذا الزر لاحقًا بسهولة (أشرح لك تحت).</p>
-    </div>
-  </div>
-
-  <!-- Layout -->
-  <main class="gridWrap">
-    <div class="vDivider"></div>
-
-    <!-- Profile -->
-    <section class="card profile">
+  <main class="grid">
+    <!-- بطاقة التعريف + كلمة + تواصل -->
+    <section class="card">
       <div class="hero">
-        <div class="titleBox">
+        <img class="photo" src="avatar.jpg" alt="صورتي">
+        <div style="flex:1">
           <h1>MUSAWI</h1>
-          <p class="subtitle">طالب <span>GEOLOGY</span> — جامعة البصرة</p>
+          <p class="subtitle">طالب <span style="letter-spacing:.4px">GEOLOGY</span> — جامعة البصرة</p>
 
           <div class="badges">
             <span class="badge">📚 تعلّم</span>
             <span class="badge">💻 خبرة بالحاسبات</span>
+            <span class="badge">📍 البصرة</span>
           </div>
         </div>
-
-        <img class="photo" src="avatar.jpg" alt="صورتي">
       </div>
 
       <hr style="border:none;border-top:1px solid rgba(255,255,255,.14); margin:14px 0;">
 
-      <h2 class="section-title">كلمة</h2>
+      <h2 class="sectionTitle">كلمة</h2>
       <p class="bigNote" id="mainQuote">... تحميل</p>
-    </section>
 
-    <!-- YouTube -->
-    <section class="card youtube">
-      <h2 class="section-title">صورة موسيقى</h2>
-      <div class="video">
-        <iframe
-          src="https://www.youtube.com/embed/BXChU6bMEXU"
-          title="YouTube video"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-          allowfullscreen></iframe>
-      </div>
-    </section>
-
-    <!-- Social + Music -->
-    <aside class="card social">
-      <div class="audioHeader">
-        <h2 class="section-title" style="margin:0;">الموسيقى</h2>
-        <p class="trackLine" id="trackTitle">المقطع 1/3</p>
-      </div>
-
-      <div class="controlsRow">
-        <div class="navBtns">
-          <button class="btn" id="prevTrack" title="السابق">◀</button>
-          <button class="btn" id="audioBtn" title="تشغيل/إيقاف">تشغيل</button>
-          <button class="btn" id="nextTrack" title="التالي">▶</button>
-        </div>
-
-        <div style="width: 140px; text-align:left; font-weight:900; opacity:.9;">
-          <span id="playState">جاهز</span>
-        </div>
-      </div>
-
-      <div style="margin-top:10px;" class="volumeWrap">
-        <span class="volumeLabel">خفض الصوت</span>
-        <input class="volume" id="volume" type="range" min="0" max="100" value="70">
-      </div>
-
-      <div class="vizWrap">
-        <canvas id="viz"></canvas>
-      </div>
-
-      <!-- audio element -->
-      <audio id="bgAudio" preload="metadata" loop></audio>
-
-      <hr style="border:none;border-top:1px solid rgba(255,255,255,.14); margin:14px 0;">
-
-      <h2 class="section-title" style="margin:0 0 8px;">حسابات التواصل</h2>
-      <div class="socialPhrase">تواصل معي عبر الروابط الرسمية 👇</div>
-
-      <div class="links">
-        <a class="link" href="https://t.me/Mu29_iq" target="_blank" rel="noopener">
-          <span class="left">
-            <span class="icon" aria-hidden="true">
-              <!-- Telegram SVG -->
-              <svg viewBox="0 0 24 24" fill="none">
-                <path d="M21.6 4.3c.3-.1.6.2.5.6l-3 16.5c-.1.6-.7.8-1.2.6l-4.9-3.6-2.6 2.5c-.3.3-.5.5-1 .5l.4-5.7L19 6.2c.4-.3-.1-.5-.5-.3l-11.3 7.1-4.9-1.5c-.6-.2-.6-1 .1-1.2L21.6 4.3Z" fill="currentColor"/>
+      <!-- التواصل تحت "كلمة" -->
+      <div class="socialRow">
+        <a class="socLink" href="https://t.me/Mu29_iq" target="_blank" rel="noopener">
+          <span class="socLeft">
+            <span class="socIco" aria-hidden="true">
+              <!-- Telegram logo (SVG) -->
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                <path d="M21.8 4.3c.3-1.2-.9-2-2-1.6L3.7 8.9c-1.1.4-1.1 2 .1 2.3l4.1 1.2 1.6 5c.3 1 1.6 1.3 2.4.6l2.3-2.1 4 3c.9.7 2.2.2 2.5-.9L21.8 4.3Z" fill="currentColor" opacity=".95"/>
+                <path d="M9.2 12.6l9.4-6.3c.2-.1.4.2.2.4l-7.8 7.5c-.3.3-.5.7-.4 1.1l.4 2.9c.1.5-.5.7-.8.3l-1.7-3.4c-.3-.5-.7-.9-1.2-1l-3.1-1c-.5-.2-.5-.9 0-1.1l16-6.2" fill="currentColor"/>
               </svg>
             </span>
             Telegram
@@ -725,12 +583,14 @@
           <span>↗</span>
         </a>
 
-        <a class="link" href="https://www.instagram.com/mu29__/" target="_blank" rel="noopener">
-          <span class="left">
-            <span class="icon" aria-hidden="true">
-              <!-- Instagram SVG -->
-              <svg viewBox="0 0 24 24" fill="none">
-                <path d="M7.5 2h9A5.5 5.5 0 0 1 22 7.5v9A5.5 5.5 0 0 1 16.5 22h-9A5.5 5.5 0 0 1 2 16.5v-9A5.5 5.5 0 0 1 7.5 2Zm0 2A3.5 3.5 0 0 0 4 7.5v9A3.5 3.5 0 0 0 7.5 20h9a3.5 3.5 0 0 0 3.5-3.5v-9A3.5 3.5 0 0 0 16.5 4h-9Zm10.2 1.8a1 1 0 1 1 0 2 1 1 0 0 1 0-2ZM12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10Zm0 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6Z" fill="currentColor"/>
+        <a class="socLink" href="https://www.instagram.com/mu29__/" target="_blank" rel="noopener">
+          <span class="socLeft">
+            <span class="socIco" aria-hidden="true">
+              <!-- Instagram logo (SVG) -->
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                <path d="M7.5 2h9A5.5 5.5 0 0 1 22 7.5v9A5.5 5.5 0 0 1 16.5 22h-9A5.5 5.5 0 0 1 2 16.5v-9A5.5 5.5 0 0 1 7.5 2Z" stroke="currentColor" stroke-width="2" opacity=".95"/>
+                <path d="M12 16.1A4.1 4.1 0 1 0 12 8a4.1 4.1 0 0 0 0 8.1Z" stroke="currentColor" stroke-width="2"/>
+                <path d="M17.6 6.9h.01" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
               </svg>
             </span>
             Instagram
@@ -738,75 +598,135 @@
           <span>↗</span>
         </a>
       </div>
-    </aside>
+    </section>
 
-    <footer class="pageFooter">
-      © <span id="y"></span> — إِنَّ مَعَ الْعُسْرِ يُسْرًا
-    </footer>
+    <!-- بطاقة يوتيوب -->
+    <section class="card">
+      <h2 class="sectionTitle">صورة موسيقى</h2>
+      <div class="video">
+        <iframe
+          src="https://www.youtube.com/embed/BXChU6bMEXU"
+          title="YouTube video"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          allowfullscreen>
+        </iframe>
+      </div>
+
+      <hr style="border:none;border-top:1px solid rgba(255,255,255,.14); margin:14px 0;">
+
+      <h2 class="sectionTitle">موسيقى</h2>
+
+      <div class="audioTop">
+        <div class="navBtns">
+          <button class="navBtn" id="prevTrack" title="السابق">◀</button>
+          <button class="navBtn" id="nextTrack" title="التالي">▶</button>
+        </div>
+
+        <p class="trackTitle" id="trackTitle">المقطع: 1</p>
+
+        <button class="playBtn" id="audioBtn">تشغيل</button>
+      </div>
+
+      <div class="volWrap">
+        <span class="volLabel">خفض الصوت</span>
+        <input class="volume" id="volume" type="range" min="0" max="100" value="70">
+      </div>
+
+      <div class="vizWrap">
+        <canvas id="viz"></canvas>
+      </div>
+
+      <audio id="bgAudio" preload="metadata" loop></audio>
+    </section>
   </main>
 
-  <!-- Dark/Light Toggle bottom-left -->
-  <div class="themeToggle" dir="ltr">
-    <button class="btn" id="themeToggleBtn">🌙 Night</button>
+  <footer>
+    © <span id="y"></span> — إِنَّ مَعَ الْعُسْرِ يُسْرًا
+  </footer>
+
+  <!-- وضع ليلي -->
+  <div class="nightToggle">
+    <span class="nightLabel">الوضع الليلي</span>
+    <button id="toggleTheme">تشغيل/إطفاء</button>
+  </div>
+
+  <!-- 11:11 Overlay -->
+  <div class="romance" id="romance">
+    <div class="romBox">
+      <h3>11:11</h3>
+      <p>
+        في هذه الدقيقة…<br>
+        فكّر بالشخص الذي يعني لك أكثر مما تقول.
+      </p>
+      <div class="romPulse"></div>
+      <p style="margin-top:10px; font-size:13px; color:rgba(255,255,255,.85)">
+        (ستعود الصفحة لوضعها الطبيعي بعد دقيقة)
+      </p>
+    </div>
   </div>
 
   <script>
-    // Year
+    // ===== سنة الفوتر =====
     document.getElementById("y").textContent = new Date().getFullYear();
 
-    // ===== Google Sheet (B1) -> big note =====
+    // ===== Google Sheet: نقرأ B1 ونخليه النص الرئيسي =====
     const SHEET_CSV_URL =
       "https://docs.google.com/spreadsheets/d/e/2PACX-1vSXkdu2p1KVIjDPGdb97HfmkKa2WuvKN349Z5qdZOd_RTCyT__xNLL44swa0EUAnq614hxS9p52NSlL/pub?gid=0&single=true&output=csv";
 
-    fetch(SHEET_CSV_URL)
+    fetch(SHEET_CSV_URL, { cache: "no-store" })
       .then(res => res.text())
       .then(text => {
-        text = text.replace(/^\uFEFF/, "");
+        text = text.replace(/^\uFEFF/, ""); // remove BOM
         const commaIndex = text.indexOf(",");
         if (commaIndex === -1) return;
-        const value = text.slice(commaIndex + 1).trim().replace(/^"|"$/g, "");
+        let value = text.slice(commaIndex + 1).trim();
+        value = value.replace(/^"|"$/g, "");
         if (value) document.getElementById("mainQuote").textContent = value;
       })
-      .catch(() => {
-        // leave as-is
-      });
+      .catch(()=>{});
 
-    // ===== Clock + Date Iraq =====
-    const bigTime = document.getElementById("bigTime");
-    const bigTimeGhost = document.getElementById("bigTimeGhost");
-    const iqDate = document.getElementById("iqDate");
+    // ===== Iraq time + Date =====
+    const timeNow = document.getElementById("timeNow");
+    const timeGhost = document.getElementById("timeGhost");
+    const dateTxt = document.getElementById("dateTxt");
 
-    function updateTime(){
+    function formatIraqTime(){
       const now = new Date();
-
-      const timeStr = new Intl.DateTimeFormat("en-GB", {
+      const t = new Intl.DateTimeFormat("en-GB", {
         timeZone: "Asia/Baghdad",
         hour: "2-digit",
-        minute: "2-digit",
-        hour12: false
+        minute: "2-digit"
       }).format(now);
+      return t;
+    }
 
-      bigTime.textContent = timeStr;
-      bigTimeGhost.textContent = timeStr;
-
-      // تاريخ عربي واضح (آيفون-ستايل)
-      const dateStr = new Intl.DateTimeFormat("ar-IQ", {
+    function formatIraqDate(){
+      const now = new Date();
+      // عربي مثل iPhone
+      const d = new Intl.DateTimeFormat("ar-IQ", {
         timeZone: "Asia/Baghdad",
         weekday: "long",
-        year: "numeric",
+        day: "2-digit",
         month: "long",
-        day: "numeric"
+        year: "numeric"
       }).format(now);
-
-      iqDate.textContent = dateStr;
+      return d;
     }
-    updateTime();
-    setInterval(updateTime, 1000);
 
-    // ===== Basra Weather (Open-Meteo) =====
-    const wxTxt = document.getElementById("basraWxTxt");
-    const wxIco = document.getElementById("basraWxIco");
-    const lat = 30.5085, lon = 47.7804;
+    function tick(){
+      const t = formatIraqTime();
+      timeNow.textContent = t;
+      timeGhost.textContent = t;
+      dateTxt.textContent = formatIraqDate();
+      check1111(t);
+    }
+    tick();
+    setInterval(tick, 1000);
+
+    // ===== Basra Weather (Open-Meteo, no key) =====
+    const wxTxt = document.getElementById("wxTxt");
+    const lat = 30.5085;
+    const lon = 47.7804;
 
     function codeToArabic(code){
       if (code === 0) return ["☀️","صحو"];
@@ -818,7 +738,7 @@
       if ([71,73,75,77].includes(code)) return ["🌨️","ثلج"];
       if ([80,81,82].includes(code)) return ["🌧️","زخات"];
       if ([95,96,99].includes(code)) return ["⛈️","عاصفة"];
-      return ["⛅","طقس متغير"];
+      return ["⛅","متغير"];
     }
 
     async function fetchWeather(){
@@ -831,27 +751,35 @@
 
         const res = await fetch(url, { cache: "no-store" });
         const data = await res.json();
-
         const temp = Math.round(data.current.temperature_2m);
         const code = data.current.weather_code;
         const [ico, desc] = codeToArabic(code);
-
-        wxIco.textContent = ico;
-        wxTxt.textContent = `البصرة: ${temp}° — ${desc}`;
+        wxTxt.textContent = `البصرة: ${temp}° — ${desc} ${ico}`;
       }catch(e){
         wxTxt.textContent = "تعذر جلب طقس البصرة";
-        wxIco.textContent = "⚠️";
       }
     }
     fetchWeather();
     setInterval(fetchWeather, 10 * 60 * 1000);
 
-    // ===== Music Playlist (3 options) + Visualizer (Bars) =====
+    // ===== Theme toggle (night) =====
+    const toggleTheme = document.getElementById("toggleTheme");
+    const savedTheme = localStorage.getItem("themeMode");
+    if(savedTheme === "light") document.body.classList.add("light");
+
+    toggleTheme.addEventListener("click", () => {
+      document.body.classList.toggle("light");
+      localStorage.setItem("themeMode", document.body.classList.contains("light") ? "light" : "dark");
+    });
+
+    // ===== Audio playlist (مطابق لأسماء ملفاتك) =====
     const tracks = [
-      { title: "المقطع 1", file: "audio.mp3.mp3" },
-      { title: "المقطع 2", file: "audio1.mp3.mp3" },
-      { title: "المقطع 3", file: "audio2.mp3.mp3" }
+      { title: "المقطع 1", file: "audio.mp3.mp3.mp3" },
+      { title: "المقطع 2", file: "audio1.mp3.mp3" }
     ];
+
+    // مقطع خاص 11:11 (مطابق لاسم ملفك)
+    const elevenTrack = { title: "11:11 Special", file: "eleven.mp3.mp3" };
 
     const audioEl = document.getElementById("bgAudio");
     const btnPlay = document.getElementById("audioBtn");
@@ -859,7 +787,6 @@
     const titleEl = document.getElementById("trackTitle");
     const prevBtn = document.getElementById("prevTrack");
     const nextBtn = document.getElementById("nextTrack");
-    const playState = document.getElementById("playState");
 
     const canvas = document.getElementById("viz");
     const ctx = canvas.getContext("2d");
@@ -873,11 +800,12 @@
       trackIndex = (i + tracks.length) % tracks.length;
       const t = tracks[trackIndex];
       audioEl.src = t.file;
-      titleEl.textContent = `المقطع ${trackIndex+1}/3 — ${t.title}`;
+      titleEl.textContent = `المقطع: ${trackIndex + 1} — ${t.title}`;
     }
     setTrack(0);
 
-    audioEl.volume = (Number(vol.value) || 70) / 100;
+    // Volume
+    audioEl.volume = (Number(vol.value)||70)/100;
     vol.addEventListener("input", () => audioEl.volume = (Number(vol.value)||0)/100);
 
     function resizeCanvas(){
@@ -895,7 +823,7 @@
       audioCtx = new (window.AudioContext || window.webkitAudioContext)();
       analyser = audioCtx.createAnalyser();
       analyser.fftSize = 2048;
-      analyser.smoothingTimeConstant = 0.85;
+      analyser.smoothingTimeConstant = 0.82;
       freqData = new Uint8Array(analyser.frequencyBinCount);
 
       srcNode = audioCtx.createMediaElementSource(audioEl);
@@ -918,18 +846,17 @@
 
       analyser.getByteFrequencyData(freqData);
 
-      const bars = 72;
+      const bars = 64;
       const step = Math.floor(freqData.length / bars);
       const barW = w / bars;
 
-      for(let i=0; i<bars; i++){
-        const v = freqData[i * step] / 255;     // 0..1
-        const barH = Math.max(4, v * (h - 10));
+      for(let i=0;i<bars;i++){
+        const v = freqData[i*step] / 255;
+        const barH = Math.max(6, v * (h - 12));
         const x = i * barW;
         const y = h - barH;
-
-        ctx.fillStyle = "rgba(255,255,255,0.80)";
-        ctx.fillRect(x + barW*0.22, y, barW*0.56, barH);
+        ctx.fillStyle = "rgba(255,255,255,0.78)";
+        ctx.fillRect(x + barW*0.18, y, barW*0.64, barH);
       }
 
       rafId = requestAnimationFrame(drawBars);
@@ -939,7 +866,6 @@
       if(rafId) cancelAnimationFrame(rafId);
       drawBars();
     }
-
     function stopViz(){
       if(rafId) cancelAnimationFrame(rafId);
       rafId = null;
@@ -960,156 +886,140 @@
           await audioEl.play();
           playing = true;
           btnPlay.textContent = "إيقاف";
-          playState.textContent = "يعمل";
           startViz();
         }else{
           audioEl.pause();
           playing = false;
           btnPlay.textContent = "تشغيل";
-          playState.textContent = "متوقف";
           stopViz();
         }
       }catch(e){
-        playState.textContent = "اضغط مرة ثانية";
+        // iOS sometimes needs second click
+        btnPlay.textContent = "اضغط مرة ثانية";
       }
     }
+
     btnPlay.addEventListener("click", playPause);
-
-    async function changeTrack(dir){
-      const wasPlaying = playing;
-      if(wasPlaying){
-        audioEl.pause();
-        playing = false;
-      }
-      setTrack(trackIndex + dir);
-
-      if(wasPlaying){
-        await playPause(); // يرجع يشغل
-      }else{
-        btnPlay.textContent = "تشغيل";
-        playState.textContent = "جاهز";
-      }
-    }
-    prevBtn.addEventListener("click", () => changeTrack(-1));
-    nextBtn.addEventListener("click", () => changeTrack(+1));
-
-    audioEl.addEventListener("pause", () => {
-      playing = false;
+    prevBtn.addEventListener("click", async () => {
+      const was = playing;
+      if(was){ audioEl.pause(); playing=false; }
+      setTrack(trackIndex - 1);
       btnPlay.textContent = "تشغيل";
-      playState.textContent = "متوقف";
       stopViz();
+      if(was) await playPause();
+    });
+    nextBtn.addEventListener("click", async () => {
+      const was = playing;
+      if(was){ audioEl.pause(); playing=false; }
+      setTrack(trackIndex + 1);
+      btnPlay.textContent = "تشغيل";
+      stopViz();
+      if(was) await playPause();
     });
 
-    // ===== Dark/Light Toggle (bottom-left) =====
-    const themeBtn = document.getElementById("themeToggleBtn");
-    themeBtn.addEventListener("click", ()=>{
-      document.body.classList.toggle("light");
-      themeBtn.textContent = document.body.classList.contains("light") ? "☀️ Light" : "🌙 Night";
-    });
-
-    // ===== Hearts Rain Logic =====
-    const heartsLayer = document.getElementById("heartsLayer");
-    let heartsTimer = null;
-    let spawnTimer = null;
-
-    function rand(min,max){ return Math.random()*(max-min)+min; }
-
-    // هذه الدالة يستخدمها زر "معاينة الآن"
-    function startHeartsRain(durationMs=60000){
-      // if already running, restart
-      stopHeartsRain();
-
-      heartsLayer.style.display = "block";
-      const startAt = Date.now();
-
-      spawnTimer = setInterval(()=>{
-        const heart = document.createElement("div");
-        heart.className = "heart";
-        heart.textContent = "💚";
-
-        const x = rand(0, 100);
-        const size = rand(14, 26);
-        const dur = rand(3.2, 6.2);
-        const drift = rand(-40, 40);
-        const rot = rand(-40, 40);
-
-        heart.style.left = x + "vw";
-        heart.style.fontSize = size + "px";
-        heart.style.animationDuration = dur + "s";
-        heart.style.setProperty("--drift", drift + "px");
-        heart.style.setProperty("--rot", rot + "deg");
-
-        heartsLayer.appendChild(heart);
-
-        setTimeout(()=> heart.remove(), (dur*1000)+200);
-      }, 130);
-
-      heartsTimer = setInterval(()=>{
-        if(Date.now() - startAt >= durationMs){
-          stopHeartsRain();
+    // ===== Smooth volume fade =====
+    function fadeTo(targetVol, ms=1000){
+      const start = audioEl.volume;
+      const startT = performance.now();
+      return new Promise(resolve=>{
+        function step(t){
+          const p = Math.min(1, (t-startT)/ms);
+          audioEl.volume = start + (targetVol-start)*p;
+          if(p<1) requestAnimationFrame(step);
+          else resolve();
         }
-      }, 250);
+        requestAnimationFrame(step);
+      });
     }
 
-    function stopHeartsRain(){
-      if(spawnTimer) clearInterval(spawnTimer);
-      if(heartsTimer) clearInterval(heartsTimer);
-      spawnTimer = null;
-      heartsTimer = null;
-      heartsLayer.innerHTML = "";
-      heartsLayer.style.display = "none";
-    }
+    // ===== 11:11 Romantic minute + switch to eleven track =====
+    const romance = document.getElementById("romance");
+    let lastKey = null;
 
-    // Trigger at 11:11 Iraq time for 1 minute (once per day)
-    function checkElevenEleven(){
-      const now = new Date();
-      const parts = new Intl.DateTimeFormat("en-GB",{
-        timeZone:"Asia/Baghdad",
-        hour:"2-digit",
-        minute:"2-digit",
-        hour12:false
-      }).formatToParts(now);
+    async function run1111Sequence(isPreview=false){
+      // عرض overlay
+      romance.classList.add("show");
 
-      const hh = parts.find(p=>p.type==="hour")?.value;
-      const mm = parts.find(p=>p.type==="minute")?.value;
+      const old = {
+        src: audioEl.src,
+        idx: trackIndex,
+        wasPlaying: playing,
+        vol: audioEl.volume
+      };
 
-      // مفتاح اليوم لمنع تكرار التشغيل
-      const todayKey = new Intl.DateTimeFormat("en-CA",{ timeZone:"Asia/Baghdad", year:"numeric", month:"2-digit", day:"2-digit"}).format(now);
-      const last = localStorage.getItem("last1111") || "";
+      try{
+        ensureAudioGraph();
+        if(audioCtx.state === "suspended") await audioCtx.resume();
 
-      if(hh === "11" && mm === "11" && last !== todayKey){
-        localStorage.setItem("last1111", todayKey);
-        startHeartsRain(60000); // دقيقة كاملة
+        // خفض تدريجي + تعتيم overlay أكثر
+        await fadeTo(Math.min(old.vol, 0.22), 900);
+
+        // بدّل للمقطع الخاص
+        audioEl.src = elevenTrack.file;
+        titleEl.textContent = `🎁 11:11 — ${elevenTrack.title}`;
+
+        await audioEl.play();
+        playing = true;
+        btnPlay.textContent = "إيقاف";
+        startViz();
+
+        // مدة دقيقة
+        setTimeout(async ()=>{
+          try{
+            await fadeTo(0.18, 700);
+
+            // ارجع للمقطع السابق
+            audioEl.src = old.src || tracks[old.idx]?.file;
+            titleEl.textContent = `المقطع: ${old.idx+1} — ${tracks[old.idx]?.title || "المقطع"}`;
+            trackIndex = old.idx;
+
+            if(old.wasPlaying){
+              await audioEl.play();
+              playing = true;
+              btnPlay.textContent = "إيقاف";
+              startViz();
+            }else{
+              audioEl.pause();
+              playing = false;
+              btnPlay.textContent = "تشغيل";
+              stopViz();
+            }
+
+            // ارجع للصوت حسب السلايدر
+            const sliderVol = (Number(vol.value)||70)/100;
+            await fadeTo(sliderVol, 900);
+          } finally {
+            romance.classList.remove("show");
+          }
+        }, 60000);
+
+      }catch(e){
+        // إذا فشل تشغيل الصوت، نخلي بس overlay دقيقة
+        setTimeout(()=> romance.classList.remove("show"), 60000);
       }
     }
-    setInterval(checkElevenEleven, 1000);
 
-    // ===== 11:11 Info Modal =====
-    const elevenBtn = document.getElementById("elevenInfoBtn");
-    const modal = document.getElementById("elevenModal");
-    const closeModal = document.getElementById("closeModal");
-    const okModal = document.getElementById("okModal");
-    const previewHearts = document.getElementById("previewHearts");
+    // تحقق 11:11 بتوقيت العراق (مرة باليوم)
+    function check1111(t){
+      const [hh, mm] = t.split(":");
+      if(hh === "11" && mm === "11"){
+        const now = new Date();
+        const key = new Intl.DateTimeFormat("en-CA", {
+          timeZone: "Asia/Baghdad",
+          year:"numeric", month:"2-digit", day:"2-digit"
+        }).format(now);
 
-    function openModal(){
-      modal.classList.add("show");
-      modal.setAttribute("aria-hidden","false");
+        // مرة واحدة باليوم
+        if(lastKey !== key){
+          lastKey = key;
+          run1111Sequence(false);
+        }
+      }
     }
-    function hideModal(){
-      modal.classList.remove("show");
-      modal.setAttribute("aria-hidden","true");
-    }
 
-    elevenBtn.addEventListener("click", openModal);
-    closeModal.addEventListener("click", hideModal);
-    okModal.addEventListener("click", hideModal);
-
-    modal.addEventListener("click", (e)=>{
-      if(e.target === modal) hideModal();
-    });
-
-    previewHearts.addEventListener("click", ()=>{
-      startHeartsRain(8000); // 8 ثواني معاينة
+    // زر المعاينة
+    document.getElementById("preview1111").addEventListener("click", () => {
+      run1111Sequence(true);
     });
   </script>
 </body>
