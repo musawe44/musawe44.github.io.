@@ -1,303 +1,1116 @@
 <!doctype html>
 <html lang="ar" dir="rtl">
-  <link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#0b1220">
-
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>MUSAWI</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>MUSAWI</title>
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;800&display=swap" rel="stylesheet">
+  <!-- iPhone / PWA nice -->
+  <meta name="theme-color" content="#0b1220">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
-<style>
-:root{
-  --card: rgba(255,255,255,.10);
-  --border: rgba(255,255,255,.18);
-  --text: #eef2ff;
-  --muted:#d1d5db;
-  --shadow: 0 18px 40px rgba(0,0,0,.38);
-}
+  <!-- خط عربي واضح -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;800;900&display=swap" rel="stylesheet">
 
-*{box-sizing:border-box}
+  <style>
+    :root{
+      --bg:#0b1220;
+      --card: rgba(255,255,255,.10);
+      --border: rgba(255,255,255,.18);
+      --text: #eef2ff;
+      --muted:#d1d5db;
+      --shadow: 0 18px 40px rgba(0,0,0,.38);
+      --accent: rgba(34,197,94,.95);
+    }
 
-/* ===== Cinematic Intro ===== */
-body{
-  margin:0;
-  font-family:"Cairo",system-ui;
-  color:var(--text);
-  min-height:100vh;
-  padding-top:80px;
-  background:#0b1220;
-  animation:cinemaIn 1.2s ease both;
-}
-@keyframes cinemaIn{
-  from{opacity:0;filter:blur(10px);transform:scale(1.03)}
-  to{opacity:1;filter:blur(0);transform:scale(1)}
-}
+    *{ box-sizing:border-box; }
 
-/* Background */
-.bgVideo{
-  position:fixed;inset:0;
-  width:100%;height:100%;
-  object-fit:cover;
-  z-index:-3;
-}
-.overlay{
-  position:fixed;inset:0;
-  z-index:-2;
-  background:linear-gradient(120deg,rgba(0,0,0,.4),rgba(0,0,0,.2));
-  transition:.3s;
-}
+    /* ===== Cinematic Page Intro ===== */
+    body{
+      margin:0;
+      font-family:"Cairo", system-ui, Arial;
+      color:var(--text);
+      min-height:100vh;
+      padding: 140px 14px 24px; /* مساحة للساعة الكبيرة */
+      overflow-x:hidden;
+      background: var(--bg);
+      animation: cinemaIn 1.1s ease both;
+    }
+    @keyframes cinemaIn{
+      from{ opacity:0; filter:blur(10px); transform:scale(1.03); }
+      to{ opacity:1; filter:blur(0); transform:scale(1); }
+    }
 
-/* ===== Top Bar ===== */
-.topbar{
-  position:fixed;
-  top:10px;left:50%;
-  transform:translateX(-50%);
-  width:min(980px,95%);
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  padding:10px 14px;
-  border-radius:16px;
-  background:rgba(255,255,255,.1);
-  backdrop-filter:blur(10px);
-  border:1px solid var(--border);
-  z-index:50;
-}
-#themeToggle{
-  border:none;
-  background:rgba(255,255,255,.15);
-  border-radius:12px;
-  padding:6px 10px;
-  cursor:pointer;
-  font-size:14px;
-}
+    /* فيديو الخلفية */
+    .bgVideo{
+      position:fixed;
+      inset:0;
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      z-index:-5;
+      transform: scale(1.02);
+      filter: saturate(1.08) contrast(1.05);
+    }
 
-/* Light Mode */
-body.light{
-  --card: rgba(0,0,0,.06);
-  --border: rgba(0,0,0,.15);
-  --text:#0f172a;
-  --muted:#334155;
-  background:#f8fafc;
-}
-body.light .overlay{opacity:.3}
+    /* تغطية خفيفة (بدون تغبيش قوي) */
+    .overlay{
+      position:fixed;
+      inset:0;
+      z-index:-4;
+      background:
+        radial-gradient(900px 500px at 80% 20%, rgba(34,197,94,.12), transparent 60%),
+        radial-gradient(700px 450px at 20% 80%, rgba(59,130,246,.12), transparent 55%),
+        linear-gradient(120deg, rgba(11,18,32,.28), rgba(11,18,32,.18));
+      transition: opacity .25s ease;
+    }
 
-/* ===== Layout ===== */
-.gridWrap{
-  width:min(980px,95%);
-  margin:auto;
-  display:grid;
-  gap:16px;
-  grid-template-columns:.8fr 1.2fr;
-  grid-template-areas:
-  "youtube profile"
-  "social profile"
-  "footer footer";
-}
-@media(max-width:900px){
-  .gridWrap{
-    grid-template-columns:1fr;
-    grid-template-areas:
-    "profile"
-    "youtube"
-    "social"
-    "footer";
-  }
-}
+    /* ===== iPhone-like Big Clock Header ===== */
+    .headerClock{
+      position: fixed;
+      top: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: min(980px, calc(100% - 20px));
+      z-index: 60;
+      pointer-events: none; /* حتى ما تعيق الضغط على العناصر */
+    }
 
-/* Cards */
-.card{
-  background:var(--card);
-  border:1px solid var(--border);
-  border-radius:18px;
-  padding:18px;
-  box-shadow:var(--shadow);
-  backdrop-filter:blur(10px);
-  transition:.2s;
-}
-.card:hover{transform:translateY(-4px)}
+    .bigTime{
+      font-weight: 900;
+      letter-spacing: .5px;
+      font-size: 76px;
+      line-height: 1;
+      text-align: center;
+      color: rgba(255,255,255,.92);
+      text-shadow: none; /* طلبت بدون ظل */
+    }
+    .bigTimeGhost{
+      position:absolute;
+      inset: -8px 0 auto 0;
+      text-align:center;
+      font-weight: 900;
+      font-size: 92px;
+      line-height: 1;
+      color: rgba(255,255,255,.10);
+      filter: blur(.2px);
+      transform: translateY(26px);
+      pointer-events:none;
+      user-select:none;
+    }
 
-.profile{grid-area:profile}
-.youtube{grid-area:youtube}
-.social{grid-area:social}
-.pageFooter{grid-area:footer}
+    .headerRow{
+      margin-top: 10px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 12px;
+      padding: 10px 12px;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,.16);
+      background: rgba(255,255,255,.07);
+      backdrop-filter: blur(10px);
+      pointer-events: auto;
+    }
 
-/* Profile */
-.hero{display:flex;gap:16px;align-items:center}
-.photo{
-  width:90px;height:90px;
-  border-radius:18px;
-  object-fit:cover;
-  border:1px solid var(--border);
-}
-.badges{display:flex;gap:8px;margin-top:10px}
-.badge{
-  padding:6px 10px;
-  border-radius:999px;
-  border:1px solid var(--border);
-  background:rgba(255,255,255,.08);
-  font-size:13px;
-}
+    .wxBox{
+      display:flex;
+      align-items:center;
+      gap: 10px;
+      font-weight: 800;
+      color: rgba(255,255,255,.92);
+      font-size: 14px;
+      text-shadow:none; /* بدون ظل */
+      white-space: nowrap;
+    }
+    .wxIco{ font-size: 16px; }
+    .dateBox{
+      font-weight: 800;
+      color: rgba(255,255,255,.92);
+      font-size: 14px;
+      text-shadow:none; /* بدون ظل */
+      white-space: nowrap;
+    }
 
-/* Main Text */
-.bigNote{
-  font-size:20px;
-  font-weight:800;
-  line-height:2;
-  padding:14px;
-  border-radius:14px;
-  background:rgba(255,255,255,.08);
-  border:1px solid var(--border);
-}
+    @media (max-width: 520px){
+      body{ padding-top: 148px; }
+      .bigTime{ font-size: 60px; }
+      .bigTimeGhost{ font-size: 74px; transform: translateY(22px); }
+      .wxBox, .dateBox{ font-size: 13px; }
+    }
 
-/* Video */
-.video{
-  border-radius:16px;
-  overflow:hidden;
-  aspect-ratio:16/9;
-}
-.video iframe{width:100%;height:100%;border:0}
+    /* ===== Layout ===== */
+    .gridWrap{
+      width:min(980px, 100%);
+      margin: 0 auto;
+      position:relative;
+      display:grid;
+      gap:16px;
+      grid-template-columns: .8fr 1.2fr;
+      grid-template-areas:
+        "youtube  profile"
+        "social   profile"
+        "footer   footer";
+      align-items:start;
+    }
+    .profile{ grid-area: profile; }
+    .youtube{ grid-area: youtube; }
+    .social{ grid-area: social; }
+    .pageFooter{ grid-area: footer; }
 
-/* Audio */
-.audioBox{display:flex;gap:8px;align-items:center}
-.audioBtn,.navBtn{
-  padding:8px 12px;
-  border-radius:12px;
-  border:1px solid var(--border);
-  background:rgba(255,255,255,.1);
-  cursor:pointer;
-}
-.vizWrap{margin-top:10px}
-#viz{width:100%;height:100px}
+    .vDivider{
+      position:absolute;
+      top: 14px;
+      bottom: 14px;
+      left: 40%;
+      width: 1px;
+      background: linear-gradient(to bottom, transparent, rgba(255,255,255,.25), transparent);
+      box-shadow: 0 0 18px rgba(255,255,255,.12);
+      border-radius:999px;
+      pointer-events:none;
+    }
+    @media (max-width: 920px){
+      .gridWrap{
+        grid-template-columns: 1fr;
+        grid-template-areas:
+          "profile"
+          "youtube"
+          "social"
+          "footer";
+      }
+      .vDivider{ display:none; }
+    }
 
-/* Links */
-.link{
-  display:flex;justify-content:space-between;
-  align-items:center;
-  padding:12px;
-  border-radius:14px;
-  border:1px solid var(--border);
-  background:rgba(255,255,255,.08);
-  margin-top:10px;
-  text-decoration:none;
-  color:inherit;
-}
-.icon img{width:18px}
+    /* ===== Cards ===== */
+    .card{
+      background:var(--card);
+      border:1px solid var(--border);
+      border-radius:18px;
+      padding:18px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
+      position:relative;
+      overflow:hidden;
+      transition: transform .18s ease, box-shadow .18s ease, background .18s ease;
+      animation: enter .65s ease both;
+    }
+    @keyframes enter {
+      from { opacity: 0; transform: translateY(14px) scale(.99); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    .profile{ animation-delay: .05s; }
+    .youtube{ animation-delay: .15s; }
+    .social{  animation-delay: .25s; }
+    .pageFooter{ animation-delay: .35s; }
 
-/* Footer */
-footer{text-align:center;font-size:13px}
-</style>
+    .card::before{
+      content:"";
+      position:absolute;
+      inset:-2px;
+      background: radial-gradient(600px 200px at 20% 0%, rgba(255,255,255,.12), transparent 60%);
+      opacity: 0;
+      transition: opacity .25s ease;
+      pointer-events:none;
+    }
+    .card:hover{
+      transform: translateY(-4px);
+      box-shadow: 0 22px 55px rgba(0,0,0,.45);
+    }
+    .card:hover::before{ opacity: 1; }
+
+    /* ===== Profile header ===== */
+    .hero{
+      display:flex;
+      align-items:center;
+      justify-content:space-between; /* صورة بنفس صف MUSAWI */
+      gap: 14px;
+    }
+    .titleBox{
+      display:flex;
+      flex-direction:column;
+      gap: 6px;
+      min-width: 0;
+    }
+    h1{
+      margin:0;
+      font-size: 34px;
+      line-height:1.05;
+      font-weight: 900;
+      letter-spacing: .7px;
+    }
+    .subtitle{
+      margin:0;
+      color: rgba(255,255,255,.92);
+      font-size: 18px; /* أكبر من قبل */
+      font-weight: 800;
+    }
+    .subtitle span{ color: rgba(255,255,255,.86); font-weight: 800; }
+
+    .photo{
+      width: 82px;
+      height: 82px;
+      border-radius: 18px;
+      border:1px solid var(--border);
+      object-fit: cover;
+      background: rgba(255,255,255,.06);
+      flex: 0 0 auto;
+      transform: translateY(-2px); /* صعدناها شوي */
+    }
+
+    .badges{
+      margin-top:10px;
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+    }
+    .badge{
+      padding:6px 10px;
+      border-radius:999px;
+      border:1px solid var(--border);
+      background:rgba(255,255,255,.06);
+      font-size:14px;
+      font-weight: 800;
+      color:var(--text);
+      white-space:nowrap;
+    }
+
+    .section-title{
+      margin:0 0 10px;
+      font-size:18px;
+      font-weight: 900;
+      color:var(--text);
+    }
+
+    /* ===== Google Note (بديل الحكمة) ===== */
+    .bigNote{
+      margin:0;
+      padding:14px 16px;
+      border-radius:16px;
+      border:1px solid rgba(255,255,255,.16);
+      background: rgba(255,255,255,.07);
+      line-height: 2.05;
+      font-size: 22px;
+      font-weight: 900;
+      letter-spacing: .2px;
+      text-align: right;
+    }
+    @media (max-width: 520px){
+      .bigNote{ font-size: 19px; }
+    }
+
+    /* ===== YouTube ===== */
+    .video{
+      margin-top:10px;
+      border-radius:16px;
+      overflow:hidden;
+      border:1px solid var(--border);
+      background: rgba(0,0,0,.20);
+      aspect-ratio: 16 / 9;
+    }
+    .video iframe{ width:100%; height:100%; border:0; display:block; }
+
+    /* ===== Music + Visualizer ===== */
+    .audioHeader{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      margin-bottom: 10px;
+    }
+    .trackLine{
+      margin:0;
+      color: rgba(255,255,255,.92);
+      font-weight: 900;
+      font-size: 14px;
+      white-space:nowrap;
+    }
+
+    .controlsRow{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      margin-top: 10px;
+    }
+    .navBtns{ display:flex; gap:8px; align-items:center; }
+
+    .btn{
+      border:1px solid var(--border);
+      background:rgba(255,255,255,.08);
+      color:var(--text);
+      padding:10px 12px;
+      border-radius:14px;
+      cursor:pointer;
+      font-family:inherit;
+      font-weight:900;
+      line-height:1;
+      transition: background .15s ease, transform .15s ease;
+    }
+    .btn:hover{ background:rgba(255,255,255,.12); transform: translateY(-1px); }
+
+    .volumeWrap{
+      flex:1;
+      display:flex;
+      align-items:center;
+      gap:10px;
+      padding:10px 12px;
+      border-radius:14px;
+      border:1px solid var(--border);
+      background:rgba(255,255,255,.06);
+    }
+    .volumeLabel{
+      font-size:13px;
+      font-weight: 900;
+      color:rgba(255,255,255,.88);
+      white-space:nowrap;
+    }
+    .volume{ width:100%; accent-color: var(--accent); }
+
+    .vizWrap{
+      margin-top:10px;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.05);
+      overflow:hidden;
+    }
+    #viz{ width:100%; height: 110px; display:block; }
+
+    /* ===== Social links ===== */
+    .socialPhrase{
+      margin: 10px 0 12px;
+      color: rgba(255,255,255,.92);
+      font-weight: 900;
+      font-size: 14px;
+    }
+    .links{
+      display:grid;
+      gap:10px;
+      margin-top:8px;
+    }
+    .link{
+      text-decoration:none;
+      color:var(--text);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      padding:12px 12px;
+      border-radius:14px;
+      border:1px solid var(--border);
+      background:rgba(255,255,255,.06);
+      transition:.15s transform, .15s background;
+      position:relative;
+      overflow:hidden;
+      font-weight: 900;
+    }
+    .link:hover{ transform: translateY(-2px); background:rgba(255,255,255,.09); }
+    .left{ display:flex; align-items:center; gap:10px; }
+    .icon{
+      width: 36px; height:36px;
+      border-radius: 12px;
+      display:grid; place-items:center;
+      background:rgba(255,255,255,.08);
+      border:1px solid var(--border);
+      overflow:hidden;
+    }
+    .icon svg{ width:18px; height:18px; display:block; }
+
+    /* ===== Footer ===== */
+    footer{
+      text-align:center;
+      color:rgba(255,255,255,.90);
+      font-weight: 900;
+      font-size: 14px;
+      padding:12px;
+      background:rgba(255,255,255,.06);
+      border:1px solid var(--border);
+      border-radius:18px;
+    }
+
+    /* ===== Dark/Light Toggle (bottom-left) ===== */
+    .themeToggle{
+      position: fixed;
+      left: 14px;
+      bottom: 14px;
+      z-index: 70;
+      display:flex;
+      align-items:center;
+      gap:8px;
+    }
+    .themeToggle .btn{ padding: 10px 12px; }
+
+    /* Light mode */
+    body.light{
+      --card: rgba(0,0,0,.06);
+      --border: rgba(0,0,0,.14);
+      --text: #0f172a;
+      --muted:#334155;
+      --shadow: 0 18px 40px rgba(0,0,0,.15);
+    }
+    body.light .overlay{ opacity: .28; }
+    body.light .bigTime{ color: rgba(15,23,42,.88); }
+    body.light .bigTimeGhost{ color: rgba(15,23,42,.10); }
+    body.light .wxBox, body.light .dateBox{ color: rgba(15,23,42,.88); }
+    body.light .headerRow{ background: rgba(255,255,255,.72); border-color: rgba(0,0,0,.08); }
+
+    /* ===== 11:11 Info Button + Modal ===== */
+    .elevenInfoBtn{
+      position: fixed;
+      top: 112px; /* تحت منطقة الساعة */
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 65;
+      border: 1px solid rgba(255,255,255,.16);
+      background: rgba(255,255,255,.07);
+      color: var(--text);
+      padding: 10px 14px;
+      border-radius: 16px;
+      backdrop-filter: blur(10px);
+      font-family: inherit;
+      font-weight: 900;
+      cursor: pointer;
+      transition: transform .15s ease, background .15s ease;
+    }
+    .elevenInfoBtn:hover{ transform: translateX(-50%) translateY(-2px); background: rgba(255,255,255,.12); }
+
+    .modal{
+      position: fixed;
+      inset: 0;
+      display: none;
+      place-items: center;
+      z-index: 999;
+      background: rgba(0,0,0,.45);
+    }
+    .modal.show{ display: grid; }
+
+    .modalCard{
+      width: min(520px, calc(100% - 26px));
+      background: rgba(15, 23, 42, .88);
+      border: 1px solid rgba(255,255,255,.18);
+      border-radius: 18px;
+      padding: 16px;
+      backdrop-filter: blur(14px);
+      box-shadow: 0 24px 80px rgba(0,0,0,.45);
+      color: var(--text);
+    }
+
+    .modalTop{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap: 12px;
+    }
+    .modalTitle{
+      font-size: 24px;
+      font-weight: 900;
+      letter-spacing: .5px;
+    }
+    .modalSub{
+      color: var(--muted);
+      font-size: 13px;
+      margin-top: 2px;
+      font-weight: 800;
+    }
+
+    .modalClose{
+      border: 1px solid rgba(255,255,255,.18);
+      background: rgba(255,255,255,.08);
+      color: var(--text);
+      width: 40px;
+      height: 40px;
+      border-radius: 14px;
+      cursor:pointer;
+      font-weight: 900;
+    }
+
+    .modalText{
+      margin: 14px 0 0;
+      color: rgba(255,255,255,.9);
+      line-height: 1.9;
+      font-size: 15px;
+      font-weight: 800;
+    }
+
+    .modalActions{
+      display:flex;
+      gap: 10px;
+      margin-top: 14px;
+    }
+    .modalBtn{
+      border: 1px solid rgba(255,255,255,.18);
+      background: rgba(255,255,255,.12);
+      color: var(--text);
+      padding: 10px 12px;
+      border-radius: 14px;
+      cursor:pointer;
+      font-weight: 900;
+      font-family: inherit;
+    }
+    .modalBtn.ghost{ background: rgba(255,255,255,.06); }
+
+    .modalHint{
+      margin: 12px 0 0;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    /* ===== Hearts Rain ===== */
+    #heartsLayer{
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 55; /* فوق الخلفية وتحت المحتوى */
+      overflow: hidden;
+      display:none;
+    }
+    .heart{
+      position:absolute;
+      top:-30px;
+      font-size: 18px;
+      opacity: .95;
+      filter: drop-shadow(0 10px 18px rgba(0,0,0,.25));
+      animation: fall linear forwards;
+      will-change: transform, opacity;
+    }
+    @keyframes fall{
+      from{ transform: translateY(-40px) translateX(0) rotate(0deg); opacity: .0; }
+      8%  { opacity: 1; }
+      to  { transform: translateY(110vh) translateX(var(--drift)) rotate(var(--rot)); opacity: .98; }
+    }
+  </style>
 </head>
 
 <body>
-<video class="bgVideo" autoplay muted loop playsinline>
-  <source src="bg.mp4.mp4" type="video/mp4">
-</video>
-<div class="overlay"></div>
+  <!-- BG -->
+  <video class="bgVideo" autoplay muted loop playsinline>
+    <source src="bg.mp4.mp4" type="video/mp4">
+  </video>
+  <div class="overlay"></div>
 
-<div class="topbar" dir="ltr">
-  <span id="iqTime">--:--</span>
-  <button id="themeToggle">🌙</button>
-</div>
+  <!-- Hearts layer -->
+  <div id="heartsLayer"></div>
 
-<main class="gridWrap">
+  <!-- Big clock header -->
+  <div class="headerClock">
+    <div class="bigTimeGhost" id="bigTimeGhost">--:--</div>
+    <div class="bigTime" id="bigTime">--:--</div>
 
-<section class="card profile">
-  <div class="hero">
-    <img src="avatar.jpg" class="photo">
-    <div>
-      <h1>MUSAWI</h1>
-      <p class="subtitle">طالب GEOLOGY — جامعة البصرة</p>
-      <div class="badges">
-        <span class="badge">📚 تعلّم</span>
-        <span class="badge">💻 حاسبات</span>
+    <div class="headerRow" dir="rtl">
+      <div class="wxBox">
+        <span class="wxIco" id="basraWxIco">⛅</span>
+        <span id="basraWxTxt">جاري جلب طقس البصرة...</span>
       </div>
+      <div class="dateBox" id="iqDate">—</div>
     </div>
   </div>
-  <hr>
-  <p class="bigNote" id="mainQuote">... تحميل</p>
-</section>
 
-<section class="card youtube">
-  <h3>صورة موسيقى</h3>
-  <div class="video">
-    <iframe src="https://www.youtube.com/embed/BXChU6bMEXU" allowfullscreen></iframe>
+  <!-- 11:11 Info Button -->
+  <button id="elevenInfoBtn" class="elevenInfoBtn" type="button">
+    ماذا يحدث عند 11:11؟
+  </button>
+
+  <!-- Modal -->
+  <div id="elevenModal" class="modal" aria-hidden="true">
+    <div class="modalCard" role="dialog" aria-modal="true" aria-labelledby="mTitle">
+      <div class="modalTop">
+        <div>
+          <div id="mTitle" class="modalTitle">11:11</div>
+          <div class="modalSub">بتوقيت العراق (Asia/Baghdad)</div>
+        </div>
+        <button id="closeModal" class="modalClose" type="button">✕</button>
+      </div>
+
+      <p class="modalText">
+        عند وصول الساعة إلى <b>11:11</b> يبدأ <b>مطر قلوب</b> بالخلفية لمدة <b>دقيقة كاملة</b>.
+      </p>
+
+      <div class="modalActions">
+        <button id="previewHearts" class="modalBtn" type="button">معاينة الآن</button>
+        <button id="okModal" class="modalBtn ghost" type="button">تمام</button>
+      </div>
+
+      <p class="modalHint">تقدر تحذف هذا الزر لاحقًا بسهولة (أشرح لك تحت).</p>
+    </div>
   </div>
-</section>
 
-<aside class="card social">
-  <div class="audioBox">
-    <button class="navBtn" id="prevTrack">◀</button>
-    <button class="audioBtn" id="audioBtn">تشغيل</button>
-    <button class="navBtn" id="nextTrack">▶</button>
+  <!-- Layout -->
+  <main class="gridWrap">
+    <div class="vDivider"></div>
+
+    <!-- Profile -->
+    <section class="card profile">
+      <div class="hero">
+        <div class="titleBox">
+          <h1>MUSAWI</h1>
+          <p class="subtitle">طالب <span>GEOLOGY</span> — جامعة البصرة</p>
+
+          <div class="badges">
+            <span class="badge">📚 تعلّم</span>
+            <span class="badge">💻 خبرة بالحاسبات</span>
+          </div>
+        </div>
+
+        <img class="photo" src="avatar.jpg" alt="صورتي">
+      </div>
+
+      <hr style="border:none;border-top:1px solid rgba(255,255,255,.14); margin:14px 0;">
+
+      <h2 class="section-title">كلمة</h2>
+      <p class="bigNote" id="mainQuote">... تحميل</p>
+    </section>
+
+    <!-- YouTube -->
+    <section class="card youtube">
+      <h2 class="section-title">صورة موسيقى</h2>
+      <div class="video">
+        <iframe
+          src="https://www.youtube.com/embed/BXChU6bMEXU"
+          title="YouTube video"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          allowfullscreen></iframe>
+      </div>
+    </section>
+
+    <!-- Social + Music -->
+    <aside class="card social">
+      <div class="audioHeader">
+        <h2 class="section-title" style="margin:0;">الموسيقى</h2>
+        <p class="trackLine" id="trackTitle">المقطع 1/3</p>
+      </div>
+
+      <div class="controlsRow">
+        <div class="navBtns">
+          <button class="btn" id="prevTrack" title="السابق">◀</button>
+          <button class="btn" id="audioBtn" title="تشغيل/إيقاف">تشغيل</button>
+          <button class="btn" id="nextTrack" title="التالي">▶</button>
+        </div>
+
+        <div style="width: 140px; text-align:left; font-weight:900; opacity:.9;">
+          <span id="playState">جاهز</span>
+        </div>
+      </div>
+
+      <div style="margin-top:10px;" class="volumeWrap">
+        <span class="volumeLabel">خفض الصوت</span>
+        <input class="volume" id="volume" type="range" min="0" max="100" value="70">
+      </div>
+
+      <div class="vizWrap">
+        <canvas id="viz"></canvas>
+      </div>
+
+      <!-- audio element -->
+      <audio id="bgAudio" preload="metadata" loop></audio>
+
+      <hr style="border:none;border-top:1px solid rgba(255,255,255,.14); margin:14px 0;">
+
+      <h2 class="section-title" style="margin:0 0 8px;">حسابات التواصل</h2>
+      <div class="socialPhrase">تواصل معي عبر الروابط الرسمية 👇</div>
+
+      <div class="links">
+        <a class="link" href="https://t.me/Mu29_iq" target="_blank" rel="noopener">
+          <span class="left">
+            <span class="icon" aria-hidden="true">
+              <!-- Telegram SVG -->
+              <svg viewBox="0 0 24 24" fill="none">
+                <path d="M21.6 4.3c.3-.1.6.2.5.6l-3 16.5c-.1.6-.7.8-1.2.6l-4.9-3.6-2.6 2.5c-.3.3-.5.5-1 .5l.4-5.7L19 6.2c.4-.3-.1-.5-.5-.3l-11.3 7.1-4.9-1.5c-.6-.2-.6-1 .1-1.2L21.6 4.3Z" fill="currentColor"/>
+              </svg>
+            </span>
+            Telegram
+          </span>
+          <span>↗</span>
+        </a>
+
+        <a class="link" href="https://www.instagram.com/mu29__/" target="_blank" rel="noopener">
+          <span class="left">
+            <span class="icon" aria-hidden="true">
+              <!-- Instagram SVG -->
+              <svg viewBox="0 0 24 24" fill="none">
+                <path d="M7.5 2h9A5.5 5.5 0 0 1 22 7.5v9A5.5 5.5 0 0 1 16.5 22h-9A5.5 5.5 0 0 1 2 16.5v-9A5.5 5.5 0 0 1 7.5 2Zm0 2A3.5 3.5 0 0 0 4 7.5v9A3.5 3.5 0 0 0 7.5 20h9a3.5 3.5 0 0 0 3.5-3.5v-9A3.5 3.5 0 0 0 16.5 4h-9Zm10.2 1.8a1 1 0 1 1 0 2 1 1 0 0 1 0-2ZM12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10Zm0 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6Z" fill="currentColor"/>
+              </svg>
+            </span>
+            Instagram
+          </span>
+          <span>↗</span>
+        </a>
+      </div>
+    </aside>
+
+    <footer class="pageFooter">
+      © <span id="y"></span> — إِنَّ مَعَ الْعُسْرِ يُسْرًا
+    </footer>
+  </main>
+
+  <!-- Dark/Light Toggle bottom-left -->
+  <div class="themeToggle" dir="ltr">
+    <button class="btn" id="themeToggleBtn">🌙 Night</button>
   </div>
 
-  <div class="vizWrap"><canvas id="viz"></canvas></div>
-  <audio id="bgAudio" loop></audio>
+  <script>
+    // Year
+    document.getElementById("y").textContent = new Date().getFullYear();
 
-  <a class="link" href="https://t.me/Mu29_iq">
-    <span class="icon">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.svg">
-    </span> Telegram ↗
-  </a>
+    // ===== Google Sheet (B1) -> big note =====
+    const SHEET_CSV_URL =
+      "https://docs.google.com/spreadsheets/d/e/2PACX-1vSXkdu2p1KVIjDPGdb97HfmkKa2WuvKN349Z5qdZOd_RTCyT__xNLL44swa0EUAnq614hxS9p52NSlL/pub?gid=0&single=true&output=csv";
 
-  <a class="link" href="https://www.instagram.com/mu29__/">
-    <span class="icon">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png">
-    </span> Instagram ↗
-  </a>
-</aside>
+    fetch(SHEET_CSV_URL)
+      .then(res => res.text())
+      .then(text => {
+        text = text.replace(/^\uFEFF/, "");
+        const commaIndex = text.indexOf(",");
+        if (commaIndex === -1) return;
+        const value = text.slice(commaIndex + 1).trim().replace(/^"|"$/g, "");
+        if (value) document.getElementById("mainQuote").textContent = value;
+      })
+      .catch(() => {
+        // leave as-is
+      });
 
-<footer class="pageFooter">
-  © <span id="y"></span>
-</footer>
+    // ===== Clock + Date Iraq =====
+    const bigTime = document.getElementById("bigTime");
+    const bigTimeGhost = document.getElementById("bigTimeGhost");
+    const iqDate = document.getElementById("iqDate");
 
-</main>
+    function updateTime(){
+      const now = new Date();
 
-<script>
-document.getElementById("y").textContent=new Date().getFullYear();
+      const timeStr = new Intl.DateTimeFormat("en-GB", {
+        timeZone: "Asia/Baghdad",
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: false
+      }).format(now);
 
-/* Theme */
-const t=document.getElementById("themeToggle");
-t.onclick=()=>{document.body.classList.toggle("light");t.textContent=document.body.classList.contains("light")?"☀️":"🌙"};
+      bigTime.textContent = timeStr;
+      bigTimeGhost.textContent = timeStr;
 
-/* Clock */
-setInterval(()=>{
-  document.getElementById("iqTime").textContent=
-  new Intl.DateTimeFormat("en-GB",{timeZone:"Asia/Baghdad",hour:"2-digit",minute:"2-digit"}).format(new Date());
-},1000);
+      // تاريخ عربي واضح (آيفون-ستايل)
+      const dateStr = new Intl.DateTimeFormat("ar-IQ", {
+        timeZone: "Asia/Baghdad",
+        weekday: "long",
+        year: "numeric",
+        month: "long",
+        day: "numeric"
+      }).format(now);
 
-/* Google Sheet Text */
-fetch("https://docs.google.com/spreadsheets/d/e/2PACX-1vSXkdu2p1KVIjDPGdb97HfmkKa2WuvKN349Z5qdZOd_RTCyT__xNLL44swa0EUAnq614hxS9p52NSlL/pub?output=csv")
-.then(r=>r.text()).then(t=>{
-  const c=t.indexOf(",");
-  if(c>-1)document.getElementById("mainQuote").textContent=t.slice(c+1).replace(/"/g,"");
-});
+      iqDate.textContent = dateStr;
+    }
+    updateTime();
+    setInterval(updateTime, 1000);
 
-/* Music */
-const tracks=[
- {file:"audio.mp3.mp3"},
- {file:"audio1.mp3.mp3"}
-];
-let i=0;
-const audio=document.getElementById("bgAudio");
-audio.src=tracks[0].file;
-document.getElementById("audioBtn").onclick=()=>audio.paused?audio.play():audio.pause();
-document.getElementById("prevTrack").onclick=()=>{i=(i-1+tracks.length)%tracks.length;audio.src=tracks[i].file;audio.play()};
-document.getElementById("nextTrack").onclick=()=>{i=(i+1)%tracks.length;audio.src=tracks[i].file;audio.play()};
-  // ===== Register Service Worker =====
-if ("serviceWorker" in navigator) {
-  window.addEventListener("load", () => {
-    navigator.serviceWorker.register("sw.js");
-  });
-}
+    // ===== Basra Weather (Open-Meteo) =====
+    const wxTxt = document.getElementById("basraWxTxt");
+    const wxIco = document.getElementById("basraWxIco");
+    const lat = 30.5085, lon = 47.7804;
 
-</script>
+    function codeToArabic(code){
+      if (code === 0) return ["☀️","صحو"];
+      if ([1,2].includes(code)) return ["🌤️","غائم جزئياً"];
+      if (code === 3) return ["☁️","غائم"];
+      if ([45,48].includes(code)) return ["🌫️","ضباب"];
+      if ([51,53,55].includes(code)) return ["🌦️","رذاذ"];
+      if ([61,63,65].includes(code)) return ["🌧️","مطر"];
+      if ([71,73,75,77].includes(code)) return ["🌨️","ثلج"];
+      if ([80,81,82].includes(code)) return ["🌧️","زخات"];
+      if ([95,96,99].includes(code)) return ["⛈️","عاصفة"];
+      return ["⛅","طقس متغير"];
+    }
 
+    async function fetchWeather(){
+      try{
+        const url =
+          `https://api.open-meteo.com/v1/forecast` +
+          `?latitude=${lat}&longitude=${lon}` +
+          `&current=temperature_2m,weather_code` +
+          `&timezone=Asia%2FBaghdad`;
+
+        const res = await fetch(url, { cache: "no-store" });
+        const data = await res.json();
+
+        const temp = Math.round(data.current.temperature_2m);
+        const code = data.current.weather_code;
+        const [ico, desc] = codeToArabic(code);
+
+        wxIco.textContent = ico;
+        wxTxt.textContent = `البصرة: ${temp}° — ${desc}`;
+      }catch(e){
+        wxTxt.textContent = "تعذر جلب طقس البصرة";
+        wxIco.textContent = "⚠️";
+      }
+    }
+    fetchWeather();
+    setInterval(fetchWeather, 10 * 60 * 1000);
+
+    // ===== Music Playlist (3 options) + Visualizer (Bars) =====
+    const tracks = [
+      { title: "المقطع 1", file: "audio.mp3.mp3" },
+      { title: "المقطع 2", file: "audio1.mp3.mp3" },
+      { title: "المقطع 3", file: "audio2.mp3.mp3" }
+    ];
+
+    const audioEl = document.getElementById("bgAudio");
+    const btnPlay = document.getElementById("audioBtn");
+    const vol = document.getElementById("volume");
+    const titleEl = document.getElementById("trackTitle");
+    const prevBtn = document.getElementById("prevTrack");
+    const nextBtn = document.getElementById("nextTrack");
+    const playState = document.getElementById("playState");
+
+    const canvas = document.getElementById("viz");
+    const ctx = canvas.getContext("2d");
+
+    let audioCtx = null, analyser = null, srcNode = null, freqData = null;
+    let rafId = null;
+    let playing = false;
+    let trackIndex = 0;
+
+    function setTrack(i){
+      trackIndex = (i + tracks.length) % tracks.length;
+      const t = tracks[trackIndex];
+      audioEl.src = t.file;
+      titleEl.textContent = `المقطع ${trackIndex+1}/3 — ${t.title}`;
+    }
+    setTrack(0);
+
+    audioEl.volume = (Number(vol.value) || 70) / 100;
+    vol.addEventListener("input", () => audioEl.volume = (Number(vol.value)||0)/100);
+
+    function resizeCanvas(){
+      const dpr = window.devicePixelRatio || 1;
+      const rect = canvas.getBoundingClientRect();
+      canvas.width = Math.floor(rect.width * dpr);
+      canvas.height = Math.floor(rect.height * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+    window.addEventListener("resize", resizeCanvas);
+    resizeCanvas();
+
+    function ensureAudioGraph(){
+      if(audioCtx) return;
+      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      analyser = audioCtx.createAnalyser();
+      analyser.fftSize = 2048;
+      analyser.smoothingTimeConstant = 0.85;
+      freqData = new Uint8Array(analyser.frequencyBinCount);
+
+      srcNode = audioCtx.createMediaElementSource(audioEl);
+      srcNode.connect(analyser);
+      analyser.connect(audioCtx.destination);
+    }
+
+    function drawBars(){
+      const w = canvas.getBoundingClientRect().width;
+      const h = canvas.getBoundingClientRect().height;
+
+      ctx.clearRect(0,0,w,h);
+      ctx.fillStyle = "rgba(255,255,255,0.03)";
+      ctx.fillRect(0,0,w,h);
+
+      if(!analyser || !freqData){
+        rafId = requestAnimationFrame(drawBars);
+        return;
+      }
+
+      analyser.getByteFrequencyData(freqData);
+
+      const bars = 72;
+      const step = Math.floor(freqData.length / bars);
+      const barW = w / bars;
+
+      for(let i=0; i<bars; i++){
+        const v = freqData[i * step] / 255;     // 0..1
+        const barH = Math.max(4, v * (h - 10));
+        const x = i * barW;
+        const y = h - barH;
+
+        ctx.fillStyle = "rgba(255,255,255,0.80)";
+        ctx.fillRect(x + barW*0.22, y, barW*0.56, barH);
+      }
+
+      rafId = requestAnimationFrame(drawBars);
+    }
+
+    function startViz(){
+      if(rafId) cancelAnimationFrame(rafId);
+      drawBars();
+    }
+
+    function stopViz(){
+      if(rafId) cancelAnimationFrame(rafId);
+      rafId = null;
+      const w = canvas.getBoundingClientRect().width;
+      const h = canvas.getBoundingClientRect().height;
+      ctx.clearRect(0,0,w,h);
+      ctx.fillStyle = "rgba(255,255,255,0.03)";
+      ctx.fillRect(0,0,w,h);
+    }
+    stopViz();
+
+    async function playPause(){
+      try{
+        ensureAudioGraph();
+        if(audioCtx.state === "suspended") await audioCtx.resume();
+
+        if(!playing){
+          await audioEl.play();
+          playing = true;
+          btnPlay.textContent = "إيقاف";
+          playState.textContent = "يعمل";
+          startViz();
+        }else{
+          audioEl.pause();
+          playing = false;
+          btnPlay.textContent = "تشغيل";
+          playState.textContent = "متوقف";
+          stopViz();
+        }
+      }catch(e){
+        playState.textContent = "اضغط مرة ثانية";
+      }
+    }
+    btnPlay.addEventListener("click", playPause);
+
+    async function changeTrack(dir){
+      const wasPlaying = playing;
+      if(wasPlaying){
+        audioEl.pause();
+        playing = false;
+      }
+      setTrack(trackIndex + dir);
+
+      if(wasPlaying){
+        await playPause(); // يرجع يشغل
+      }else{
+        btnPlay.textContent = "تشغيل";
+        playState.textContent = "جاهز";
+      }
+    }
+    prevBtn.addEventListener("click", () => changeTrack(-1));
+    nextBtn.addEventListener("click", () => changeTrack(+1));
+
+    audioEl.addEventListener("pause", () => {
+      playing = false;
+      btnPlay.textContent = "تشغيل";
+      playState.textContent = "متوقف";
+      stopViz();
+    });
+
+    // ===== Dark/Light Toggle (bottom-left) =====
+    const themeBtn = document.getElementById("themeToggleBtn");
+    themeBtn.addEventListener("click", ()=>{
+      document.body.classList.toggle("light");
+      themeBtn.textContent = document.body.classList.contains("light") ? "☀️ Light" : "🌙 Night";
+    });
+
+    // ===== Hearts Rain Logic =====
+    const heartsLayer = document.getElementById("heartsLayer");
+    let heartsTimer = null;
+    let spawnTimer = null;
+
+    function rand(min,max){ return Math.random()*(max-min)+min; }
+
+    // هذه الدالة يستخدمها زر "معاينة الآن"
+    function startHeartsRain(durationMs=60000){
+      // if already running, restart
+      stopHeartsRain();
+
+      heartsLayer.style.display = "block";
+      const startAt = Date.now();
+
+      spawnTimer = setInterval(()=>{
+        const heart = document.createElement("div");
+        heart.className = "heart";
+        heart.textContent = "💚";
+
+        const x = rand(0, 100);
+        const size = rand(14, 26);
+        const dur = rand(3.2, 6.2);
+        const drift = rand(-40, 40);
+        const rot = rand(-40, 40);
+
+        heart.style.left = x + "vw";
+        heart.style.fontSize = size + "px";
+        heart.style.animationDuration = dur + "s";
+        heart.style.setProperty("--drift", drift + "px");
+        heart.style.setProperty("--rot", rot + "deg");
+
+        heartsLayer.appendChild(heart);
+
+        setTimeout(()=> heart.remove(), (dur*1000)+200);
+      }, 130);
+
+      heartsTimer = setInterval(()=>{
+        if(Date.now() - startAt >= durationMs){
+          stopHeartsRain();
+        }
+      }, 250);
+    }
+
+    function stopHeartsRain(){
+      if(spawnTimer) clearInterval(spawnTimer);
+      if(heartsTimer) clearInterval(heartsTimer);
+      spawnTimer = null;
+      heartsTimer = null;
+      heartsLayer.innerHTML = "";
+      heartsLayer.style.display = "none";
+    }
+
+    // Trigger at 11:11 Iraq time for 1 minute (once per day)
+    function checkElevenEleven(){
+      const now = new Date();
+      const parts = new Intl.DateTimeFormat("en-GB",{
+        timeZone:"Asia/Baghdad",
+        hour:"2-digit",
+        minute:"2-digit",
+        hour12:false
+      }).formatToParts(now);
+
+      const hh = parts.find(p=>p.type==="hour")?.value;
+      const mm = parts.find(p=>p.type==="minute")?.value;
+
+      // مفتاح اليوم لمنع تكرار التشغيل
+      const todayKey = new Intl.DateTimeFormat("en-CA",{ timeZone:"Asia/Baghdad", year:"numeric", month:"2-digit", day:"2-digit"}).format(now);
+      const last = localStorage.getItem("last1111") || "";
+
+      if(hh === "11" && mm === "11" && last !== todayKey){
+        localStorage.setItem("last1111", todayKey);
+        startHeartsRain(60000); // دقيقة كاملة
+      }
+    }
+    setInterval(checkElevenEleven, 1000);
+
+    // ===== 11:11 Info Modal =====
+    const elevenBtn = document.getElementById("elevenInfoBtn");
+    const modal = document.getElementById("elevenModal");
+    const closeModal = document.getElementById("closeModal");
+    const okModal = document.getElementById("okModal");
+    const previewHearts = document.getElementById("previewHearts");
+
+    function openModal(){
+      modal.classList.add("show");
+      modal.setAttribute("aria-hidden","false");
+    }
+    function hideModal(){
+      modal.classList.remove("show");
+      modal.setAttribute("aria-hidden","true");
+    }
+
+    elevenBtn.addEventListener("click", openModal);
+    closeModal.addEventListener("click", hideModal);
+    okModal.addEventListener("click", hideModal);
+
+    modal.addEventListener("click", (e)=>{
+      if(e.target === modal) hideModal();
+    });
+
+    previewHearts.addEventListener("click", ()=>{
+      startHeartsRain(8000); // 8 ثواني معاينة
+    });
+  </script>
 </body>
 </html>
