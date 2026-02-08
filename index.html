@@ -481,11 +481,10 @@
     // ===== Playlist (ضيف ملفات mp3 عندك بالمستودع) =====
     // IMPORTANT: ارفع الملفات بهذه الأسماء أو غيّرها هنا
     const tracks = [
-     const tracks = [
-  { title: "You Know", file: "audio.mp3.mp3" },
-  { title: "Track 2", file: "audio1.mp3.mp3" }
-];
-
+      { title: "المقطع 1", file: "audio.mp3.mp3" },  // موجود عندك
+      { title: "المقطع 2", file: "track2.mp3" },     // ارفعه إذا تريده
+      { title: "المقطع 3", file: "track3.mp3" }      // ارفعه إذا تريده
+    ];
 
     const audioEl = document.getElementById("bgAudio");
     const btn = document.getElementById("audioBtn");
@@ -686,4 +685,3 @@
   </script>
 </body>
 </html>
-
