@@ -1,12 +1,9 @@
-// admin-tools.js — Admin buttons hidden + 7 taps to reveal + Info modal
+// admin-tools.js — Force-hide admin buttons + 7 taps toggle
 (() => {
-  // ===== Settings =====
-  const TAP_TARGET_SELECTOR = "h1";    // يضغط 7 مرات على عنوان MUSAWI
+  const TAP_TARGET_SELECTOR = "h1";
   const TAPS_REQUIRED = 7;
   const TAP_RESET_MS = 1200;
 
-  // ===== Helpers =====
-  const $ = (sel, root = document) => root.querySelector(sel);
   const el = (tag, props = {}, children = []) => {
     const n = document.createElement(tag);
     Object.assign(n, props);
@@ -14,15 +11,18 @@
     return n;
   };
 
-  // ===== Inject minimal styles =====
+  // ✅ Force CSS (wins over most site CSS)
   const style = el("style", {
     textContent: `
-      .admWrap{
+      .admForceHide{ display:none !important; }
+      #admWrap{ display:none !important; }
+      #admWrap.admShow{ display:flex !important; }
+
+      #admWrap{
         position: fixed;
         right: 12px;
         bottom: 12px;
         z-index: 99999;
-        display: none;
         gap: 8px;
         align-items: center;
         padding: 10px;
@@ -31,7 +31,7 @@
         background: rgba(0,0,0,.22);
         backdrop-filter: blur(10px);
       }
-      body.light .admWrap{
+      body.light #admWrap{
         background: rgba(255,255,255,.55);
         border-color: rgba(0,0,0,.10);
       }
@@ -53,7 +53,7 @@
       }
 
       /* Modal */
-      .admModal{
+      #admModal{
         position: fixed; inset: 0;
         z-index: 100000;
         display: none;
@@ -63,8 +63,8 @@
         background: rgba(0,0,0,.55);
         backdrop-filter: blur(6px);
       }
-      body.light .admModal{ background: rgba(255,255,255,.35); }
-      .admModal.show{ display:flex; }
+      body.light #admModal{ background: rgba(255,255,255,.35); }
+      #admModal.show{ display:flex; }
 
       .admCard{
         width: min(720px, 96vw);
@@ -83,17 +83,8 @@
         color: rgba(10,16,28,.86);
         box-shadow: 0 20px 70px rgba(0,0,0,.16);
       }
-      .admTitle{
-        margin: 0 0 10px;
-        font-weight: 900;
-        font-size: 18px;
-      }
-      .admRow{
-        display:flex;
-        gap:10px;
-        flex-wrap: wrap;
-        margin-top: 10px;
-      }
+      .admTitle{ margin: 0 0 10px; font-weight: 900; font-size: 18px; }
+      .admRow{ display:flex; gap:10px; flex-wrap: wrap; margin-top: 10px; }
       .admChip{
         padding: 8px 10px;
         border-radius: 999px;
@@ -106,31 +97,35 @@
         border-color: rgba(0,0,0,.10);
         background: rgba(0,0,0,.04);
       }
-      .admClose{
-        margin-top: 12px;
-        width: 100%;
-      }
+      .admClose{ margin-top: 12px; width: 100%; }
     `
   });
   document.head.appendChild(style);
 
-  // ===== Build UI (hidden by default) =====
-  const wrap = el("div", { className: "admWrap", id: "admWrap" });
+  // ✅ hide old buttons if موجودة بالصفحة
+  function forceHideOldButtons() {
+    const buttons = Array.from(document.querySelectorAll("button, a, div"));
+    for (const b of buttons) {
+      const t = (b.textContent || "").trim();
+      if (t === "11:11" || t === "معلومات" || t === "معلوماتي" || t === "Info") {
+        b.classList.add("admForceHide");
+      }
+    }
+  }
 
+  // ===== create our hidden admin UI =====
+  const wrap = el("div", { id: "admWrap" });
   const btn1111 = el("button", { className: "admBtn", textContent: "11:11" });
   const btnInfo = el("button", { className: "admBtn", textContent: "معلومات" });
-
   wrap.append(btn1111, btnInfo);
   document.body.appendChild(wrap);
 
-  // ===== Info modal =====
-  const modal = el("div", { className: "admModal", id: "admModal" });
+  // Modal
+  const modal = el("div", { id: "admModal" });
   const card = el("div", { className: "admCard" });
   const title = el("h3", { className: "admTitle", textContent: "لوحة معلومات" });
-
   const chips = el("div", { className: "admRow", id: "admChips" });
   const closeBtn = el("button", { className: "admBtn admClose", textContent: "إغلاق" });
-
   card.append(title, chips, closeBtn);
   modal.append(card);
   document.body.appendChild(modal);
@@ -138,20 +133,11 @@
   closeBtn.addEventListener("click", () => modal.classList.remove("show"));
   modal.addEventListener("click", (e) => { if (e.target === modal) modal.classList.remove("show"); });
 
-  function setChips(items) {
-    chips.innerHTML = "";
-    items.forEach(txt => chips.append(el("div", { className: "admChip", textContent: txt })));
-  }
-
-  // ===== Visitors (local only) =====
-  // ملاحظة: هذا عداد "محلي" لكل جهاز/متصفح فقط (بدون سيرفر ما نكدر نعدّ الزوار الحقيقيين)
   const vKey = "musawi_local_visits";
   const visits = (Number(localStorage.getItem(vKey)) || 0) + 1;
   localStorage.setItem(vKey, String(visits));
 
-  // ===== Ping (lightweight) =====
   async function pingMs() {
-    // نستخدم نفس الأصل (بدون طلبات خارجية)
     const t0 = performance.now();
     try {
       await fetch(location.href, { method: "HEAD", cache: "no-store" });
@@ -161,64 +147,46 @@
     }
   }
 
+  function setChips(items) {
+    chips.innerHTML = "";
+    for (const txt of items) chips.append(el("div", { className: "admChip", textContent: txt }));
+  }
+
   btnInfo.addEventListener("click", async () => {
     modal.classList.add("show");
-
     const lastUpdate = document.lastModified ? new Date(document.lastModified) : null;
     const lastUpdateTxt = lastUpdate ? lastUpdate.toLocaleString("ar-IQ") : "غير معروف";
-
-    setChips([
-      "Ping: ...",
-      `آخر تحديث: ${lastUpdateTxt}`,
-      `عدد الزيارات (محلي): ${visits}`
-    ]);
-
+    setChips([ "Ping: ...", `آخر تحديث: ${lastUpdateTxt}`, `عدد الزيارات (محلي): ${visits}` ]);
     const p = await pingMs();
-    setChips([
-      `Ping: ${p === null ? "غير متاح" : p + "ms"}`,
-      `آخر تحديث: ${lastUpdateTxt}`,
-      `عدد الزيارات (محلي): ${visits}`
-    ]);
+    setChips([ `Ping: ${p === null ? "غير متاح" : p + "ms"}`, `آخر تحديث: ${lastUpdateTxt}`, `عدد الزيارات (محلي): ${visits}` ]);
   });
 
-  // ===== 11:11 Test Button =====
   btn1111.addEventListener("click", () => {
-    // إذا عندك event1111.js عامل window.TEST_1111
-    if (typeof window.TEST_1111 === "function") {
-      window.TEST_1111(); // يشغّل الحدث يدويًا
-      return;
-    }
-    // fallback: إذا ما موجود
-    alert("زر 11:11 جاهز ✅\nبس لازم يكون عندك event1111.js مفعّل ويعرّف TEST_1111().");
+    if (typeof window.TEST_1111 === "function") return window.TEST_1111();
+    alert("زر 11:11 جاهز ✅\nلكن event1111.js لازم يعرّف window.TEST_1111()");
   });
 
-  // ===== 7 taps reveal (toggle) =====
-  const trigger = $(TAP_TARGET_SELECTOR) || document.body;
+  // ===== 7 taps toggle =====
+  const trigger = document.querySelector(TAP_TARGET_SELECTOR) || document.body;
   trigger.style.cursor = "pointer";
 
   let taps = 0;
   let tmr = null;
 
-  function showAdmin() { wrap.style.display = "flex"; }
-  function hideAdmin() { wrap.style.display = "none"; }
+  function show() { wrap.classList.add("admShow"); }
+  function hide() { wrap.classList.remove("admShow"); }
 
-  // نخليها Toggle حتى تگدر تخفيها بعدين بنفس 7 ضغطات
-  function toggleAdmin() {
-    const visible = wrap.style.display !== "none";
-    visible ? hideAdmin() : showAdmin();
-  }
-
-  // مخفية افتراضيًا
-  hideAdmin();
+  // ✅ Start hidden
+  hide();
+  forceHideOldButtons();
 
   trigger.addEventListener("click", () => {
     taps++;
     clearTimeout(tmr);
     tmr = setTimeout(() => { taps = 0; }, TAP_RESET_MS);
-
     if (taps >= TAPS_REQUIRED) {
       taps = 0;
-      toggleAdmin();
+      wrap.classList.contains("admShow") ? hide() : show();
     }
   });
 })();
