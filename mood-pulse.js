@@ -73,20 +73,11 @@
       background: rgba(10,16,28,.85);
     }
 
-    #moodLabel{
-      font-weight: 900;
-      font-size: 11px;
-      color: rgba(255,255,255,.80);
-      letter-spacing: .2px;
-    }
-    body.light #moodLabel{
-      color: rgba(10,16,28,.72);
-    }
-
+    
     /* نستخدم CSS Variables للتحكم */
     #moodPulseWrap{
       --beat: 1.2s;      /* مدة النبضة */
-      --glow: 0.18;      /* قوة التوهج */
+      --glow: 1.18;      /* قوة التوهج */
     }
 
     .beatAnim{
