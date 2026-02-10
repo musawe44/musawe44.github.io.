@@ -1,7 +1,7 @@
 // birthday-line.js — خط رفيع + (الأيام المتبقية) — 2/4 (April 2)
 (() => {
   // ===== عدّل هنا فقط =====
-  const BDAY_DAY = 2;
+  const BDAY_DAY = 3;
   const BDAY_MONTH = 4; // 4 = April
 
   // ===== Helpers =====
