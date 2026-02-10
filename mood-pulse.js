@@ -40,24 +40,6 @@
       font-family: Cairo, system-ui, Arial;
     }
 
-    #moodPulseChip{
-      pointer-events: none;
-      display:flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 6px;
-      padding: 10px 12px;
-      border-radius: 16px;
-      border: 1px solid rgba(255,255,255,.16);
-      background: rgba(0,0,0,.18);
-      backdrop-filter: blur(10px);
-      box-shadow: 0 10px 28px rgba(0,0,0,.18);
-      min-width: 70px;
-    }
-    body.light #moodPulseChip{
-      border-color: rgba(0,0,0,.10);
-      background: rgba(255,255,255,.65);
-      box-shadow: 0 10px 28px rgba(0,0,0,.10);
     }
 
     /* النبض */
