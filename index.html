@@ -223,44 +223,14 @@
     .socLink:hover{ transform: translateY(-2px); background: rgba(255,255,255,.10); }
     body.light .socLink{ background: rgba(0,0,0,.03); }
     .socLeft{ display:flex; align-items:center; gap:10px; }
-  /* ✅ ألوان متناسقة لأيقونات Telegram / Instagram */
-.socIco{
-  color: rgba(255,255,255,.92);
-}
-
-/* Telegram: سماوي أنيق */
-.socIco.tg{
-  background: rgba(56,189,248,.18);
-  border-color: rgba(56,189,248,.30);
-  box-shadow: 0 0 18px rgba(56,189,248,.18);
-}
-
-/* Instagram: تدرّج فخم */
-.socIco.ig{
-  background: linear-gradient(135deg,
-    rgba(245,158,11,.22),
-    rgba(236,72,153,.18),
-    rgba(99,102,241,.18)
-  );
-  border-color: rgba(255,255,255,.22);
-  box-shadow: 0 0 18px rgba(236,72,153,.14);
-}
-
-/* وضع فاتح */
-body.light .socIco.tg{
-  background: rgba(56,189,248,.16);
-  border-color: rgba(56,189,248,.25);
-  box-shadow: 0 0 14px rgba(56,189,248,.14);
-}
-body.light .socIco.ig{
-  background: linear-gradient(135deg,
-    rgba(245,158,11,.18),
-    rgba(236,72,153,.14),
-    rgba(99,102,241,.14)
-  );
-  border-color: rgba(0,0,0,.10);
-  box-shadow: 0 0 14px rgba(236,72,153,.12);
-}
+    .socIco{
+      width: 34px; height:34px;
+      border-radius: 12px;
+      display:grid; place-items:center;
+      background: rgba(255,255,255,.10);
+      border: 1px solid var(--border);
+    }
+    body.light .socIco{ background: rgba(0,0,0,.04); }
 
     /* ===== YouTube ===== */
     .video{
@@ -435,8 +405,7 @@ body.light .socIco.ig{
       <div class="socialRow">
         <a class="socLink" id="tgLink" href="https://t.me/Mu29_iq" target="_blank" rel="noopener">
           <span class="socLeft">
-            <span class="socIco tg" aria-hidden="true">
-
+            <span class="socIco" aria-hidden="true">✈️</span>
             Telegram
           </span>
           <span>↗</span>
@@ -444,8 +413,7 @@ body.light .socIco.ig{
 
         <a class="socLink" id="igLink" href="https://www.instagram.com/mu29__/" target="_blank" rel="noopener">
           <span class="socLeft">
-            <span class="socIco ig" aria-hidden="true">
-
+            <span class="socIco" aria-hidden="true">📷</span>
             Instagram
           </span>
           <span>↗</span>
