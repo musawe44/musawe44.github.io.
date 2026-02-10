@@ -22,6 +22,7 @@
       --glass2: rgba(255,255,255,.05);
       --accent: rgba(34,197,94,.95);
     }
+
     body.light{
       --bg:#f4f6ff;
       --card: rgba(0,0,0,.06);
@@ -70,7 +71,7 @@
         linear-gradient(120deg, rgba(255,255,255,.28), rgba(255,255,255,.18));
     }
 
-    /* ===== Top HUD ===== */
+    /* ===== Top HUD (Time + Date + Weather) ===== */
     .topHUD{
       position: fixed;
       top: 10px;
@@ -87,8 +88,24 @@
       font-size: 68px;
       line-height: 1;
       color: rgba(255,255,255,.92);
+      text-shadow:none;
+      pointer-events:none;
     }
     body.light .timeBig{ color: rgba(10,16,28,.88); }
+
+    .timeGhost{
+      position:absolute;
+      inset: -10px 0 auto 0;
+      text-align:center;
+      font-weight: 900;
+      font-size: 92px;
+      line-height: 1;
+      color: rgba(255,255,255,.10);
+      transform: translateY(22px);
+      user-select:none;
+      pointer-events:none;
+    }
+    body.light .timeGhost{ color: rgba(10,16,28,.10); }
 
     .hudRow{
       margin-top: 10px;
@@ -108,6 +125,7 @@
       border-color: rgba(0,0,0,.10);
       box-shadow: 0 10px 24px rgba(0,0,0,.08);
     }
+
     .hudDate,.hudWx{
       font-weight: 900;
       font-size: 14px;
@@ -116,10 +134,31 @@
     }
     body.light .hudDate, body.light .hudWx{ color: rgba(10,16,28,.82); }
 
+    .previewBtn{
+      pointer-events:auto;
+      border: 1px solid rgba(255,255,255,.18);
+      background: rgba(255,255,255,.10);
+      color: rgba(255,255,255,.92);
+      padding: 8px 12px;
+      border-radius: 14px;
+      font-family: inherit;
+      font-weight: 900;
+      cursor: pointer;
+      white-space:nowrap;
+    }
+    .previewBtn:hover{ background: rgba(255,255,255,.14); }
+    body.light .previewBtn{
+      border-color: rgba(0,0,0,.10);
+      background: rgba(0,0,0,.04);
+      color: rgba(10,16,28,.86);
+    }
+
     @media (max-width: 560px){
       body{ padding-top: 185px; }
       .timeBig{ font-size: 56px; }
+      .timeGhost{ font-size: 78px; }
       .hudDate,.hudWx{ font-size: 13px; }
+      .previewBtn{ padding: 8px 10px; font-size: 13px; }
     }
 
     /* ===== Layout ===== */
@@ -152,9 +191,14 @@
     }
 
     /* ===== Profile ===== */
-    .hero{ display:flex; gap:14px; align-items:flex-start; }
+    .hero{
+      display:flex;
+      gap:14px;
+      align-items:flex-start;
+    }
     .photo{
-      width: 92px; height: 92px;
+      width: 92px;
+      height: 92px;
       border-radius: 20px;
       border: 1px solid var(--border);
       object-fit: cover;
@@ -168,7 +212,6 @@
       font-weight: 900;
       letter-spacing:.3px;
       line-height:1.05;
-      user-select:none;
     }
     .subtitle{
       margin: 8px 0 0;
@@ -176,7 +219,12 @@
       font-weight: 900;
       font-size: 17px;
     }
-    .badges{ margin-top: 12px; display:flex; flex-wrap:wrap; gap:8px; }
+    .badges{
+      margin-top: 12px;
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+    }
     .badge{
       padding: 6px 10px;
       border-radius: 999px;
@@ -186,10 +234,18 @@
       font-weight: 900;
       white-space:nowrap;
     }
-    body.light .badge{ border-color: rgba(0,0,0,.10); background: rgba(0,0,0,.03); }
-    .sectionTitle{ margin: 0 0 10px; font-size: 18px; font-weight: 900; }
+    body.light .badge{
+      border-color: rgba(0,0,0,.10);
+      background: rgba(0,0,0,.03);
+    }
 
-    /* ===== Note ===== */
+    .sectionTitle{
+      margin: 0 0 10px;
+      font-size: 18px;
+      font-weight: 900;
+    }
+
+    /* ===== Note from Google Sheet ===== */
     .bigNote{
       margin:0;
       padding: 14px 16px;
@@ -201,10 +257,18 @@
       font-weight: 900;
       letter-spacing: .2px;
     }
-    body.light .bigNote{ border-color: rgba(0,0,0,.10); background: rgba(255,255,255,.55); }
+    body.light .bigNote{
+      border-color: rgba(0,0,0,.10);
+      background: rgba(255,255,255,.55);
+    }
 
-    /* ===== Social ===== */
-    .socialRow{ margin-top: 12px; display:flex; gap:10px; flex-wrap:wrap; }
+    /* ===== Social under note ===== */
+    .socialRow{
+      margin-top: 12px;
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+    }
     .socLink{
       flex: 1 1 180px;
       text-decoration:none;
@@ -221,7 +285,7 @@
       font-weight: 900;
     }
     .socLink:hover{ transform: translateY(-2px); background: rgba(255,255,255,.10); }
-    body.light .socLink{ background: rgba(0,0,0,.03); }
+
     .socLeft{ display:flex; align-items:center; gap:10px; }
     .socIco{
       width: 34px; height:34px;
@@ -229,8 +293,40 @@
       display:grid; place-items:center;
       background: rgba(255,255,255,.10);
       border: 1px solid var(--border);
+      color: rgba(255,255,255,.92);
     }
-    body.light .socIco{ background: rgba(0,0,0,.04); }
+    body.light .socLink{ background: rgba(0,0,0,.03); }
+    body.light .socIco{ background: rgba(0,0,0,.04); color: rgba(10,16,28,.86); }
+
+    /* ===== ✅ ألوان متناسقة لأيقونات Telegram / Instagram ===== */
+    .socIco.tg{
+      background: rgba(56,189,248,.18);
+      border-color: rgba(56,189,248,.30);
+      box-shadow: 0 0 18px rgba(56,189,248,.18);
+    }
+    .socIco.ig{
+      background: linear-gradient(135deg,
+        rgba(245,158,11,.22),
+        rgba(236,72,153,.18),
+        rgba(99,102,241,.18)
+      );
+      border-color: rgba(255,255,255,.22);
+      box-shadow: 0 0 18px rgba(236,72,153,.14);
+    }
+    body.light .socIco.tg{
+      background: rgba(56,189,248,.16);
+      border-color: rgba(56,189,248,.25);
+      box-shadow: 0 0 14px rgba(56,189,248,.14);
+    }
+    body.light .socIco.ig{
+      background: linear-gradient(135deg,
+        rgba(245,158,11,.18),
+        rgba(236,72,153,.14),
+        rgba(99,102,241,.14)
+      );
+      border-color: rgba(0,0,0,.10);
+      box-shadow: 0 0 14px rgba(236,72,153,.12);
+    }
 
     /* ===== YouTube ===== */
     .video{
@@ -296,6 +392,7 @@
       background: rgba(255,255,255,.06);
     }
     body.light .volWrap{ background: rgba(0,0,0,.03); }
+
     .volLabel{ font-weight: 900; font-size: 13px; color: var(--muted); white-space:nowrap; }
     .volume{ width:100%; accent-color: var(--accent); }
 
@@ -325,7 +422,7 @@
     }
     body.light footer{ color: rgba(10,16,28,.82); background: rgba(0,0,0,.03); }
 
-    /* ===== Theme toggle ===== */
+    /* ===== Night toggle bottom-left ===== */
     .nightToggle{
       position: fixed;
       left: 12px;
@@ -362,29 +459,84 @@
     }
     .nightLabel{ font-weight: 900; font-size: 13px; color: rgba(255,255,255,.92); }
     body.light .nightLabel{ color: rgba(10,16,28,.82); }
+
+    /* ===== Romantic overlay (11:11 + 23:11) ===== */
+    .romance{
+      position:fixed; inset:0;
+      z-index: 200;
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding: 24px;
+      background: rgba(0,0,0,.35);
+      backdrop-filter: blur(2px);
+    }
+    body.light .romance{ background: rgba(255,255,255,.30); }
+    .romance.show{ display:flex; animation: fadeIn .35s ease both; }
+    @keyframes fadeIn{ from{opacity:0} to{opacity:1} }
+
+    .romBox{
+      width:min(720px, 100%);
+      text-align:center;
+      padding: 18px 16px;
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,.18);
+      background: rgba(255,255,255,.08);
+      backdrop-filter: blur(12px);
+      box-shadow: 0 24px 70px rgba(0,0,0,.35);
+      animation: pop 700ms cubic-bezier(.2,.9,.2,1) both;
+    }
+    @keyframes pop{
+      from{ transform: translateY(12px) scale(.985); opacity:.6; }
+      to{ transform: translateY(0) scale(1); opacity:1; }
+    }
+    .romBox h3{
+      margin:0 0 10px;
+      font-weight: 900;
+      font-size: 22px;
+      letter-spacing:.2px;
+    }
+    .romBox p{
+      margin:0;
+      font-weight: 900;
+      font-size: 20px;
+      line-height: 2.0;
+    }
+    .romPulse{
+      margin-top: 12px;
+      height: 6px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,.65), transparent);
+      animation: pulse 2.6s ease-in-out infinite;
+      opacity:.85;
+    }
+    @keyframes pulse{
+      0%,100%{ transform: scaleX(.6); opacity:.55; }
+      50%{ transform: scaleX(1); opacity:1; }
+    }
   </style>
 </head>
 
 <body>
-  <!-- Background -->
-  <video class="bgVideo" id="bgVideo" autoplay muted loop playsinline>
+  <video class="bgVideo" autoplay muted loop playsinline>
     <source src="bg.mp4.mp4" type="video/mp4">
   </video>
   <div class="overlay"></div>
 
-  <!-- Top HUD -->
   <div class="topHUD">
+    <div class="timeGhost" id="timeGhost">11:11</div>
     <div class="timeBig" id="timeNow">--:--</div>
+
     <div class="hudRow">
       <div class="hudDate" id="dateTxt">...</div>
-      <div class="hudWx" id="wxTxt">جاري جلب الطقس...</div>
+      <div class="hudWx" id="wxTxt">جاري جلب طقس البصرة...</div>
     </div>
   </div>
 
   <main class="grid">
     <section class="card">
       <div class="hero">
-        <img class="photo" id="avatarImg" src="avatar.jpg" alt="صورتي">
+        <img class="photo" src="avatar.jpg" alt="صورتي">
         <div style="flex:1">
           <h1>MUSAWI</h1>
           <p class="subtitle">طالب <span style="letter-spacing:.4px">GEOLOGY</span> — جامعة البصرة</p>
@@ -403,17 +555,30 @@
       <p class="bigNote" id="mainQuote">... تحميل</p>
 
       <div class="socialRow">
-        <a class="socLink" id="tgLink" href="https://t.me/Mu29_iq" target="_blank" rel="noopener">
+        <a class="socLink" href="https://t.me/Mu29_iq" target="_blank" rel="noopener">
           <span class="socLeft">
-            <span class="socIco" aria-hidden="true">✈️</span>
+            <!-- ✅ هنا أضفنا tg -->
+            <span class="socIco tg" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                <path d="M21.8 4.3c.3-1.2-.9-2-2-1.6L3.7 8.9c-1.1.4-1.1 2 .1 2.3l4.1 1.2 1.6 5c.3 1 1.6 1.3 2.4.6l2.3-2.1 4 3c.9.7 2.2.2 2.5-.9L21.8 4.3Z" fill="currentColor" opacity=".95"/>
+                <path d="M9.2 12.6l9.4-6.3c.2-.1.4.2.2.4l-7.8 7.5c-.3.3-.5.7-.4 1.1l.4 2.9c.1.5-.5.7-.8.3l-1.7-3.4c-.3-.5-.7-.9-1.2-1l-3.1-1c-.5-.2-.5-.9 0-1.1l16-6.2" fill="currentColor"/>
+              </svg>
+            </span>
             Telegram
           </span>
           <span>↗</span>
         </a>
 
-        <a class="socLink" id="igLink" href="https://www.instagram.com/mu29__/" target="_blank" rel="noopener">
+        <a class="socLink" href="https://www.instagram.com/mu29__/" target="_blank" rel="noopener">
           <span class="socLeft">
-            <span class="socIco" aria-hidden="true">📷</span>
+            <!-- ✅ هنا أضفنا ig -->
+            <span class="socIco ig" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                <path d="M7.5 2h9A5.5 5.5 0 0 1 22 7.5v9A5.5 5.5 0 0 1 16.5 22h-9A5.5 5.5 0 0 1 2 16.5v-9A5.5 5.5 0 0 1 7.5 2Z" stroke="currentColor" stroke-width="2" opacity=".95"/>
+                <path d="M12 16.1A4.1 4.1 0 1 0 12 8a4.1 4.1 0 0 0 0 8.1Z" stroke="currentColor" stroke-width="2"/>
+                <path d="M17.6 6.9h.01" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+              </svg>
+            </span>
             Instagram
           </span>
           <span>↗</span>
@@ -425,7 +590,6 @@
       <h2 class="sectionTitle">صورة موسيقى</h2>
       <div class="video">
         <iframe
-          id="ytFrame"
           src="https://www.youtube.com/embed/BXChU6bMEXU"
           title="YouTube video"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
@@ -456,7 +620,7 @@
         <canvas id="viz"></canvas>
       </div>
 
-      <audio id="bgAudio" preload="metadata"></audio>
+      <audio id="bgAudio" preload="metadata" loop></audio>
     </section>
   </main>
 
@@ -469,9 +633,103 @@
     <button id="toggleTheme">تشغيل/إطفاء</button>
   </div>
 
+  <!-- Romantic overlay -->
+  <div class="romance" id="romance">
+    <div class="romBox">
+      <h3 id="romTitle">11:11</h3>
+      <p id="romText">... </p>
+      <div class="romPulse"></div>
+      <p style="margin-top:10px; font-size:13px; color:rgba(255,255,255,.85)">
+        (ستعود الصفحة لوضعها الطبيعي بعد دقيقة)
+      </p>
+    </div>
+  </div>
+
   <script>
-    // سنة الفوتر + ثيم
+    // ===== Footer year =====
     document.getElementById("y").textContent = new Date().getFullYear();
+
+    // ===== Google Sheet -> B1 =====
+    const SHEET_CSV_URL =
+      "https://docs.google.com/spreadsheets/d/e/2PACX-1vSXkdu2p1KVIjDPGdb97HfmkKa2WuvKN349Z5qdZOd_RTCyT__xNLL44swa0EUAnq614hxS9p52NSlL/pub?gid=0&single=true&output=csv";
+
+    fetch(SHEET_CSV_URL, { cache: "no-store" })
+      .then(res => res.text())
+      .then(text => {
+        text = text.replace(/^\uFEFF/, "");
+        const commaIndex = text.indexOf(",");
+        if (commaIndex === -1) return;
+        let value = text.slice(commaIndex + 1).trim();
+        value = value.replace(/^"|"$/g, "");
+        if (value) document.getElementById("mainQuote").textContent = value;
+      })
+      .catch(()=>{});
+
+    // ===== Iraq time/date =====
+    const timeNow = document.getElementById("timeNow");
+    const timeGhost = document.getElementById("timeGhost");
+    const dateTxt = document.getElementById("dateTxt");
+
+    function formatIraqTime(){
+      const now = new Date();
+      return new Intl.DateTimeFormat("en-GB", {
+        timeZone: "Asia/Baghdad",
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: false
+      }).format(now);
+    }
+
+    function formatIraqDate(){
+      const now = new Date();
+      return new Intl.DateTimeFormat("ar-IQ", {
+        timeZone: "Asia/Baghdad",
+        weekday: "long",
+        day: "2-digit",
+        month: "long",
+        year: "numeric"
+      }).format(now);
+    }
+
+    // ===== Basra weather (Open-Meteo) =====
+    const wxTxt = document.getElementById("wxTxt");
+    const lat = 30.5085, lon = 47.7804;
+
+    function codeToArabic(code){
+      if (code === 0) return ["☀️","صحو"];
+      if ([1,2].includes(code)) return ["🌤️","غائم جزئياً"];
+      if (code === 3) return ["☁️","غائم"];
+      if ([45,48].includes(code)) return ["🌫️","ضباب"];
+      if ([51,53,55].includes(code)) return ["🌦️","رذاذ"];
+      if ([61,63,65].includes(code)) return ["🌧️","مطر"];
+      if ([71,73,75,77].includes(code)) return ["🌨️","ثلج"];
+      if ([80,81,82].includes(code)) return ["🌧️","زخات"];
+      if ([95,96,99].includes(code)) return ["⛈️","عاصفة"];
+      return ["⛅","متغير"];
+    }
+
+    async function fetchWeather(){
+      try{
+        const url =
+          `https://api.open-meteo.com/v1/forecast` +
+          `?latitude=${lat}&longitude=${lon}` +
+          `&current=temperature_2m,weather_code` +
+          `&timezone=Asia%2FBaghdad`;
+
+        const res = await fetch(url, { cache: "no-store" });
+        const data = await res.json();
+        const temp = Math.round(data.current.temperature_2m);
+        const code = data.current.weather_code;
+        const [ico, desc] = codeToArabic(code);
+        wxTxt.textContent = `البصرة: ${temp}° — ${desc} ${ico}`;
+      }catch(e){
+        wxTxt.textContent = "تعذر جلب طقس البصرة";
+      }
+    }
+    fetchWeather();
+    setInterval(fetchWeather, 10 * 60 * 1000);
+
+    // ===== Theme toggle =====
     const toggleTheme = document.getElementById("toggleTheme");
     const savedTheme = localStorage.getItem("themeMode");
     if(savedTheme === "light") document.body.classList.add("light");
@@ -479,17 +737,258 @@
       document.body.classList.toggle("light");
       localStorage.setItem("themeMode", document.body.classList.contains("light") ? "light" : "dark");
     });
+
+    // ===== Audio playlist =====
+    const tracks = [
+      { title: "المقطع 1", file: "audio.mp3.mp3.mp3" },
+      { title: "المقطع 2", file: "audio1.mp3.mp3" }
+    ];
+    const elevenTrack = { title: "Romantic 11:11", file: "eleven.mp3.mp3" };
+
+    const audioEl = document.getElementById("bgAudio");
+    const btnPlay = document.getElementById("audioBtn");
+    const vol = document.getElementById("volume");
+    const titleEl = document.getElementById("trackTitle");
+    const prevBtn = document.getElementById("prevTrack");
+    const nextBtn = document.getElementById("nextTrack");
+
+    const canvas = document.getElementById("viz");
+    const ctx = canvas.getContext("2d");
+
+    let audioCtx = null, analyser = null, srcNode = null, freqData = null;
+    let rafId = null;
+    let playing = false;
+    let trackIndex = 0;
+
+    function setTrack(i){
+      trackIndex = (i + tracks.length) % tracks.length;
+      const t = tracks[trackIndex];
+      audioEl.src = t.file;
+      titleEl.textContent = `المقطع: ${trackIndex + 1} — ${t.title}`;
+    }
+    setTrack(0);
+
+    audioEl.volume = (Number(vol.value)||70)/100;
+    vol.addEventListener("input", () => audioEl.volume = (Number(vol.value)||0)/100);
+
+    function resizeCanvas(){
+      const dpr = window.devicePixelRatio || 1;
+      const rect = canvas.getBoundingClientRect();
+      canvas.width = Math.floor(rect.width * dpr);
+      canvas.height = Math.floor(rect.height * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+    window.addEventListener("resize", resizeCanvas);
+    resizeCanvas();
+
+    function ensureAudioGraph(){
+      if(audioCtx) return;
+      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      analyser = audioCtx.createAnalyser();
+      analyser.fftSize = 2048;
+      analyser.smoothingTimeConstant = 0.82;
+      freqData = new Uint8Array(analyser.frequencyBinCount);
+
+      srcNode = audioCtx.createMediaElementSource(audioEl);
+      srcNode.connect(analyser);
+      analyser.connect(audioCtx.destination);
+    }
+
+    function drawBars(){
+      const w = canvas.getBoundingClientRect().width;
+      const h = canvas.getBoundingClientRect().height;
+
+      ctx.clearRect(0,0,w,h);
+      ctx.fillStyle = "rgba(255,255,255,0.03)";
+      ctx.fillRect(0,0,w,h);
+
+      if(!analyser || !freqData){
+        rafId = requestAnimationFrame(drawBars);
+        return;
+      }
+
+      analyser.getByteFrequencyData(freqData);
+
+      const bars = 64;
+      const step = Math.floor(freqData.length / bars);
+      const barW = w / bars;
+
+      for(let i=0;i<bars;i++){
+        const v = freqData[i*step] / 255;
+        const barH = Math.max(6, v * (h - 12));
+        const x = i * barW;
+        const y = h - barH;
+        ctx.fillStyle = "rgba(255,255,255,0.78)";
+        ctx.fillRect(x + barW*0.18, y, barW*0.64, barH);
+      }
+
+      rafId = requestAnimationFrame(drawBars);
+    }
+
+    function startViz(){
+      if(rafId) cancelAnimationFrame(rafId);
+      drawBars();
+    }
+    function stopViz(){
+      if(rafId) cancelAnimationFrame(rafId);
+      rafId = null;
+      const w = canvas.getBoundingClientRect().width;
+      const h = canvas.getBoundingClientRect().height;
+      ctx.clearRect(0,0,w,h);
+      ctx.fillStyle = "rgba(255,255,255,0.03)";
+      ctx.fillRect(0,0,w,h);
+    }
+    stopViz();
+
+    async function playPause(){
+      try{
+        ensureAudioGraph();
+        if(audioCtx.state === "suspended") await audioCtx.resume();
+
+        if(!playing){
+          await audioEl.play();
+          playing = true;
+          btnPlay.textContent = "إيقاف";
+          startViz();
+        }else{
+          audioEl.pause();
+          playing = false;
+          btnPlay.textContent = "تشغيل";
+          stopViz();
+        }
+      }catch(e){
+        btnPlay.textContent = "اضغط مرة ثانية";
+      }
+    }
+    btnPlay.addEventListener("click", playPause);
+
+    prevBtn.addEventListener("click", async () => {
+      const was = playing;
+      if(was){ audioEl.pause(); playing=false; }
+      setTrack(trackIndex - 1);
+      btnPlay.textContent = "تشغيل";
+      stopViz();
+      if(was) await playPause();
+    });
+
+    nextBtn.addEventListener("click", async () => {
+      const was = playing;
+      if(was){ audioEl.pause(); playing=false; }
+      setTrack(trackIndex + 1);
+      btnPlay.textContent = "تشغيل";
+      stopViz();
+      if(was) await playPause();
+    });
+
+    function fadeTo(targetVol, ms=900){
+      const start = audioEl.volume;
+      const startT = performance.now();
+      return new Promise(resolve=>{
+        function step(t){
+          const p = Math.min(1, (t-startT)/ms);
+          audioEl.volume = start + (targetVol-start)*p;
+          if(p<1) requestAnimationFrame(step);
+          else resolve();
+        }
+        requestAnimationFrame(step);
+      });
+    }
+
+    // ===== Romantic Event (11:11 + 23:11) =====
+    const romance = document.getElementById("romance");
+    const romText = document.getElementById("romText");
+    const romTitle = document.getElementById("romTitle");
+    let lastKey = null;
+
+    const romanticLines = [
+      "11:11…<br>يمكن هو جاي يفكّر بيج 🤍",
+      "بهذه الدقيقة…<br>اسمچ مرّ بباله مثل نسمة هادئة 🤍",
+      "11:11…<br>مو كل تفكير يصير كلام… بعضه حب خالص 🤍",
+      "بهذه اللحظة…<br>يمكن ما كتب… بس قلبه مرّ عليچ 🤍",
+      "11:11…<br>إذا حسّيتي بدفء… مو صدفة 🤍",
+      "بهذه الدقيقة…<br>تذكّري شخص يسكن قلبچ 🤍",
+      "11:11…<br>تمنّي له الخير… يمكن هو يتمنّاه إلچ 🤍",
+      "بهذه اللحظة…<br>بعيد… بس قريب بالفكرة 🤍"
+    ];
+
+    async function runRomanticEvent(label){
+      romance.classList.add("show");
+      romTitle.textContent = label;
+      romText.innerHTML = romanticLines[Math.floor(Math.random() * romanticLines.length)];
+
+      const old = { src: audioEl.src, idx: trackIndex, wasPlaying: playing, vol: audioEl.volume };
+
+      try{
+        ensureAudioGraph();
+        if(audioCtx.state === "suspended") await audioCtx.resume();
+
+        await fadeTo(Math.min(old.vol, 0.22), 900);
+
+        audioEl.src = elevenTrack.file;
+        titleEl.textContent = `🎁 ${label} — ${elevenTrack.title}`;
+
+        if(old.wasPlaying){
+          await audioEl.play();
+          playing = true;
+          btnPlay.textContent = "إيقاف";
+          startViz();
+        }
+
+        setTimeout(async ()=>{
+          try{
+            if(old.wasPlaying){
+              await fadeTo(0.18, 700);
+              audioEl.src = old.src || tracks[old.idx]?.file;
+              trackIndex = old.idx;
+              titleEl.textContent = `المقطع: ${trackIndex + 1} — ${tracks[trackIndex]?.title || ""}`;
+
+              await audioEl.play();
+              playing = true;
+              btnPlay.textContent = "إيقاف";
+              startViz();
+
+              const sliderVol = (Number(vol.value)||70)/100;
+              await fadeTo(sliderVol, 900);
+            }
+          } finally {
+            romance.classList.remove("show");
+          }
+        }, 60000);
+
+      }catch(e){
+        setTimeout(()=> romance.classList.remove("show"), 60000);
+      }
+    }
+
+    function checkSpecialTimes(t){
+      const [hh, mm] = t.split(":");
+      const ok = (hh === "11" && mm === "11") || (hh === "23" && mm === "11");
+      if(!ok) return;
+
+      const now = new Date();
+      const key = new Intl.DateTimeFormat("en-CA", {
+        timeZone: "Asia/Baghdad",
+        year:"numeric", month:"2-digit", day:"2-digit",
+        hour:"2-digit", minute:"2-digit", hour12:false
+      }).format(now);
+
+      if(lastKey !== key){
+        lastKey = key;
+        const label = (hh === "11") ? "11:11 AM" : "23:11 PM";
+        runRomanticEvent(label);
+      }
+    }
+
+    // Main tick
+    function tick(){
+      const t = formatIraqTime();
+      timeNow.textContent = t;
+      timeGhost.textContent = t;
+      dateTxt.textContent = formatIraqDate();
+      checkSpecialTimes(t);
+    }
+    tick();
+    setInterval(tick, 1000);
   </script>
-
-  <!-- ✅ ترتيب الملفات (مهم) -->
-  <script src="config.js"></script>
-  <script src="base.js"></script>
-  <script src="audio.js"></script>
-  <script src="admin-tools.js"></script>
-  <script src="more-info-button.js"></script>
-  <script src="tools.js"></script>
-
-  <!-- ✅ فعالية 11:11 بملف وحده (إذا تريدها) -->
-  <script src="event1111.js"></script>
 </body>
 </html>
