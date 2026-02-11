@@ -1,257 +1,495 @@
 <!doctype html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>معلومات أكثر</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>MUSAWI</title>
+  <meta name="theme-color" content="#0b1220">
 
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;800;900&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;800;900&display=swap" rel="stylesheet">
 
-<style>
-body{
-  margin:0;
-  font-family:"Cairo",sans-serif;
-  background:#0b1220;
-  color:#fff;
-  overflow-x:hidden;
-  padding:20px;
-}
+  <style>
+    :root{
+      --bg:#0b1220;
+      --card: rgba(255,255,255,.10);
+      --border: rgba(255,255,255,.18);
+      --text: #eef2ff;
+      --muted:#d1d5db;
+      --shadow: 0 18px 40px rgba(0,0,0,.38);
+      --glass: rgba(255,255,255,.07);
+      --glass2: rgba(255,255,255,.05);
+      --accent: rgba(34,197,94,.95);
+    }
+    body.light{
+      --bg:#f4f6ff;
+      --card: rgba(0,0,0,.06);
+      --border: rgba(0,0,0,.12);
+      --text:#0b1220;
+      --muted:#334155;
+      --shadow: 0 18px 40px rgba(0,0,0,.12);
+      --glass: rgba(255,255,255,.62);
+      --glass2: rgba(255,255,255,.40);
+    }
 
-/* نفس خلفية الصفحة الرئيسية */
-.bgVideo{
-  position:fixed;
-  inset:0;
-  width:100%;
-  height:100%;
-  object-fit:cover;
-  z-index:-2;
-}
-.overlay{
-  position:fixed;
-  inset:0;
-  background:linear-gradient(180deg,rgba(0,0,0,.5),rgba(0,0,0,.8));
-  z-index:-1;
-}
+    *{ box-sizing:border-box; }
+    html,body{ height:100%; }
 
-/* فقاعة */
-.card{
-  backdrop-filter: blur(18px);
-  background: rgba(255,255,255,.08);
-  border:1px solid rgba(255,255,255,.15);
-  border-radius:28px;
-  padding:20px;
-  margin-bottom:20px;
-  box-shadow:0 10px 40px rgba(0,0,0,.5);
-}
+    body{
+      margin:0;
+      font-family:"Cairo", system-ui, Arial;
+      color:var(--text);
+      background: var(--bg);
+      overflow-x:hidden;
+      padding: 175px 14px 22px;
+    }
 
-h2{
-  margin:0 0 15px;
-  font-weight:900;
-}
+    /* ===== Background video ===== */
+    .bgVideo{
+      position:fixed; inset:0;
+      width:100%; height:100%;
+      object-fit:cover;
+      z-index:-6;
+      transform: scale(1.02);
+      filter: saturate(1.08) contrast(1.05);
+    }
+    .overlay{
+      position:fixed; inset:0;
+      z-index:-5;
+      background:
+        radial-gradient(900px 520px at 80% 20%, rgba(34,197,94,.12), transparent 60%),
+        radial-gradient(750px 450px at 20% 80%, rgba(59,130,246,.12), transparent 55%),
+        linear-gradient(120deg, rgba(11,18,32,.30), rgba(11,18,32,.18));
+      transition: opacity .25s ease;
+    }
+    body.light .overlay{
+      background:
+        radial-gradient(900px 520px at 80% 20%, rgba(34,197,94,.14), transparent 60%),
+        radial-gradient(750px 450px at 20% 80%, rgba(59,130,246,.14), transparent 55%),
+        linear-gradient(120deg, rgba(255,255,255,.28), rgba(255,255,255,.18));
+    }
 
-/* ===== iPhone Weather Style ===== */
-.weatherMain{
-  text-align:center;
-}
-.weatherMain .temp{
-  font-size:60px;
-  font-weight:900;
-}
-.weatherMain .desc{
-  opacity:.8;
-  font-size:18px;
-}
+    /* ===== Top HUD ===== */
+    .topHUD{
+      position: fixed;
+      top: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: min(980px, calc(100% - 20px));
+      z-index: 70;
+      pointer-events:none;
+    }
+    .timeBig{
+      text-align:center;
+      font-weight: 900;
+      letter-spacing: .5px;
+      font-size: 68px;
+      line-height: 1;
+      color: rgba(255,255,255,.92);
+    }
+    body.light .timeBig{ color: rgba(10,16,28,.88); }
 
-.week{
-  margin-top:15px;
-}
-.dayRow{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin:8px 0;
-}
-.bar{
-  flex:1;
-  height:6px;
-  margin:0 10px;
-  background:rgba(255,255,255,.15);
-  border-radius:10px;
-  position:relative;
-}
-.bar span{
-  position:absolute;
-  height:100%;
-  border-radius:10px;
-  background:linear-gradient(90deg,#facc15,#f97316);
-}
+    .hudRow{
+      margin-top: 10px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,.16);
+      background: var(--glass);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 10px 24px rgba(0,0,0,.14);
+      pointer-events:auto;
+    }
+    body.light .hudRow{
+      border-color: rgba(0,0,0,.10);
+      box-shadow: 0 10px 24px rgba(0,0,0,.08);
+    }
+    .hudDate,.hudWx{
+      font-weight: 900;
+      font-size: 14px;
+      color: rgba(255,255,255,.92);
+      white-space:nowrap;
+    }
+    body.light .hudDate, body.light .hudWx{ color: rgba(10,16,28,.82); }
 
-/* ===== Prayer Style ===== */
-.prayerRow{
-  display:flex;
-  justify-content:space-between;
-  padding:12px 0;
-  border-bottom:1px dashed rgba(255,255,255,.2);
-}
-.prayerRow:last-child{
-  border-bottom:none;
-}
+    @media (max-width: 560px){
+      body{ padding-top: 185px; }
+      .timeBig{ font-size: 56px; }
+      .hudDate,.hudWx{ font-size: 13px; }
+    }
 
-/* ===== On this day ===== */
-.eventBox{
-  text-align:center;
-}
-.eventBox img{
-  width:100%;
-  border-radius:20px;
-  margin:10px 0;
-}
-.eventYear{
-  font-size:20px;
-  font-weight:900;
-}
-.eventText{
-  margin-top:8px;
-  opacity:.9;
-}
-.changeBtn{
-  margin-top:10px;
-  background:rgba(255,255,255,.15);
-  border:none;
-  padding:8px 14px;
-  border-radius:20px;
-  color:#fff;
-  cursor:pointer;
-}
+    /* ===== Layout ===== */
+    .grid{
+      width:min(980px, 100%);
+      margin: 0 auto;
+      display:grid;
+      gap:16px;
+      grid-template-columns: 1.2fr .8fr;
+      align-items:start;
+    }
+    @media (max-width: 920px){
+      .grid{ grid-template-columns: 1fr; }
+    }
 
-/* ===== Dua ===== */
-.dua{
-  font-size:18px;
-  line-height:2;
-  opacity:.95;
-}
+    .card{
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 18px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
+      position:relative;
+      overflow:hidden;
+      animation: enter 820ms cubic-bezier(.2,.9,.2,1) both;
+    }
+    @keyframes enter{
+      from{ opacity:0; transform: translateY(18px) scale(.99); filter: blur(8px); }
+      to{ opacity:1; transform: translateY(0) scale(1); filter: blur(0); }
+    }
 
-.backBtn{
-  display:inline-block;
-  margin-bottom:20px;
-  padding:8px 14px;
-  background:rgba(255,255,255,.15);
-  border-radius:20px;
-  text-decoration:none;
-  color:#fff;
-}
-</style>
+    /* ===== Profile ===== */
+    .hero{ display:flex; gap:14px; align-items:flex-start; }
+    .photo{
+      width: 92px; height: 92px;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      object-fit: cover;
+      background: rgba(255,255,255,.06);
+      flex: 0 0 auto;
+      margin-top: 2px;
+    }
+    h1{
+      margin:0;
+      font-size: 32px;
+      font-weight: 900;
+      letter-spacing:.3px;
+      line-height:1.05;
+      user-select:none;
+    }
+    .subtitle{
+      margin: 8px 0 0;
+      color: var(--muted);
+      font-weight: 900;
+      font-size: 17px;
+    }
+    .badges{ margin-top: 12px; display:flex; flex-wrap:wrap; gap:8px; }
+    .badge{
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.16);
+      background: rgba(255,255,255,.06);
+      font-size: 14px;
+      font-weight: 900;
+      white-space:nowrap;
+    }
+    body.light .badge{ border-color: rgba(0,0,0,.10); background: rgba(0,0,0,.03); }
+    .sectionTitle{ margin: 0 0 10px; font-size: 18px; font-weight: 900; }
+
+    /* ===== Note ===== */
+    .bigNote{
+      margin:0;
+      padding: 14px 16px;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,.16);
+      background: var(--glass2);
+      line-height: 2.1;
+      font-size: 21px;
+      font-weight: 900;
+      letter-spacing: .2px;
+    }
+    body.light .bigNote{ border-color: rgba(0,0,0,.10); background: rgba(255,255,255,.55); }
+
+    /* ===== Social ===== */
+    .socialRow{ margin-top: 12px; display:flex; gap:10px; flex-wrap:wrap; }
+    .socLink{
+      flex: 1 1 180px;
+      text-decoration:none;
+      color: var(--text);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      padding: 12px 12px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,.06);
+      transition: transform .18s ease, background .18s ease;
+      font-weight: 900;
+    }
+    .socLink:hover{ transform: translateY(-2px); background: rgba(255,255,255,.10); }
+    body.light .socLink{ background: rgba(0,0,0,.03); }
+    .socLeft{ display:flex; align-items:center; gap:10px; }
+    .socIco{
+      width: 34px; height:34px;
+      border-radius: 12px;
+      display:grid; place-items:center;
+      background: rgba(255,255,255,.10);
+      border: 1px solid var(--border);
+    }
+    body.light .socIco{ background: rgba(0,0,0,.04); }
+
+    /* ===== YouTube ===== */
+    .video{
+      border-radius: 16px;
+      overflow:hidden;
+      border: 1px solid var(--border);
+      background: rgba(0,0,0,.20);
+      aspect-ratio: 16/9;
+    }
+    .video iframe{ width:100%; height:100%; border:0; display:block; }
+
+    /* ===== Audio ===== */
+    .audioTop{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      padding: 12px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,.06);
+    }
+    body.light .audioTop{ background: rgba(0,0,0,.03); }
+
+    .navBtns{ display:flex; gap:8px; align-items:center; }
+    .navBtn, .playBtn{
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,.10);
+      color: var(--text);
+      padding: 10px 12px;
+      border-radius: 14px;
+      cursor:pointer;
+      font-family:inherit;
+      font-weight: 900;
+      line-height:1;
+      white-space:nowrap;
+    }
+    .navBtn:hover, .playBtn:hover{ background: rgba(255,255,255,.14); }
+    body.light .navBtn, body.light .playBtn{
+      background: rgba(0,0,0,.04);
+      color: rgba(10,16,28,.86);
+      border-color: rgba(0,0,0,.10);
+    }
+
+    .trackTitle{
+      margin:0;
+      font-size: 13px;
+      font-weight: 900;
+      color: var(--muted);
+      flex:1;
+      text-align:right;
+      line-height:1.3;
+    }
+
+    .volWrap{
+      margin-top: 10px;
+      display:flex;
+      align-items:center;
+      gap:10px;
+      padding: 10px 12px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,.06);
+    }
+    body.light .volWrap{ background: rgba(0,0,0,.03); }
+    .volLabel{ font-weight: 900; font-size: 13px; color: var(--muted); white-space:nowrap; }
+    .volume{ width:100%; accent-color: var(--accent); }
+
+    .vizWrap{
+      margin-top: 10px;
+      border-radius: 14px;
+      overflow:hidden;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.05);
+    }
+    body.light .vizWrap{ border-color: rgba(0,0,0,.10); background: rgba(0,0,0,.03); }
+    #viz{ width:100%; height:120px; display:block; }
+
+    /* ===== Footer ===== */
+    footer{
+      margin-top: 16px;
+      width:min(980px, 100%);
+      margin-left:auto; margin-right:auto;
+      text-align:center;
+      color: rgba(255,255,255,.88);
+      font-weight: 900;
+      font-size: 14px;
+      padding: 12px;
+      border-radius: 18px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,.06);
+    }
+    body.light footer{ color: rgba(10,16,28,.82); background: rgba(0,0,0,.03); }
+
+    /* ===== Theme toggle ===== */
+    .nightToggle{
+      position: fixed;
+      left: 12px;
+      bottom: 12px;
+      z-index: 80;
+      display:flex;
+      align-items:center;
+      gap:10px;
+      padding: 10px 12px;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,.16);
+      background: rgba(255,255,255,.08);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 10px 24px rgba(0,0,0,.12);
+    }
+    body.light .nightToggle{
+      border-color: rgba(0,0,0,.10);
+      background: rgba(255,255,255,.65);
+    }
+    .nightToggle button{
+      border: 1px solid rgba(255,255,255,.16);
+      background: rgba(255,255,255,.10);
+      color: rgba(255,255,255,.92);
+      padding: 8px 10px;
+      border-radius: 14px;
+      cursor:pointer;
+      font-family: inherit;
+      font-weight: 900;
+    }
+    body.light .nightToggle button{
+      border-color: rgba(0,0,0,.10);
+      background: rgba(0,0,0,.04);
+      color: rgba(10,16,28,.86);
+    }
+    .nightLabel{ font-weight: 900; font-size: 13px; color: rgba(255,255,255,.92); }
+    body.light .nightLabel{ color: rgba(10,16,28,.82); }
+  </style>
 </head>
 
 <body>
+  <!-- Background -->
+  <video class="bgVideo" id="bgVideo" autoplay muted loop playsinline>
+    <source src="bg.mp4.mp4" type="video/mp4">
+  </video>
+  <div class="overlay"></div>
 
-<video class="bgVideo" autoplay muted loop>
-<source src="bg.mp4.mp4" type="video/mp4">
-</video>
-<div class="overlay"></div>
-
-<a href="index.html" class="backBtn">رجوع</a>
-
-<!-- ===== Weather ===== -->
-<div class="card">
-  <h2>الطقس — البصرة</h2>
-  <div class="weatherMain">
-    <div class="temp" id="tempNow">--°</div>
-    <div class="desc" id="descNow">تحميل...</div>
+  <!-- Top HUD -->
+  <div class="topHUD">
+    <div class="timeBig" id="timeNow">--:--</div>
+    <div class="hudRow">
+      <div class="hudDate" id="dateTxt">...</div>
+      <div class="hudWx" id="wxTxt">جاري جلب الطقس...</div>
+    </div>
   </div>
 
-  <div class="week" id="weekBox"></div>
-</div>
+  <main class="grid">
+    <section class="card">
+      <div class="hero">
+        <img class="photo" id="avatarImg" src="avatar.jpg" alt="صورتي">
+        <div style="flex:1">
+          <h1>MUSAWI</h1>
+          <p class="subtitle">طالب <span style="letter-spacing:.4px">GEOLOGY</span> — جامعة البصرة</p>
 
-<!-- ===== Prayer ===== -->
-<div class="card">
-  <h2>مواقيت الصلاة (جعفري)</h2>
-  <div id="prayerBox">تحميل...</div>
-</div>
+          <div class="badges">
+            <span class="badge">📚 تعلّم</span>
+            <span class="badge">💻 خبرة بالحاسبات</span>
+            <span class="badge">📍 البصرة</span>
+          </div>
+        </div>
+      </div>
 
-<!-- ===== On this day ===== -->
-<div class="card eventBox">
-  <h2>في مثل هذا اليوم</h2>
-  <div class="eventYear" id="eventYear">--</div>
-  <img id="eventImg" src="">
-  <div class="eventText" id="eventText">تحميل...</div>
-  <button class="changeBtn" onclick="changeEvent()">تغيير</button>
-</div>
+      <hr style="border:none;border-top:1px solid rgba(255,255,255,.14); margin:14px 0;">
 
-<!-- ===== Dua ===== -->
-<div class="card">
-  <h2>دعاء اليوم</h2>
-  <div class="dua" id="duaText">تحميل...</div>
-</div>
+      <h2 class="sectionTitle">كلمة</h2>
+      <p class="bigNote" id="mainQuote">... تحميل</p>
 
-<script>
+      <div class="socialRow">
+        <a class="socLink" id="tgLink" href="https://t.me/Mu29_iq" target="_blank" rel="noopener">
+          <span class="socLeft">
+            <span class="socIco" aria-hidden="true">✈️</span>
+            Telegram
+          </span>
+          <span>↗</span>
+        </a>
 
-/* ===== Weather API ===== */
-async function loadWeather(){
-  const lat=30.5, lon=47.8;
-  const res=await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,weather_code&daily=temperature_2m_max,temperature_2m_min&timezone=Asia%2FBaghdad`);
-  const data=await res.json();
+        <a class="socLink" id="igLink" href="https://www.instagram.com/mu29__/" target="_blank" rel="noopener">
+          <span class="socLeft">
+            <span class="socIco" aria-hidden="true">📷</span>
+            Instagram
+          </span>
+          <span>↗</span>
+        </a>
+      </div>
+    </section>
 
-  document.getElementById("tempNow").textContent=Math.round(data.current.temperature_2m)+"°";
-  document.getElementById("descNow").textContent="غائم جزئياً";
+    <section class="card">
+      <h2 class="sectionTitle">صورة موسيقى</h2>
+      <div class="video">
+        <iframe
+          id="ytFrame"
+          src="https://www.youtube.com/embed/BXChU6bMEXU"
+          title="YouTube video"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          allowfullscreen>
+        </iframe>
+      </div>
 
-  const weekBox=document.getElementById("weekBox");
-  weekBox.innerHTML="";
-  for(let i=0;i<7;i++){
-    const max=data.daily.temperature_2m_max[i];
-    const min=data.daily.temperature_2m_min[i];
-    weekBox.innerHTML+=`
-      <div class="dayRow">
-        <span>${Math.round(max)}°</span>
-        <div class="bar"><span style="width:${max}%"></span></div>
-        <span>${Math.round(min)}°</span>
-      </div>`;
-  }
-}
-loadWeather();
+      <hr style="border:none;border-top:1px solid rgba(255,255,255,.14); margin:14px 0;">
 
-/* ===== Prayer API ===== */
-async function loadPrayer(){
-  const res=await fetch("https://api.aladhan.com/v1/timingsByCity?city=Basra&country=Iraq&method=3");
-  const data=await res.json();
-  const t=data.data.timings;
+      <h2 class="sectionTitle">موسيقى</h2>
 
-  const box=document.getElementById("prayerBox");
-  box.innerHTML=`
-  <div class="prayerRow"><span>الفجر</span><span>${t.Fajr}</span></div>
-  <div class="prayerRow"><span>الشروق</span><span>${t.Sunrise}</span></div>
-  <div class="prayerRow"><span>الظهر</span><span>${t.Dhuhr}</span></div>
-  <div class="prayerRow"><span>المغرب</span><span>${t.Maghrib}</span></div>
-  <div class="prayerRow"><span>منتصف الليل</span><span>${t.Midnight}</span></div>
-  `;
-}
-loadPrayer();
+      <div class="audioTop">
+        <div class="navBtns">
+          <button class="navBtn" id="prevTrack" title="السابق">◀</button>
+          <button class="navBtn" id="nextTrack" title="التالي">▶</button>
+        </div>
 
-/* ===== On this day ===== */
-const events=[
-{year:"1920",text:"ثورة العشرين في العراق",img:"https://upload.wikimedia.org/wikipedia/commons/2/27/1920_Iraqi_revolt.jpg"},
-{year:"1958",text:"ثورة 14 تموز",img:"https://upload.wikimedia.org/wikipedia/commons/4/4f/14_July_Revolution.jpg"}
-];
-let index=0;
+        <p class="trackTitle" id="trackTitle">المقطع: 1</p>
+        <button class="playBtn" id="audioBtn">تشغيل</button>
+      </div>
 
-function changeEvent(){
-  index=(index+1)%events.length;
-  const e=events[index];
-  document.getElementById("eventYear").textContent=e.year;
-  document.getElementById("eventText").textContent=e.text;
-  document.getElementById("eventImg").src=e.img;
-}
-changeEvent();
+      <div class="volWrap">
+        <span class="volLabel">خفض الصوت</span>
+        <input class="volume" id="volume" type="range" min="0" max="100" value="70">
+      </div>
 
-/* ===== Dua ===== */
-const duas={
-0:"اللهم افتح لي أبواب رحمتك 🤍",
-1:"يا رب اجعل هذا اليوم مليئاً بالبركة 🤲"
-};
-const day=new Date().getDay();
-document.getElementById("duaText").textContent=duas[day%2];
+      <div class="vizWrap">
+        <canvas id="viz"></canvas>
+      </div>
 
-</script>
+      <audio id="bgAudio" preload="metadata"></audio>
+    </section>
+  </main>
 
+  <footer>
+    © <span id="y"></span> — إِنَّ مَعَ الْعُسْرِ يُسْرًا
+  </footer>
+
+  <div class="nightToggle">
+    <span class="nightLabel">الوضع الليلي</span>
+    <button id="toggleTheme">تشغيل/إطفاء</button>
+  </div>
+
+  <script>
+    // سنة الفوتر + ثيم
+    document.getElementById("y").textContent = new Date().getFullYear();
+    const toggleTheme = document.getElementById("toggleTheme");
+    const savedTheme = localStorage.getItem("themeMode");
+    if(savedTheme === "light") document.body.classList.add("light");
+    toggleTheme.addEventListener("click", () => {
+      document.body.classList.toggle("light");
+      localStorage.setItem("themeMode", document.body.classList.contains("light") ? "light" : "dark");
+    });
+  </script>
+
+  <!-- ✅ ترتيب الملفات (مهم) -->
+  <script src="config.js"></script>
+  <script src="base.js"></script>
+  <script src="audio.js"></script>
+  <script src="admin-tools.js"></script>
+  <script src="more-info-button.js"></script>
+  <script src="tools.js"></script>
+
+  <!-- ✅ فعالية 11:11 بملف وحده (إذا تريدها) -->
+  <script src="event1111.js"></script>
 </body>
 </html>
