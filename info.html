@@ -1,237 +1,256 @@
 <!doctype html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>MUSAWI — معلومات أكثر</title>
-  <meta name="theme-color" content="#0b1220">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>معلومات أكثر</title>
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;800;900&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;800;900&display=swap" rel="stylesheet">
 
-  <style>
-    :root{
-      --bg:#0b1220;
-      --card: rgba(255,255,255,.10);
-      --border: rgba(255,255,255,.18);
-      --text: #eef2ff;
-      --muted:#d1d5db;
-      --shadow: 0 18px 40px rgba(0,0,0,.38);
-      --glass: rgba(255,255,255,.07);
-      --glass2: rgba(255,255,255,.05);
-    }
-    body.light{
-      --bg:#f4f6ff;
-      --card: rgba(0,0,0,.06);
-      --border: rgba(0,0,0,.12);
-      --text:#0b1220;
-      --muted:#334155;
-      --shadow: 0 18px 40px rgba(0,0,0,.12);
-      --glass: rgba(255,255,255,.62);
-      --glass2: rgba(255,255,255,.40);
-    }
+<style>
+:root{
+  --bg:#0b1220;
+  --card: rgba(255,255,255,.08);
+  --border: rgba(255,255,255,.15);
+  --text:#eef2ff;
+  --muted:#cbd5e1;
+}
+body.light{
+  --bg:#f4f6ff;
+  --card: rgba(0,0,0,.05);
+  --border: rgba(0,0,0,.12);
+  --text:#0b1220;
+  --muted:#475569;
+}
 
-    *{ box-sizing:border-box; }
-    html,body{ height:100%; }
-    body{
-      margin:0;
-      font-family:"Cairo", system-ui, Arial;
-      color:var(--text);
-      background: var(--bg);
-      padding: 18px 14px 22px;
-    }
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:"Cairo",sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  padding:120px 14px 30px;
+}
 
-    .wrap{ width:min(980px,100%); margin:0 auto; }
-    .topbar{
-      display:flex; justify-content:space-between; align-items:center; gap:10px;
-      margin-bottom: 14px;
-      padding: 12px 14px;
-      border-radius: 18px;
-      border: 1px solid var(--border);
-      background: var(--glass);
-      backdrop-filter: blur(10px);
-      box-shadow: 0 10px 24px rgba(0,0,0,.14);
-    }
-    .title{ margin:0; font-weight:900; font-size:18px; }
-    .btn{
-      text-decoration:none;
-      border: 1px solid rgba(255,255,255,.18);
-      background: rgba(255,255,255,.10);
-      color: rgba(255,255,255,.92);
-      padding: 10px 12px;
-      border-radius: 14px;
-      font-weight: 900;
-      white-space:nowrap;
-    }
-    body.light .btn{
-      border-color: rgba(0,0,0,.10);
-      background: rgba(0,0,0,.04);
-      color: rgba(10,16,28,.86);
-    }
+/* نفس خلفية الرئيسية */
+.bgVideo{
+  position:fixed; inset:0;
+  width:100%; height:100%;
+  object-fit:cover;
+  z-index:-5;
+  opacity:.35;
+}
+.overlay{
+  position:fixed; inset:0;
+  background:linear-gradient(120deg, rgba(11,18,32,.8), rgba(11,18,32,.7));
+  z-index:-4;
+}
 
-    .grid{
-      display:grid;
-      grid-template-columns: 1fr;
-      gap: 14px;
-    }
+.container{
+  width:min(950px,100%);
+  margin:auto;
+  display:grid;
+  gap:18px;
+}
 
-    .card{
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 18px;
-      padding: 16px;
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(10px);
-      overflow:hidden;
-    }
-    .card h2{
-      margin:0 0 10px;
-      font-size: 16px;
-      font-weight: 900;
-    }
-    .muted{ color: var(--muted); font-weight:900; font-size: 13px; }
+.header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  background:var(--card);
+  border:1px solid var(--border);
+  padding:16px;
+  border-radius:18px;
+  backdrop-filter:blur(10px);
+}
 
-    /* Weather week */
-    .week{
-      display:grid;
-      grid-template-columns: repeat(7, 1fr);
-      gap: 10px;
-    }
-    @media (max-width: 920px){
-      .week{ grid-template-columns: repeat(2, 1fr); }
-    }
-    .day{
-      border-radius: 16px;
-      border: 1px solid rgba(255,255,255,.14);
-      background: rgba(255,255,255,.06);
-      padding: 10px 10px 12px;
-      min-height: 88px;
-    }
-    body.light .day{
-      border-color: rgba(0,0,0,.10);
-      background: rgba(0,0,0,.03);
-    }
-    .dName{ font-weight: 900; font-size: 13px; margin:0 0 6px; }
-    .dTemp{ font-weight: 900; font-size: 13px; margin:0; direction:ltr; text-align:right; }
-    .tempBar{
-      margin-top: 8px;
-      height: 6px;
-      border-radius: 999px;
-      background: rgba(255,255,255,.10);
-      overflow:hidden;
-      border: 1px solid rgba(255,255,255,.10);
-    }
-    body.light .tempBar{ background: rgba(0,0,0,.06); border-color: rgba(0,0,0,.08); }
-    .tempFill{ height:100%; width: 50%; border-radius:999px; background: rgba(255,255,255,.70); }
+.backBtn{
+  text-decoration:none;
+  padding:8px 14px;
+  border-radius:12px;
+  border:1px solid var(--border);
+  background:rgba(255,255,255,.08);
+  color:var(--text);
+  font-weight:900;
+}
 
-    /* Prayer */
-    .prGrid{
-      display:grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
-    }
-    @media (max-width: 920px){
-      .prGrid{ grid-template-columns: repeat(2, 1fr); }
-    }
-    .pr{
-      border-radius: 16px;
-      border: 1px solid rgba(255,255,255,.14);
-      background: rgba(255,255,255,.06);
-      padding: 10px 12px;
-    }
-    body.light .pr{ border-color: rgba(0,0,0,.10); background: rgba(0,0,0,.03); }
-    .prName{ margin:0 0 6px; font-weight:900; font-size:13px; }
-    .prTime{ margin:0; font-weight:900; font-size:14px; direction:ltr; text-align:right; }
+.card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:18px;
+  padding:18px;
+  backdrop-filter:blur(10px);
+}
 
-    /* On this day + Dua */
-    .row2{
-      display:grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 14px;
-    }
-    @media (max-width: 920px){
-      .row2{ grid-template-columns: 1fr; }
-    }
-    .box{
-      border-radius: 18px;
-      border: 1px solid rgba(255,255,255,.14);
-      background: rgba(255,255,255,.06);
-      padding: 14px;
-      min-height: 120px;
-    }
-    body.light .box{ border-color: rgba(0,0,0,.10); background: rgba(0,0,0,.03); }
+.title{
+  font-size:18px;
+  font-weight:900;
+  margin-bottom:12px;
+}
 
-    .bigText{ margin:0; font-weight:900; font-size:15px; line-height: 2.0; }
-    .miniBtn{
-      display:inline-block;
-      margin-top: 10px;
-      text-decoration:none;
-      border: 1px solid rgba(255,255,255,.16);
-      background: rgba(255,255,255,.08);
-      color: rgba(255,255,255,.92);
-      padding: 8px 10px;
-      border-radius: 14px;
-      font-weight: 900;
-      font-size: 13px;
-      white-space:nowrap;
-    }
-    body.light .miniBtn{
-      border-color: rgba(0,0,0,.10);
-      background: rgba(0,0,0,.04);
-      color: rgba(10,16,28,.86);
-    }
+.loading{
+  opacity:.7;
+  font-weight:900;
+  color:var(--muted);
+}
 
-    /* theme btn */
-    .themeWrap{ margin-top: 14px; display:flex; justify-content:space-between; gap:10px; align-items:center; }
-    .themeBtn{ cursor:pointer; }
-  </style>
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(130px,1fr));
+  gap:12px;
+}
+
+.miniBox{
+  padding:12px;
+  border-radius:14px;
+  border:1px solid var(--border);
+  text-align:center;
+  font-weight:900;
+  background:rgba(255,255,255,.05);
+}
+
+.footer{
+  text-align:center;
+  margin-top:20px;
+  font-size:13px;
+  opacity:.6;
+}
+</style>
 </head>
+
 <body>
-  <div class="wrap">
-    <div class="topbar">
-      <h1 class="title">معلومات أكثر</h1>
-      <a class="btn" href="index.html">رجوع</a>
-    </div>
 
-    <div class="grid">
-      <section class="card" id="wxCard">
-        <h2>طقس الأسبوع — البصرة</h2>
-        <p class="muted" id="wxMeta">... تحميل</p>
-        <div class="week" id="week"></div>
-      </section>
+<video class="bgVideo" autoplay muted loop playsinline>
+  <source src="bg.mp4.mp4" type="video/mp4">
+</video>
+<div class="overlay"></div>
 
-      <section class="card">
-        <h2>الشروق والغروب + مواقيت الصلاة (جعفري)</h2>
-        <p class="muted" id="sunMeta">... تحميل</p>
-        <div class="prGrid" id="prayers"></div>
-      </section>
+<div class="container">
 
-      <div class="row2">
-        <section class="card">
-          <h2>في مثل هذا اليوم (حدث حقيقي)</h2>
-          <div class="box">
-            <p class="bigText" id="otdTxt">... تحميل</p>
-            <a class="miniBtn" id="otdMore" href="#" target="_blank" rel="noopener">مصدر ويكيبيديا</a>
-          </div>
-        </section>
-
-        <section class="card">
-          <h2>دعاء اليوم</h2>
-          <div class="box">
-            <p class="bigText" id="duaTxt">... تحميل</p>
-            <a class="miniBtn" id="duaMore" href="#" target="_blank" rel="noopener">قراءة كاملة</a>
-          </div>
-        </section>
-      </div>
-
-      <div class="themeWrap">
-        <p class="muted" id="pingTxt">Ping: ...</p>
-        <a class="btn themeBtn" id="toggleTheme" href="#">تشغيل/إطفاء الوضع</a>
-      </div>
-    </div>
+  <div class="header">
+    <div style="font-weight:900;font-size:20px;">معلومات أكثر</div>
+    <a href="index.html" class="backBtn">رجوع</a>
   </div>
 
-  <script src="info-page.js"></script>
+  <!-- طقس الأسبوع -->
+  <div class="card">
+    <div class="title">طقس الأسبوع — البصرة</div>
+    <div id="weekWeather" class="loading">جاري التحميل...</div>
+  </div>
+
+  <!-- الشروق والغروب -->
+  <div class="card">
+    <div class="title">الشروق والغروب</div>
+    <div id="sunData" class="loading">جاري التحميل...</div>
+  </div>
+
+  <!-- حدث مثل هذا اليوم -->
+  <div class="card">
+    <div class="title">في مثل هذا اليوم</div>
+    <div id="todayEvent" class="loading">جاري التحميل...</div>
+  </div>
+
+  <!-- دعاء اليوم -->
+  <div class="card">
+    <div class="title">دعاء اليوم</div>
+    <div id="dailyDua" class="loading">جاري التحميل...</div>
+  </div>
+
+  <div class="footer">
+    MUSAWI © <span id="year"></span>
+  </div>
+
+</div>
+
+<script>
+document.getElementById("year").textContent = new Date().getFullYear();
+
+/* ========== طقس الأسبوع ========== */
+async function loadWeather(){
+  try{
+    const res = await fetch(
+      "https://api.open-meteo.com/v1/forecast?latitude=30.5085&longitude=47.7804&daily=temperature_2m_max,temperature_2m_min&timezone=Asia%2FBaghdad"
+    );
+    const data = await res.json();
+
+    let html = '<div class="grid">';
+    for(let i=0;i<7;i++){
+      html += `
+        <div class="miniBox">
+          ${data.daily.time[i]}<br>
+          ${Math.round(data.daily.temperature_2m_max[i])}° /
+          ${Math.round(data.daily.temperature_2m_min[i])}°
+        </div>`;
+    }
+    html += '</div>';
+    document.getElementById("weekWeather").innerHTML = html;
+  }catch{
+    document.getElementById("weekWeather").textContent = "تعذر جلب البيانات";
+  }
+}
+
+/* ========== الشروق والغروب ========== */
+async function loadSun(){
+  try{
+    const res = await fetch(
+      "https://api.sunrise-sunset.org/json?lat=30.5085&lng=47.7804&formatted=0"
+    );
+    const data = await res.json();
+
+    const sunrise = new Date(data.results.sunrise)
+      .toLocaleTimeString("ar-IQ",{hour:'2-digit',minute:'2-digit'});
+    const sunset = new Date(data.results.sunset)
+      .toLocaleTimeString("ar-IQ",{hour:'2-digit',minute:'2-digit'});
+
+    document.getElementById("sunData").innerHTML =
+      `🌅 الشروق: ${sunrise}<br>🌇 الغروب: ${sunset}`;
+  }catch{
+    document.getElementById("sunData").textContent = "تعذر جلب البيانات";
+  }
+}
+
+/* ========== حدث اليوم من ويكيبيديا ========== */
+async function loadTodayEvent(){
+  try{
+    const today = new Date();
+    const m = today.getMonth()+1;
+    const d = today.getDate();
+
+    const res = await fetch(
+      `https://api.wikimedia.org/feed/v1/wikipedia/ar/onthisday/events/${m}/${d}`
+    );
+    const data = await res.json();
+
+    const event = data.events[0];
+    document.getElementById("todayEvent").innerHTML =
+      `<b>${event.year}</b> — ${event.text}`;
+  }catch{
+    document.getElementById("todayEvent").textContent = "تعذر جلب البيانات";
+  }
+}
+
+/* ========== دعاء اليوم ========== */
+const duas = [
+"دعاء يوم الأحد: اللهم اجعل أول يومي هذا صلاحاً...",
+"دعاء يوم الاثنين: اللهم اجعلني من المتوكلين عليك...",
+"دعاء يوم الثلاثاء: يا رب ارزقني صفاء القلب...",
+"دعاء يوم الأربعاء: اللهم ثبتني على الحق...",
+"دعاء يوم الخميس: اللهم قربني إليك...",
+"دعاء يوم الجمعة: اللهم اجعلني من أهل الجنة...",
+"دعاء يوم السبت: اللهم اجعل هذا اليوم بداية خير..."
+];
+
+function loadDua(){
+  const day = new Date().getDay();
+  document.getElementById("dailyDua").textContent = duas[day];
+}
+
+loadWeather();
+loadSun();
+loadTodayEvent();
+loadDua();
+</script>
+
 </body>
 </html>
