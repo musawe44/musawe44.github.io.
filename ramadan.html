@@ -1,0 +1,379 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>الإمساك والإفطار + الأذان</title>
+  <meta name="theme-color" content="#0b1220">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;800;900&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --bg:#0b1220;
+      --text:#eef2ff;
+      --muted:#d1d5db;
+      --border: rgba(255,255,255,.18);
+      --glass: rgba(255,255,255,.09);
+      --shadow: 0 18px 45px rgba(0,0,0,.38);
+      --accent: rgba(34,197,94,.95);
+    }
+    *{ box-sizing:border-box; }
+    html,body{ height:100%; }
+    body{
+      margin:0;
+      font-family:"Cairo", system-ui, Arial;
+      color:var(--text);
+      background: var(--bg);
+      overflow-x:hidden;
+      padding: 16px 14px 22px;
+    }
+
+    /* فيديو خلفية فقط */
+    .bgVideo{
+      position:fixed; inset:0;
+      width:100%; height:100%;
+      object-fit:cover;
+      z-index:-6;
+      transform: scale(1.02);
+      filter: saturate(1.06) contrast(1.05) brightness(.62);
+    }
+    .overlay{
+      position:fixed; inset:0;
+      z-index:-5;
+      background:
+        radial-gradient(900px 520px at 80% 20%, rgba(34,197,94,.12), transparent 60%),
+        radial-gradient(750px 450px at 20% 80%, rgba(59,130,246,.12), transparent 55%),
+        linear-gradient(120deg, rgba(11,18,32,.62), rgba(11,18,32,.42));
+    }
+
+    .wrap{ width:min(980px, 100%); margin: 0 auto; display:grid; gap:14px; }
+
+    .card{
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      background: var(--glass);
+      backdrop-filter: blur(14px);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+    .head{
+      padding: 14px 16px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      border-bottom: 1px solid rgba(255,255,255,.12);
+    }
+    .title{ margin:0; font-weight:900; font-size:18px; }
+    .sub{ margin:0; color:var(--muted); font-weight:900; font-size:12px; }
+
+    .btn{
+      border: 1px solid rgba(255,255,255,.18);
+      background: rgba(255,255,255,.10);
+      color: rgba(255,255,255,.92);
+      padding: 10px 12px;
+      border-radius: 14px;
+      cursor:pointer;
+      font-family:inherit;
+      font-weight: 900;
+      text-decoration:none;
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      white-space:nowrap;
+    }
+    .btn:hover{ background: rgba(255,255,255,.14); }
+
+    .body{ padding: 14px 16px 16px; }
+
+    .bigTimes{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:12px;
+    }
+    @media(max-width:560px){ .bigTimes{ grid-template-columns: 1fr; } }
+
+    .tile{
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06);
+      border-radius: 18px;
+      padding: 14px;
+    }
+    .tile .k{ color:var(--muted); font-weight:900; font-size:12px; }
+    .tile .v{ font-weight:900; font-size:32px; margin-top:6px; letter-spacing:.3px; }
+    .tile .n{ color:rgba(255,255,255,.92); font-weight:900; font-size:14px; margin-top:6px; }
+
+    .list{
+      margin-top: 12px;
+      border-radius: 18px;
+      overflow:hidden;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06);
+    }
+    .row{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      padding: 12px 14px;
+      border-bottom: 1px dashed rgba(255,255,255,.18);
+      font-weight:900;
+    }
+    .row:last-child{ border-bottom:none; }
+    .row .name{ opacity:.95; }
+    .row .time{ opacity:.95; }
+
+    .hint{
+      margin-top: 10px;
+      color: var(--muted);
+      font-weight: 900;
+      font-size: 12px;
+      line-height: 1.8;
+    }
+
+    .err{
+      display:none;
+      margin-top: 12px;
+      padding: 12px;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,.18);
+      background: rgba(244,63,94,.12);
+      color: rgba(255,255,255,.92);
+      font-weight: 900;
+      line-height: 1.8;
+    }
+  </style>
+</head>
+
+<body>
+  <video class="bgVideo" autoplay muted loop playsinline>
+    <source src="bg.mp4.mp4" type="video/mp4">
+  </video>
+  <div class="overlay"></div>
+
+  <div class="wrap">
+
+    <section class="card">
+      <div class="head">
+        <div>
+          <h1 class="title">☾ الإمساك والإفطار + الأذان</h1>
+          <p class="sub" id="topSub">... تحميل</p>
+        </div>
+        <a class="btn" href="index.html">↩ رجوع</a>
+      </div>
+
+      <div class="body">
+        <div id="errBox" class="err"></div>
+
+        <div class="bigTimes">
+          <div class="tile">
+            <div class="k">الإمساك (نهاية السحور)</div>
+            <div class="v" id="imsakT">--:--</div>
+            <div class="n" id="imsakN">...</div>
+          </div>
+
+          <div class="tile">
+            <div class="k">الإفطار (المغرب)</div>
+            <div class="v" id="iftarT">--:--</div>
+            <div class="n" id="iftarN">...</div>
+          </div>
+        </div>
+
+        <div style="margin-top:12px; display:flex; gap:10px; flex-wrap:wrap;">
+          <button class="btn" id="enableAdhan">🔊 تفعيل صوت الأذان</button>
+          <button class="btn" id="refreshBtn">⟳ تحديث</button>
+        </div>
+
+        <div class="list" id="prayList"></div>
+
+        <div class="hint">
+          • يعتمد على توقيت البصرة (جعفري/شيعي) من API. <br>
+          • المتصفح يمنع تشغيل الأذان تلقائياً إلا بعد ضغط “تفعيل صوت الأذان” مرة وحدة.
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- ملف الأذان -->
+  <audio id="adhanAudio" src="adhan.mp3" preload="auto"></audio>
+
+  <script>
+    const BAGHDAD_TZ = "Asia/Baghdad";
+    const CITY = "Basra";
+    const COUNTRY = "Iraq";
+
+    const $ = (id)=>document.getElementById(id);
+    const errBox = $("errBox");
+    const adhanAudio = $("adhanAudio");
+
+    let adhanEnabled = false;
+    let timesHHMM = {};      // {Fajr:"05:11", ...}
+    let lastHitKey = null;   // لمنع التكرار بنفس الدقيقة
+
+    function showErr(msg){
+      errBox.style.display = "block";
+      errBox.textContent = msg;
+    }
+    function clearErr(){
+      errBox.style.display = "none";
+      errBox.textContent = "";
+    }
+
+    function fmtDateAr(d){
+      return new Intl.DateTimeFormat("ar-IQ", {
+        timeZone: BAGHDAD_TZ,
+        weekday:"long",
+        day:"2-digit",
+        month:"long",
+        year:"numeric"
+      }).format(d);
+    }
+
+    function fmt12(hhmm){
+      const [hStr,mStr] = hhmm.split(":");
+      let h = Number(hStr);
+      const m = Number(mStr);
+      const isPM = h >= 12;
+      h = h % 12; if(h === 0) h = 12;
+      const mm = String(m).padStart(2,"0");
+      return `${h}:${mm} ${isPM ? "م" : "ص"}`;
+    }
+
+    // وقت بغداد الحالي HH:MM
+    function nowHHMM(){
+      return new Intl.DateTimeFormat("en-GB", {
+        timeZone: BAGHDAD_TZ,
+        hour:"2-digit",
+        minute:"2-digit",
+        hour12:false
+      }).format(new Date());
+    }
+
+    // مفتاح دقيقة لمنع تكرار نفس الأذان
+    function minuteKey(){
+      return new Intl.DateTimeFormat("en-CA", {
+        timeZone: BAGHDAD_TZ,
+        year:"numeric", month:"2-digit", day:"2-digit",
+        hour:"2-digit", minute:"2-digit",
+        hour12:false
+      }).format(new Date());
+    }
+
+    async function fetchTimings(){
+      clearErr();
+      try{
+        // method=0 (Shia Ithna-Ashari / Jafari) حسب AlAdhan
+        const url = `https://api.aladhan.com/v1/timingsByCity?city=${encodeURIComponent(CITY)}&country=${encodeURIComponent(COUNTRY)}&method=0`;
+        const res = await fetch(url, { cache:"no-store" });
+        if(!res.ok) throw new Error("HTTP " + res.status);
+        const data = await res.json();
+
+        const t = data?.data?.timings;
+        if(!t) throw new Error("No timings");
+
+        // نخزن أهم الأوقات (HH:MM فقط)
+        timesHHMM = {
+          Imsak: String(t.Imsak || "").slice(0,5),
+          Fajr: String(t.Fajr || "").slice(0,5),
+          Sunrise: String(t.Sunrise || "").slice(0,5),
+          Dhuhr: String(t.Dhuhr || "").slice(0,5),
+          Asr: String(t.Asr || "").slice(0,5),
+          Maghrib: String(t.Maghrib || "").slice(0,5),
+          Isha: String(t.Isha || "").slice(0,5),
+        };
+
+        // عرض الإمساك/الإفطار
+        $("imsakT").textContent = fmt12(timesHHMM.Imsak || "--:--");
+        $("iftarT").textContent = fmt12(timesHHMM.Maghrib || "--:--");
+        $("imsakN").textContent = "الإمساك = توقف الأكل (قبل الفجر)";
+        $("iftarN").textContent = "الإفطار = وقت أذان المغرب";
+
+        // قائمة الصلوات
+        const rows = [
+          ["الإمساك", timesHHMM.Imsak, "⏳"],
+          ["الفجر", timesHHMM.Fajr, "🔔"],
+          ["الشروق", timesHHMM.Sunrise, "☀️"],
+          ["الظهر", timesHHMM.Dhuhr, "🔔"],
+          ["العصر", timesHHMM.Asr, "🔔"],
+          ["المغرب", timesHHMM.Maghrib, "🌙"],
+          ["العشاء", timesHHMM.Isha, "✨"],
+        ];
+
+        const list = $("prayList");
+        list.innerHTML = "";
+        for(const [name, time, ico] of rows){
+          const safe = (time && time.includes(":")) ? fmt12(time) : "--:--";
+          const div = document.createElement("div");
+          div.className = "row";
+          div.innerHTML = `<span class="name">${ico} ${name}</span><span class="time">${safe}</span>`;
+          list.appendChild(div);
+        }
+
+        $("topSub").textContent = `البصرة — ${fmtDateAr(new Date())}`;
+
+      }catch(e){
+        showErr("تعذر جلب المواقيت. تأكد من الانترنت ثم جرّب تحديث.");
+      }
+    }
+
+    // تشغيل الأذان عند أي موعد
+    async function maybePlayAdhan(){
+      if(!adhanEnabled) return;
+      const hhmm = nowHHMM();
+      const k = minuteKey();
+      if(lastHitKey === k) return;
+
+      // أي وقت تريد الأذان يشتغل عليه؟
+      const hit =
+        hhmm === timesHHMM.Fajr ||
+        hhmm === timesHHMM.Dhuhr ||
+        hhmm === timesHHMM.Asr ||
+        hhmm === timesHHMM.Maghrib ||
+        hhmm === timesHHMM.Isha;
+
+      if(!hit) return;
+
+      lastHitKey = k;
+
+      try{
+        adhanAudio.currentTime = 0;
+        await adhanAudio.play();
+      }catch{
+        // إذا المتصفح منع الصوت، نخلي المستخدم يضغط تفعيل مرة ثانية
+        adhanEnabled = false;
+        $("enableAdhan").textContent = "🔊 تفعيل صوت الأذان";
+        showErr("المتصفح منع تشغيل الصوت. اضغط (تفعيل صوت الأذان) مرة ثانية.");
+      }
+    }
+
+    $("enableAdhan").addEventListener("click", async ()=>{
+      clearErr();
+      try{
+        // "Unlock" للصوت
+        adhanAudio.volume = 1;
+        adhanAudio.currentTime = 0;
+        await adhanAudio.play();
+        adhanAudio.pause();
+        adhanAudio.currentTime = 0;
+
+        adhanEnabled = true;
+        $("enableAdhan").textContent = "✅ الأذان مفعل";
+      }catch{
+        showErr("ما قدرت أفعل الصوت. جرّب تضغط مرة ثانية.");
+      }
+    });
+
+    $("refreshBtn").addEventListener("click", fetchTimings);
+
+    // تشغيل تلقائي عند المطابقة (كل 10 ثواني)
+    setInterval(maybePlayAdhan, 10 * 1000);
+
+    // Init
+    fetchTimings();
+  </script>
+</body>
+</html>
