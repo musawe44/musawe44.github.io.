@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>معلومات أكثر</title>
+  <title>معلومات أكثر — MUSAWI</title>
   <meta name="theme-color" content="#0b1220">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -14,712 +14,760 @@
     :root{
       --bg:#0b1220;
       --text:#eef2ff;
-      --muted:#cbd5e1;
+      --muted:#d1d5db;
       --border: rgba(255,255,255,.18);
       --glass: rgba(255,255,255,.09);
       --glass2: rgba(255,255,255,.06);
-      --shadow: 0 18px 50px rgba(0,0,0,.45);
-      --accent: rgba(59,130,246,.92);
-      --ok: rgba(34,197,94,.95);
-      --warn: rgba(245,158,11,.95);
-      --bad: rgba(244,63,94,.95);
+      --shadow: 0 18px 45px rgba(0,0,0,.38);
+      --accent: rgba(34,197,94,.95);
+      --danger: rgba(244,63,94,.90);
+    }
+    body.light{
+      --bg:#f4f6ff;
+      --text:#0b1220;
+      --muted:#334155;
+      --border: rgba(0,0,0,.12);
+      --glass: rgba(255,255,255,.70);
+      --glass2: rgba(255,255,255,.48);
+      --shadow: 0 18px 45px rgba(0,0,0,.12);
     }
 
     *{ box-sizing:border-box; }
     html,body{ height:100%; }
+
     body{
       margin:0;
       font-family:"Cairo", system-ui, Arial;
-      color:var(--text);
       background: var(--bg);
+      color: var(--text);
       overflow-x:hidden;
       padding: 16px 14px 22px;
     }
 
-    /* ===== Video background only ===== */
+    /* ===== Background video (ONLY) ===== */
     .bgVideo{
-      position: fixed;
-      top:0; left:0;
-      width:100vw; height:100vh;
+      position:fixed; inset:0;
+      width:100%; height:100%;
       object-fit:cover;
-      z-index:-10;
+      z-index:-6;
       transform: scale(1.02);
-      filter: saturate(1.06) contrast(1.05) brightness(.62);
+      filter: saturate(1.05) contrast(1.04) brightness(.78);
     }
+    body.light .bgVideo{
+      filter: saturate(1.05) contrast(1.02) brightness(1.02);
+    }
+
+    /* glass overlay */
     .overlay{
-      position: fixed;
-      inset: 0;
+      position:fixed; inset:0;
       z-index:-5;
       background:
         radial-gradient(900px 520px at 80% 20%, rgba(34,197,94,.12), transparent 60%),
         radial-gradient(750px 450px at 20% 80%, rgba(59,130,246,.12), transparent 55%),
-        linear-gradient(120deg, rgba(11,18,32,.72), rgba(11,18,32,.58));
-      backdrop-filter: blur(2px);
+        linear-gradient(120deg, rgba(11,18,32,.42), rgba(11,18,32,.28));
+    }
+    body.light .overlay{
+      background:
+        radial-gradient(900px 520px at 80% 20%, rgba(34,197,94,.12), transparent 60%),
+        radial-gradient(750px 450px at 20% 80%, rgba(59,130,246,.10), transparent 55%),
+        linear-gradient(120deg, rgba(255,255,255,.30), rgba(255,255,255,.18));
     }
 
-    /* ===== Layout ===== */
     .wrap{
       width:min(980px, 100%);
       margin: 0 auto;
-      display:grid;
-      gap:14px;
     }
 
-    /* ===== Glass cards ===== */
-    .card{
-      border: 1px solid var(--border);
-      border-radius: 22px;
-      background: linear-gradient(180deg, rgba(255,255,255,.11), rgba(255,255,255,.06));
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
-      overflow:hidden;
-      position: relative;
-    }
-    .card::before{
-      content:"";
-      position:absolute;
-      inset:-2px;
-      background:
-        radial-gradient(600px 220px at 30% 10%, rgba(255,255,255,.10), transparent 60%),
-        radial-gradient(520px 220px at 80% 70%, rgba(255,255,255,.08), transparent 65%);
-      pointer-events:none;
-      opacity:.85;
-    }
-    .card > *{ position:relative; }
-
-    .head{
+    /* ===== Top Bar ===== */
+    .topBar{
       display:flex;
       align-items:center;
       justify-content:space-between;
-      gap:10px;
-      padding: 14px 16px;
+      gap: 10px;
+      padding: 12px 14px;
+      border-radius: 18px;
+      border: 1px solid var(--border);
+      background: var(--glass);
+      backdrop-filter: blur(12px);
+      box-shadow: var(--shadow);
     }
-    .title{
+    .topTitle{
       margin:0;
       font-weight: 900;
       font-size: 18px;
       letter-spacing:.2px;
     }
-    .sub{
-      margin:0;
-      color: var(--muted);
-      font-weight: 900;
-      font-size: 13px;
-    }
     .btn{
-      border: 1px solid rgba(255,255,255,.20);
+      border: 1px solid var(--border);
       background: rgba(255,255,255,.10);
-      color: rgba(255,255,255,.95);
-      padding: 10px 14px;
-      border-radius: 16px;
-      font-family: inherit;
-      font-weight: 900;
+      color: var(--text);
+      padding: 10px 12px;
+      border-radius: 14px;
       cursor:pointer;
+      font-family:inherit;
+      font-weight: 900;
+      white-space:nowrap;
       text-decoration:none;
       display:inline-flex;
       align-items:center;
       gap:8px;
-      user-select:none;
     }
     .btn:hover{ background: rgba(255,255,255,.14); }
-    .btn.small{ padding: 8px 12px; border-radius: 14px; font-size: 13px; }
-
-    .body{
-      padding: 0 16px 16px;
+    body.light .btn{
+      background: rgba(0,0,0,.04);
+      color: rgba(10,16,28,.88);
     }
 
-    .errBox{
+    .grid{
+      margin-top: 14px;
+      display:grid;
+      grid-template-columns: 1fr;
+      gap: 14px;
+    }
+
+    .card{
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      background: var(--glass);
+      backdrop-filter: blur(14px);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+    .cardHd{
+      padding: 14px 16px 10px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+    }
+    .cardHd h2{
+      margin:0;
+      font-weight: 900;
+      font-size: 16px;
+      letter-spacing:.2px;
+    }
+    .smallMuted{
+      color: var(--muted);
+      font-weight: 900;
+      font-size: 12px;
+      white-space:nowrap;
+    }
+    .cardBd{ padding: 0 16px 16px; }
+
+    /* ===== Error box ===== */
+    #errBox{
       display:none;
-      margin: 12px 16px 16px;
-      padding: 12px 12px;
+      margin-top: 12px;
+      padding: 12px;
       border-radius: 16px;
       border: 1px solid rgba(255,255,255,.18);
       background: rgba(244,63,94,.12);
       color: rgba(255,255,255,.92);
       font-weight: 900;
-      line-height: 1.9;
+      line-height: 1.8;
+    }
+    body.light #errBox{
+      border-color: rgba(0,0,0,.12);
+      background: rgba(244,63,94,.10);
+      color: rgba(10,16,28,.90);
     }
 
-    /* ===== Weather (iPhone-ish list) ===== */
-    .wxTop{
+    /* ===== Weather (iPhone-like list) ===== */
+    .wxHero{
       display:flex;
       align-items:flex-end;
       justify-content:space-between;
-      gap:12px;
-      padding: 0 16px 12px;
+      gap: 10px;
+      padding: 14px 16px;
+      border-top: 1px solid rgba(255,255,255,.10);
+      border-bottom: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.05);
+    }
+    body.light .wxHero{
+      border-color: rgba(0,0,0,.08);
+      background: rgba(255,255,255,.55);
     }
     .wxCity{
-      font-size: 18px;
       font-weight: 900;
+      font-size: 22px;
       margin:0;
-      letter-spacing:.2px;
+      line-height:1.1;
     }
     .wxNow{
       display:flex;
       align-items:center;
-      gap:10px;
+      gap: 10px;
+      justify-content:flex-end;
+    }
+    .wxNowTemp{
       font-weight: 900;
-      color: rgba(255,255,255,.95);
-    }
-    .wxNow .big{
-      font-size: 34px;
+      font-size: 40px;
+      margin:0;
       line-height:1;
+      letter-spacing:.2px;
     }
-    .wxNow .desc{
-      font-size: 13px;
+    .wxNowDesc{
+      margin:0;
+      font-weight: 900;
       color: var(--muted);
-      margin-top:6px;
+      font-size: 13px;
+      text-align:right;
+      line-height:1.35;
     }
-    .wxNowIcon{
-      width: 44px; height:44px;
-      border-radius: 16px;
-      display:grid;
-      place-items:center;
-      background: rgba(255,255,255,.10);
-      border: 1px solid rgba(255,255,255,.16);
-      font-size: 22px;
-    }
-
     .wxList{
-      padding: 6px 10px 12px;
+      list-style:none;
+      margin:0;
+      padding: 10px 0 0;
     }
     .wxRow{
       display:grid;
-      grid-template-columns: 88px 34px 1fr 48px 48px;
+      grid-template-columns: 78px 28px 1fr 44px 44px;
+      gap: 10px;
       align-items:center;
-      gap:10px;
-      padding: 10px 10px;
-      border-radius: 18px;
+      padding: 10px 0;
+      border-bottom: 1px dashed rgba(255,255,255,.18);
     }
-    .wxRow + .wxRow{ margin-top: 6px; }
-    .wxRow:hover{ background: rgba(255,255,255,.06); }
-
+    body.light .wxRow{ border-bottom-color: rgba(0,0,0,.12); }
+    .wxRow:last-child{ border-bottom: none; }
     .wxDay{
       font-weight: 900;
-      color: rgba(255,255,255,.95);
-      white-space:nowrap;
+      font-size: 14px;
+      color: rgba(255,255,255,.92);
     }
+    body.light .wxDay{ color: rgba(10,16,28,.90); }
     .wxIcon{
-      width: 34px; height:34px;
-      border-radius: 14px;
-      display:grid;
-      place-items:center;
-      background: rgba(255,255,255,.10);
-      border: 1px solid rgba(255,255,255,.14);
       font-size: 18px;
+      opacity:.95;
+      text-align:center;
+      width:28px;
     }
     .wxBar{
       height: 8px;
       border-radius: 999px;
-      background: rgba(255,255,255,.10);
-      overflow:hidden;
+      background: rgba(255,255,255,.12);
       border: 1px solid rgba(255,255,255,.12);
+      overflow:hidden;
+      position:relative;
     }
-    .wxBar > i{
-      display:block;
-      height:100%;
+    body.light .wxBar{
+      background: rgba(0,0,0,.06);
+      border-color: rgba(0,0,0,.08);
+    }
+    .wxFill{
+      position:absolute; inset:0;
       width: 50%;
-      background: linear-gradient(90deg, rgba(245,158,11,.95), rgba(34,197,94,.92));
       border-radius: 999px;
+      background: linear-gradient(90deg, rgba(255,220,120,.90), rgba(255,170,70,.90), rgba(255,120,120,.85));
+      transform-origin: right;
     }
     .wxMin, .wxMax{
       font-weight: 900;
+      font-size: 13px;
       text-align:center;
       color: rgba(255,255,255,.92);
-      white-space:nowrap;
     }
-    .wxMin{ opacity:.72; }
+    body.light .wxMin, body.light .wxMax{ color: rgba(10,16,28,.88); }
+    .wxMin{ opacity:.78; }
 
-    .wxMeta{
-      padding: 0 16px 16px;
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-    }
-    .pill{
-      padding: 10px 12px;
+    /* ===== Prayer list (iPhone style) ===== */
+    .plist{
       border-radius: 18px;
       border: 1px solid rgba(255,255,255,.14);
       background: rgba(255,255,255,.06);
-      font-weight: 900;
-      color: rgba(255,255,255,.92);
-      display:flex;
-      align-items:center;
-      gap:8px;
-    }
-    .pill .k{ color: var(--muted); font-size: 13px; }
-    .pill .v{ font-size: 13px; }
-
-    /* ===== Prayer list (iOS modal-ish) ===== */
-    .prayList{
-      padding: 10px 10px 14px;
-    }
-    .prayRow{
-      display:grid;
-      grid-template-columns: 92px 1fr 40px;
-      align-items:center;
-      gap:10px;
-      padding: 12px 12px;
-      border-radius: 18px;
-      background: rgba(255,255,255,.06);
-      border: 1px solid rgba(255,255,255,.12);
-    }
-    .prayRow + .prayRow{ margin-top: 8px; }
-    .prayTime{
-      font-weight: 900;
-      font-size: 16px;
-      white-space:nowrap;
-      color: rgba(255,255,255,.95);
-    }
-    .prayName{
-      font-weight: 900;
-      font-size: 16px;
-      color: rgba(255,255,255,.95);
-    }
-    .prayIco{
-      width: 38px; height:38px;
-      border-radius: 16px;
-      display:grid;
-      place-items:center;
-      background: rgba(255,255,255,.08);
-      border: 1px solid rgba(255,255,255,.12);
-      font-size: 18px;
-      opacity: .95;
-    }
-
-    /* ===== On this day ===== */
-    .odayBox{
-      padding: 10px 16px 16px;
-    }
-    .odayCard{
-      border: 1px solid rgba(255,255,255,.14);
-      background: rgba(255,255,255,.06);
-      border-radius: 20px;
       overflow:hidden;
+    }
+    body.light .plist{
+      border-color: rgba(0,0,0,.10);
+      background: rgba(255,255,255,.55);
+    }
+    .prow{
       display:grid;
-      grid-template-columns: 110px 1fr;
-      min-height: 96px;
+      grid-template-columns: 92px 1fr 26px;
+      gap: 10px;
+      align-items:center;
+      padding: 12px 14px;
+      border-bottom: 1px dashed rgba(255,255,255,.18);
     }
-    .odayImg{
-      width:100%;
-      height:100%;
-      object-fit:cover;
-      background: rgba(255,255,255,.06);
-    }
-    .odayInfo{
-      padding: 12px 12px 10px;
-    }
-    .odayYear{
+    body.light .prow{ border-bottom-color: rgba(0,0,0,.12); }
+    .prow:last-child{ border-bottom:none; }
+    .ptime{
       font-weight: 900;
-      color: rgba(255,255,255,.85);
-      font-size: 13px;
+      font-size: 18px;
+      letter-spacing:.3px;
+    }
+    .pname{
+      font-weight: 900;
+      font-size: 16px;
+    }
+    .pico{
+      opacity:.65;
+      text-align:center;
+      font-size: 18px;
+    }
+
+    /* ===== On this day (carousel) ===== */
+    .odayBox{
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06);
+      overflow:hidden;
+    }
+    body.light .odayBox{
+      border-color: rgba(0,0,0,.10);
+      background: rgba(255,255,255,.55);
+    }
+    .odayMedia{
+      height: 180px;
+      background: rgba(0,0,0,.25);
+      border-bottom: 1px solid rgba(255,255,255,.10);
+      position:relative;
+      overflow:hidden;
+    }
+    body.light .odayMedia{ background: rgba(0,0,0,.06); border-bottom-color: rgba(0,0,0,.08); }
+    .odayMedia img{
+      width:100%; height:100%;
+      object-fit:cover;
+      display:block;
+      filter: saturate(1.04) contrast(1.02);
+      opacity:.92;
+    }
+    .odayBadge{
+      position:absolute;
+      top: 10px;
+      right: 10px;
+      padding: 8px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.18);
+      background: rgba(0,0,0,.35);
+      backdrop-filter: blur(10px);
+      font-weight: 900;
+      font-size: 12px;
+    }
+    .odayBody{ padding: 12px 14px 14px; }
+    .odayYear{
       margin:0 0 6px;
+      font-weight: 900;
+      font-size: 14px;
+      color: var(--muted);
     }
     .odayText{
       margin:0;
       font-weight: 900;
-      font-size: 14px;
-      line-height: 1.8;
-      color: rgba(255,255,255,.95);
-      max-height: 3.6em;
-      overflow:hidden;
+      line-height: 1.95;
+      font-size: 15px;
     }
     .odayNav{
-      margin-top: 10px;
+      margin-top: 12px;
       display:flex;
-      justify-content:space-between;
       align-items:center;
+      justify-content:space-between;
       gap:10px;
     }
     .odayCount{
-      color: var(--muted);
       font-weight: 900;
-      font-size: 13px;
+      color: var(--muted);
+      font-size: 12px;
       white-space:nowrap;
     }
 
     /* ===== Dua ===== */
     .duaBox{
-      padding: 10px 16px 16px;
-    }
-    .duaText{
-      margin:0;
-      padding: 12px 12px;
       border-radius: 18px;
       border: 1px solid rgba(255,255,255,.14);
       background: rgba(255,255,255,.06);
-      font-weight: 900;
+      padding: 14px;
       line-height: 2.0;
-      color: rgba(255,255,255,.95);
-      font-size: 15px;
-    }
-    .duaHint{
-      margin-top: 10px;
-      color: var(--muted);
       font-weight: 900;
-      font-size: 12px;
+    }
+    body.light .duaBox{
+      border-color: rgba(0,0,0,.10);
+      background: rgba(255,255,255,.55);
+    }
+    .duaTitle{
+      margin:0 0 8px;
+      font-weight: 900;
+      font-size: 14px;
+      color: var(--muted);
+    }
+    .duaText{
+      margin:0;
+      font-size: 16px;
     }
 
-    /* Footer small */
-    .foot{
+    /* ===== Footer mini ===== */
+    .miniRow{
       display:flex;
       align-items:center;
       justify-content:space-between;
       gap:10px;
-      padding: 10px 16px 14px;
-      color: rgba(255,255,255,.82);
+      padding: 12px 14px;
+      border-radius: 18px;
+      border: 1px solid var(--border);
+      background: var(--glass);
+      backdrop-filter: blur(12px);
+      box-shadow: var(--shadow);
+      margin-top: 14px;
+    }
+    .miniRow .mini{
       font-weight: 900;
-      font-size: 13px;
+      font-size: 12px;
+      color: var(--muted);
+      white-space:nowrap;
     }
 
-    @media (max-width: 560px){
-      .wxRow{ grid-template-columns: 78px 34px 1fr 42px 42px; }
-      .wxDay{ font-size: 13px; }
-      .prayTime,.prayName{ font-size: 15px; }
-      .odayCard{ grid-template-columns: 98px 1fr; }
+    .toggle{
+      display:flex;
+      align-items:center;
+      gap:10px;
     }
   </style>
 </head>
 
 <body>
-  <!-- Background video only -->
-  <video class="bgVideo" autoplay muted loop playsinline>
+  <!-- ✅ فيديو خلفية فقط -->
+  <video class="bgVideo" id="bgVideo" autoplay muted loop playsinline>
     <source src="bg.mp4.mp4" type="video/mp4">
   </video>
   <div class="overlay"></div>
 
   <div class="wrap">
+    <div class="topBar">
+      <a class="btn" href="index.html">↩ رجوع</a>
+      <h1 class="topTitle">معلومات أكثر</h1>
+      <button class="btn" id="toggleTheme">🌙/☀️</button>
+    </div>
 
-    <!-- Header -->
-    <section class="card">
-      <div class="head">
-        <div>
-          <h1 class="title">معلومات أكثر</h1>
-          <p class="sub" id="topSub">... تحميل</p>
+    <div id="errBox"></div>
+
+    <div class="grid">
+      <!-- ===== الطقس ===== -->
+      <section class="card">
+        <div class="cardHd">
+          <h2>طقس الأسبوع — البصرة</h2>
+          <span class="smallMuted" id="wxUpdated">... تحميل</span>
         </div>
-        <a class="btn" href="index.html">رجوع</a>
-      </div>
 
-      <div id="errBox" class="errBox"></div>
-
-      <div class="foot">
-        <span id="pingTxt">Ping: ...</span>
-        <span id="updatedTxt">آخر تحديث: ...</span>
-      </div>
-    </section>
-
-    <!-- Weather -->
-    <section class="card" id="wxCard">
-      <div class="head">
-        <div>
-          <h2 class="title">طقس الأسبوع — البصرة</h2>
-          <p class="sub">شكل احترافي + أيقونات + خط حرارة</p>
-        </div>
-        <button class="btn small" id="refreshWx">تحديث</button>
-      </div>
-
-      <div class="wxTop">
-        <div>
-          <p class="wxCity" id="wxCity">البصرة</p>
-          <p class="sub" id="wxDate">...</p>
-        </div>
-        <div class="wxNow">
-          <div class="wxNowIcon" id="wxNowIcon">⛅</div>
+        <div class="wxHero">
           <div>
-            <div class="big" id="wxNowTemp">--°</div>
-            <div class="desc" id="wxNowDesc">... تحميل</div>
+            <p class="wxCity" id="wxCity">البصرة</p>
+            <p class="wxNowDesc" id="wxNowDesc">... تحميل</p>
           </div>
-        </div>
-      </div>
 
-      <div class="wxList" id="wxList"></div>
-
-      <div class="wxMeta" id="sunMeta">
-        <div class="pill"><span class="k">الشروق</span><span class="v" id="sunriseTxt">--:--</span></div>
-        <div class="pill"><span class="k">الغروب</span><span class="v" id="sunsetTxt">--:--</span></div>
-      </div>
-    </section>
-
-    <!-- Prayer times -->
-    <section class="card" id="prayCard">
-      <div class="head">
-        <div>
-          <h2 class="title">الشروق والغروب + مواقيت الصلاة (جعفري)</h2>
-          <p class="sub">بنظام 12 ساعة صباح/مساء</p>
-        </div>
-        <button class="btn small" id="refreshPray">تحديث</button>
-      </div>
-
-      <div class="prayList" id="prayList"></div>
-    </section>
-
-    <!-- On this day -->
-    <section class="card" id="odayCard">
-      <div class="head">
-        <div>
-          <h2 class="title">في مثل هذا اليوم (حدث حقيقي)</h2>
-          <p class="sub">تصفح بين الأحداث مع صورة + سنة</p>
-        </div>
-        <button class="btn small" id="refreshOday">تحديث</button>
-      </div>
-
-      <div class="odayBox">
-        <div class="odayCard">
-          <img class="odayImg" id="odayImg" alt="صورة الحدث" src="" />
-          <div class="odayInfo">
-            <p class="odayYear" id="odayYear">... تحميل</p>
-            <p class="odayText" id="odayText">... تحميل</p>
-            <div class="odayNav">
-              <button class="btn small" id="odayPrev">◀</button>
-              <span class="odayCount" id="odayCount">...</span>
-              <button class="btn small" id="odayNext">▶</button>
+          <div class="wxNow">
+            <div style="text-align:right">
+              <p class="wxNowTemp" id="wxNowTemp">--°</p>
+              <p class="wxNowDesc" id="wxNowFeels">...</p>
             </div>
           </div>
         </div>
-      </div>
-    </section>
 
-    <!-- Dua of day -->
-    <section class="card" id="duaCard">
-      <div class="head">
-        <div>
-          <h2 class="title">دعاء اليوم</h2>
-          <p class="sub">سطرين فقط (يتغير حسب اليوم)</p>
+        <div class="cardBd">
+          <ul class="wxList" id="wxList"></ul>
         </div>
-        <button class="btn small" id="refreshDua">تحديث</button>
-      </div>
+      </section>
 
-      <div class="duaBox">
-        <p class="duaText" id="duaText">... تحميل</p>
-        <div class="duaHint" id="duaHint">...</div>
-      </div>
-    </section>
+      <!-- ===== أوقات الصلاة + الشروق/الغروب ===== -->
+      <section class="card">
+        <div class="cardHd">
+          <h2>الشروق والغروب + مواقيت الصلاة (جعفري)</h2>
+          <span class="smallMuted" id="pUpdated">... تحميل</span>
+        </div>
+        <div class="cardBd">
+          <div class="plist" id="pList">
+            <!-- rows injected -->
+          </div>
+          <div style="margin-top:10px" class="smallMuted">
+            ملاحظة: الترتيب بصيغة 12 ساعة (ص/م).
+          </div>
+        </div>
+      </section>
 
+      <!-- ===== في مثل هذا اليوم ===== -->
+      <section class="card">
+        <div class="cardHd">
+          <h2>في مثل هذا اليوم (حدث حقيقي)</h2>
+          <button class="btn" id="refreshOday">تحديث</button>
+        </div>
+        <div class="cardBd">
+          <div class="odayBox">
+            <div class="odayMedia">
+              <img id="odayImg" alt="صورة الحدث">
+              <div class="odayBadge" id="odayBadge">... تحميل</div>
+            </div>
+            <div class="odayBody">
+              <p class="odayYear" id="odayYear">... تحميل</p>
+              <p class="odayText" id="odayText">... تحميل</p>
+
+              <div class="odayNav">
+                <button class="btn" id="odayPrev">◀ السابق</button>
+                <span class="odayCount" id="odayCount">0 / 0</span>
+                <button class="btn" id="odayNext">التالي ▶</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== دعاء اليوم ===== -->
+      <section class="card">
+        <div class="cardHd">
+          <h2>دعاء اليوم</h2>
+          <span class="smallMuted" id="duaDay">... تحميل</span>
+        </div>
+        <div class="cardBd">
+          <div class="duaBox">
+            <p class="duaTitle" id="duaTitle">...</p>
+            <p class="duaText" id="duaText">... تحميل</p>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <div class="miniRow">
+      <div class="mini" id="pingTxt">Ping: ...</div>
+      <div class="mini" id="updTxt">آخر تحديث: ...</div>
+      <div class="mini" id="visTxt">زياراتك على هذا الجهاز: ...</div>
+    </div>
   </div>
 
   <script>
-    // ========= Helpers =========
+    // ===== Helpers =====
     const $ = (id) => document.getElementById(id);
-    const errBox = $("errBox");
-
-    function showErr(msg){
-      errBox.style.display = "block";
-      errBox.textContent = msg;
-    }
-    function clearErr(){
-      errBox.style.display = "none";
-      errBox.textContent = "";
-    }
-
     const BAGHDAD_TZ = "Asia/Baghdad";
     const lat = 30.5085, lon = 47.7804; // Basra
 
-    function fmtDateAr(d){
-      return new Intl.DateTimeFormat("ar-IQ", {
-        timeZone: BAGHDAD_TZ,
-        weekday: "long",
-        day: "2-digit",
-        month: "long",
-        year: "numeric"
-      }).format(d);
+    function showErr(msg){
+      const b = $("errBox");
+      b.textContent = msg;
+      b.style.display = "block";
+    }
+    function clearErr(){
+      const b = $("errBox");
+      b.textContent = "";
+      b.style.display = "none";
     }
 
-    function fmt12hFromHHMM(hhmm){
-      // "17:49" -> "5:49 م"
-      const [hStr,mStr] = hhmm.split(":");
-      let h = Number(hStr);
-      const m = Number(mStr);
-      const am = h < 12;
-      h = h % 12; if (h === 0) h = 12;
+    function formatDayName(date){
+      return new Intl.DateTimeFormat("ar-IQ", { weekday:"short", timeZone: BAGHDAD_TZ }).format(date);
+    }
+
+    function formatTime12h(hhmm){
+      // hhmm = "05:11"
+      const [hS, mS] = hhmm.split(":");
+      let h = Number(hS);
+      const m = Number(mS);
+      const isPM = h >= 12;
+      let h12 = h % 12; if(h12 === 0) h12 = 12;
       const mm = String(m).padStart(2,"0");
-      return `${h}:${mm} ${am ? "ص" : "م"}`;
+      return `${h12}:${mm} ${isPM ? "م" : "ص"}`;
     }
 
-    function wmoToIconDesc(code){
-      // WMO weather code mapping (مختصر)
-      if (code === 0) return ["☀️","صحو"];
-      if ([1,2].includes(code)) return ["🌤️","غائم جزئياً"];
-      if (code === 3) return ["☁️","غائم"];
-      if ([45,48].includes(code)) return ["🌫️","ضباب"];
-      if ([51,53,55].includes(code)) return ["🌦️","رذاذ"];
-      if ([61,63,65].includes(code)) return ["🌧️","مطر"];
-      if ([71,73,75,77].includes(code)) return ["🌨️","ثلج"];
-      if ([80,81,82].includes(code)) return ["🌧️","زخات"];
-      if ([95,96,99].includes(code)) return ["⛈️","عاصفة"];
-      return ["⛅","متغير"];
+    function weatherIcon(code){
+      if (code === 0) return "☀️";
+      if ([1,2].includes(code)) return "🌤️";
+      if (code === 3) return "☁️";
+      if ([45,48].includes(code)) return "🌫️";
+      if ([51,53,55].includes(code)) return "🌦️";
+      if ([61,63,65].includes(code)) return "🌧️";
+      if ([71,73,75,77].includes(code)) return "🌨️";
+      if ([80,81,82].includes(code)) return "🌧️";
+      if ([95,96,99].includes(code)) return "⛈️";
+      return "⛅";
     }
 
-    function clamp(n,a,b){ return Math.max(a, Math.min(b,n)); }
+    function weatherDescAr(code){
+      if (code === 0) return "صحو";
+      if (code === 1) return "غائم قليلاً";
+      if (code === 2) return "غائم جزئياً";
+      if (code === 3) return "غائم";
+      if ([45,48].includes(code)) return "ضباب";
+      if ([51,53,55].includes(code)) return "رذاذ";
+      if ([61,63,65].includes(code)) return "مطر";
+      if ([71,73,75,77].includes(code)) return "ثلج";
+      if ([80,81,82].includes(code)) return "زخات";
+      if ([95,96,99].includes(code)) return "عاصفة";
+      return "متغير";
+    }
 
-    // ========= Top small status =========
-    (function initTop(){
-      $("topSub").textContent = fmtDateAr(new Date());
-      $("updatedTxt").textContent = "آخر تحديث: ...";
-      // Ping بسيط (تقريبي) عبر قياس fetch
-      pingOnce();
-      setInterval(pingOnce, 60*1000);
+    // ===== Theme toggle =====
+    const savedTheme = localStorage.getItem("themeMode");
+    if(savedTheme === "light") document.body.classList.add("light");
+    $("toggleTheme").addEventListener("click", () => {
+      document.body.classList.toggle("light");
+      localStorage.setItem("themeMode", document.body.classList.contains("light") ? "light" : "dark");
+    });
+
+    // ===== Visitors (local device only) =====
+    (function(){
+      const k = "info_visits_local";
+      const v = (Number(localStorage.getItem(k)) || 0) + 1;
+      localStorage.setItem(k, String(v));
+      $("visTxt").textContent = `زياراتك على هذا الجهاز: ${v}`;
     })();
 
-    async function pingOnce(){
-      const t0 = performance.now();
+    // ===== Last update (page) =====
+    $("updTxt").textContent = `آخر تحديث: ${document.lastModified || "—"}`;
+
+    // ===== Ping =====
+    (async function(){
       try{
-        // طلب خفيف
-        await fetch("https://www.google.com/generate_204", { mode:"no-cors", cache:"no-store" });
+        const t0 = performance.now();
+        await fetch("index.html", { cache:"no-store" });
         const ms = Math.round(performance.now() - t0);
         $("pingTxt").textContent = `Ping: ${ms}ms`;
       }catch{
-        $("pingTxt").textContent = `Ping: --`;
+        $("pingTxt").textContent = "Ping: —";
       }
-    }
+    })();
 
-    // ========= Weather (Open-Meteo) =========
+    // ===== Weather (Open-Meteo) =====
     async function loadWeather(){
       clearErr();
-      const t0 = performance.now();
       try{
         const url =
           `https://api.open-meteo.com/v1/forecast` +
           `?latitude=${lat}&longitude=${lon}` +
-          `&current=temperature_2m,weather_code` +
-          `&daily=temperature_2m_max,temperature_2m_min,weather_code,sunrise,sunset` +
+          `&current=temperature_2m,apparent_temperature,weather_code` +
+          `&daily=weather_code,temperature_2m_max,temperature_2m_min` +
           `&timezone=Asia%2FBaghdad`;
 
         const res = await fetch(url, { cache:"no-store" });
-        if(!res.ok) throw new Error("Weather HTTP " + res.status);
+        if(!res.ok) throw new Error("WX HTTP " + res.status);
         const data = await res.json();
 
-        const nowTemp = Math.round(data.current.temperature_2m);
-        const wcode = data.current.weather_code;
-        const [ico, desc] = wmoToIconDesc(wcode);
+        const curTemp = Math.round(data.current.temperature_2m);
+        const feels = Math.round(data.current.apparent_temperature);
+        const code = data.current.weather_code;
 
-        $("wxNowTemp").textContent = `${nowTemp}°`;
-        $("wxNowIcon").textContent = ico;
-        $("wxNowDesc").textContent = desc;
-        $("wxDate").textContent = fmtDateAr(new Date());
+        $("wxNowTemp").textContent = `${curTemp}°`;
+        $("wxNowDesc").textContent = `${weatherDescAr(code)} ${weatherIcon(code)}`;
+        $("wxNowFeels").textContent = `المحسوس: ${feels}°`;
+        $("wxUpdated").textContent = "محدّث الآن";
 
-        // sunrise/sunset (today)
-        const sr = data.daily.sunrise?.[0];
-        const ss = data.daily.sunset?.[0];
-        if (sr) $("sunriseTxt").textContent = fmt12hFromHHMM(sr.slice(11,16));
-        if (ss) $("sunsetTxt").textContent = fmt12hFromHHMM(ss.slice(11,16));
-
-        // weekly list
-        const days = data.daily.time;
-        const maxs = data.daily.temperature_2m_max;
-        const mins = data.daily.temperature_2m_min;
-        const codes = data.daily.weather_code;
+        const times = data.daily.time || [];
+        const tmax = data.daily.temperature_2m_max || [];
+        const tmin = data.daily.temperature_2m_min || [];
+        const wcodes = data.daily.weather_code || [];
 
         // range for bars
-        const globalMin = Math.min(...mins);
-        const globalMax = Math.max(...maxs);
-        const range = Math.max(1, globalMax - globalMin);
+        const all = [];
+        for(let i=0;i<times.length;i++){
+          if(typeof tmin[i]==="number" && typeof tmax[i]==="number"){ all.push(tmin[i], tmax[i]); }
+        }
+        const gMin = Math.min(...all);
+        const gMax = Math.max(...all);
+        const span = Math.max(1, gMax - gMin);
 
         const list = $("wxList");
         list.innerHTML = "";
 
-        for(let i=0;i<days.length;i++){
-          const d = new Date(days[i] + "T00:00:00");
-          const dayName = new Intl.DateTimeFormat("ar-IQ", { timeZone:BAGHDAD_TZ, weekday:"long" }).format(d);
-          const min = Math.round(mins[i]);
-          const max = Math.round(maxs[i]);
-          const [ic] = wmoToIconDesc(codes[i]);
+        const daysToShow = Math.min(10, times.length);
+        for(let i=0;i<daysToShow;i++){
+          const d = new Date(times[i] + "T12:00:00");
+          const dayName = (i===0) ? "اليوم" : formatDayName(d);
+          const mn = Math.round(tmin[i]);
+          const mx = Math.round(tmax[i]);
+          const c = wcodes[i];
 
-          const startPct = ((min - globalMin)/range) * 100;
-          const widthPct = ((max - min)/range) * 100;
+          const leftPct = ((mn - gMin) / span) * 100;
+          const widthPct = ((mx - mn) / span) * 100;
 
-          const row = document.createElement("div");
-          row.className = "wxRow";
-          row.innerHTML = `
-            <div class="wxDay">${i===0 ? "اليوم" : dayName}</div>
-            <div class="wxIcon">${ic}</div>
-            <div class="wxBar"><i style="margin-right:${startPct}%; width:${clamp(widthPct,10,100)}%"></i></div>
-            <div class="wxMin">${min}°</div>
-            <div class="wxMax">${max}°</div>
+          const li = document.createElement("li");
+          li.className = "wxRow";
+          li.innerHTML = `
+            <div class="wxDay">${dayName}</div>
+            <div class="wxIcon" title="${weatherDescAr(c)}">${weatherIcon(c)}</div>
+            <div class="wxBar" aria-hidden="true">
+              <div class="wxFill" style="right:${100 - (leftPct + widthPct)}%; width:${widthPct}%;"></div>
+            </div>
+            <div class="wxMin">${mn}°</div>
+            <div class="wxMax">${mx}°</div>
           `;
-          list.appendChild(row);
+          list.appendChild(li);
         }
-
-        $("updatedTxt").textContent = "آخر تحديث: " + new Date().toLocaleTimeString("ar-IQ");
       }catch(e){
-        showErr("تعذر تحميل الطقس. تأكد من الاتصال أو جرّب تحديث الصفحة.");
-      }finally{
-        // nothing
+        showErr("تعذر تحميل الطقس. تأكد من الانترنت ثم حدّث الصفحة.");
+        $("wxUpdated").textContent = "فشل التحميل";
       }
     }
 
-    $("refreshWx").addEventListener("click", loadWeather);
-
-    // ========= Prayer times (Aladhan, Jafari) =========
-    // ملاحظة: Aladhan يعطي أوقات، نعرضها 12 ساعة.
-    async function loadPrayer(){
+    // ===== Prayer times (AlAdhan) — Jafari (approx) =====
+    async function loadPrayers(){
       clearErr();
       try{
-        const today = new Date();
-        const dd = String(today.getDate()).padStart(2,"0");
-        const mm = String(today.getMonth()+1).padStart(2,"0");
-        const yyyy = today.getFullYear();
-
-        // method=0 (Shia Ithna-Ashari / Jafari) حسب Aladhan
-        const url = `https://api.aladhan.com/v1/timings/${dd}-${mm}-${yyyy}?latitude=${lat}&longitude=${lon}&method=0&tune=0,0,0,0,0,0,0,0,0`;
-
+        // Basra, Iraq (جعفري/شيعي) — نستخدم method=0 (شائع كـ Shia Ithna-Ashari)
+        const url = `https://api.aladhan.com/v1/timingsByCity?city=Basra&country=Iraq&method=0`;
         const res = await fetch(url, { cache:"no-store" });
-        if(!res.ok) throw new Error("Prayer HTTP " + res.status);
+        if(!res.ok) throw new Error("PR HTTP " + res.status);
         const data = await res.json();
-        const t = data.data.timings;
+        const t = data?.data?.timings;
+        if(!t) throw new Error("No timings");
 
-        // نختار أهم الأوقات + شروق/غروب
-        const items = [
-          { name:"صلاة الصبح", time: t.Fajr, ico:"🔔" },
-          { name:"الشروق", time: t.Sunrise, ico:"☀️" },
-          { name:"صلاة الظهر", time: t.Dhuhr, ico:"🔔" },
-          { name:"الغروب", time: t.Sunset, ico:"🌇" },
-          { name:"صلاة المغرب", time: t.Maghrib, ico:"🔔" },
-          { name:"منتصف الليل", time: t.Midnight || t.MiddleOfTheNight, ico:"✨" },
+        const rows = [
+          { name:"صلاة الصبح", key:"Fajr", icon:"🔔" },
+          { name:"الشروق", key:"Sunrise", icon:"☀️" },
+          { name:"صلاة الظهر", key:"Dhuhr", icon:"🔔" },
+          { name:"الغروب", key:"Sunset", icon:"🌇" },
+          { name:"صلاة المغرب", key:"Maghrib", icon:"🌙" },
+          { name:"صلاة العشاء", key:"Isha", icon:"✨" }
         ];
 
-        const list = $("prayList");
-        list.innerHTML = "";
+        const list = $("pList");
+        list.innerHTML = reminderRow("... تحميل");
 
-        for(const it of items){
-          const hhmm = String(it.time || "--:--").slice(0,5);
-          const nice = (hhmm.includes(":") && hhmm !== "--:--") ? fmt12hFromHHMM(hhmm) : "--:--";
-          const row = document.createElement("div");
-          row.className = "prayRow";
-          row.innerHTML = `
-            <div class="prayTime">${nice}</div>
-            <div class="prayName">${it.name}</div>
-            <div class="prayIco">${it.ico}</div>
+        const frag = document.createDocumentFragment();
+
+        for(const r of rows){
+          const hhmm = String(t[r.key] || "").slice(0,5);
+          if(!/^\d{2}:\d{2}$/.test(hhmm)) continue;
+          const div = document.createElement("div");
+          div.className = "prow";
+          div.innerHTML = `
+            <div class="ptime">${formatTime12h(hhmm)}</div>
+            <div class="pname">${r.name}</div>
+            <div class="pico">${r.icon}</div>
           `;
-          list.appendChild(row);
+          frag.appendChild(div);
         }
+
+        list.innerHTML = "";
+        list.appendChild(frag);
+
+        $("pUpdated").textContent = "محدّث اليوم";
       }catch(e){
-        showErr("تعذر تحميل مواقيت الصلاة. جرّب تحديث الصفحة.");
+        showErr("تعذر تحميل أوقات الصلاة. إذا استمر، جرّب تحديث الصفحة.");
+        $("pUpdated").textContent = "فشل التحميل";
+        $("pList").innerHTML = reminderRow("لا توجد بيانات");
       }
     }
 
-    $("refreshPray").addEventListener("click", loadPrayer);
+    function reminderRow(text){
+      return `
+        <div class="prow">
+          <div class="ptime">--:--</div>
+          <div class="pname">${text}</div>
+          <div class="pico">…</div>
+        </div>
+      `;
+    }
 
-    // ========= On This Day (Wikipedia / Wikimedia REST) =========
-    // نجيب أحداث اليوم + نجيب صورة للحدث عبر summary endpoint
+    // ===== On This Day (Arabic Wikipedia feed + Arabic summary for image) =====
     let ODAY = { list: [], idx: 0 };
 
     async function loadOnThisDay(){
       clearErr();
       try{
         const now = new Date();
-        // الشهر/اليوم حسب بغداد (تقريبياً)
         const baghdad = new Date(now.toLocaleString("en-US", { timeZone: BAGHDAD_TZ }));
         const m = baghdad.getMonth() + 1;
         const d = baghdad.getDate();
 
-        const url = `https://api.wikimedia.org/feed/v1/wikipedia/en/onthisday/events/${m}/${d}`;
+        const url = `https://api.wikimedia.org/feed/v1/wikipedia/ar/onthisday/events/${m}/${d}`;
         const res = await fetch(url, { cache:"no-store" });
         if(!res.ok) throw new Error("OnThisDay HTTP " + res.status);
         const data = await res.json();
 
         const events = Array.isArray(data.events) ? data.events : [];
-        // ننظف ونختار أحداث بها نص
         const cleaned = events
           .filter(e => e && e.year && e.text)
           .slice(0, 25);
@@ -732,6 +780,11 @@
         await renderOnThisDay();
       }catch(e){
         showErr("تعذر تحميل (في مثل هذا اليوم). جرّب تحديث الصفحة.");
+        $("odayBadge").textContent = "تعذر التحميل";
+        $("odayYear").textContent = "—";
+        $("odayText").textContent = "—";
+        $("odayCount").textContent = "0 / 0";
+        $("odayImg").src = "";
       }
     }
 
@@ -744,17 +797,18 @@
         return;
       }
 
+      $("odayBadge").textContent = "مصدر: ويكيبيديا";
       $("odayYear").textContent = `سنة ${e.year}`;
       $("odayText").textContent = e.text;
       $("odayCount").textContent = `${ODAY.idx + 1} / ${ODAY.list.length}`;
 
-      // صورة: نحاول نجيب صورة من أول صفحة مرتبطة
+      // image from Arabic summary
       let img = "";
       try{
         const page = e.pages?.[0];
-        if(page?.titles?.normalized){
-          const title = page.titles.normalized;
-          const sUrl = `https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(title)}`;
+        const title = page?.titles?.normalized || page?.titles?.display;
+        if(title){
+          const sUrl = `https://ar.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(title)}`;
           const sRes = await fetch(sUrl, { cache:"no-store" });
           if(sRes.ok){
             const sData = await sRes.json();
@@ -764,21 +818,21 @@
       }catch{}
 
       if(!img){
-        // fallback بسيطة
         img = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(`
-          <svg xmlns="http://www.w3.org/2000/svg" width="400" height="400">
+          <svg xmlns="http://www.w3.org/2000/svg" width="800" height="400">
             <defs>
               <linearGradient id="g" x1="0" x2="1" y1="0" y2="1">
-                <stop offset="0" stop-color="rgba(255,255,255,.12)"/>
+                <stop offset="0" stop-color="rgba(255,255,255,.14)"/>
                 <stop offset="1" stop-color="rgba(255,255,255,.02)"/>
               </linearGradient>
             </defs>
             <rect width="100%" height="100%" fill="url(#g)"/>
-            <text x="50%" y="52%" dominant-baseline="middle" text-anchor="middle"
-              fill="rgba(255,255,255,.82)" font-family="Arial" font-size="26">On This Day</text>
+            <text x="50%" y="54%" dominant-baseline="middle" text-anchor="middle"
+              fill="rgba(255,255,255,.88)" font-family="Arial" font-size="28">في مثل هذا اليوم</text>
           </svg>
         `);
       }
+
       $("odayImg").src = img;
     }
 
@@ -794,31 +848,36 @@
     });
     $("refreshOday").addEventListener("click", loadOnThisDay);
 
-    // ========= Dua of Day (سطرين) =========
-    const DUAS = [
-      { day: 0, name:"الأحد", text:"اللهم اجعلني في درعك الحصينة التي تجعل فيها من تريد.", text2:"وارزقني طمأنينة تُشبه نور الصباح." },
-      { day: 1, name:"الاثنين", text:"اللهم ارزقني توفيقاً يفتح أبواب الخير حيثما اتجهت.", text2:"واجعل لي من كل همٍ فرجاً." },
-      { day: 2, name:"الثلاثاء", text:"اللهم ثبت قلبي على ما تحب، واصرف عني ما يضر.", text2:"واغمر أيامي برحمةٍ لا تنقطع." },
-      { day: 3, name:"الأربعاء", text:"اللهم اجعلني من أهل السكينة، ولا تكلني لنفسي طرفة عين.", text2:"واكتب لي رزقاً يطمئن له قلبي." },
-      { day: 4, name:"الخميس", text:"اللهم اجعل خاتمتي خيراً، واغفر لي ما تقدم وما تأخر.", text2:"وارزقني دعوةً مستجابة." },
-      { day: 5, name:"الجمعة", text:"اللهم صلّ على محمد وآل محمد، واملأ قلبي نوراً.", text2:"واجعل هذا اليوم بداية خيرٍ لي ولأهلي." },
-      { day: 6, name:"السبت", text:"اللهم افتح لي أبواب الرحمة، وأبعد عني كل ضيق.", text2:"واجعل لي في هذه الليلة سلاماً." },
-    ];
-
-    function loadDua(){
+    // ===== Dua of the day (2 lines only) =====
+    function duaOfWeek(){
       const now = new Date();
       const baghdad = new Date(now.toLocaleString("en-US", { timeZone: BAGHDAD_TZ }));
-      const d = baghdad.getDay(); // 0=Sun
-      const dua = DUAS.find(x=>x.day===d) || DUAS[0];
-      $("duaText").textContent = `${dua.text}\n${dua.text2}`;
-      $("duaHint").textContent = `دعاء يوم ${dua.name} — (مختصر سطرين)`;
-    }
-    $("refreshDua").addEventListener("click", loadDua);
+      const day = baghdad.getDay(); // 0 Sun .. 6 Sat
 
-    // ========= Boot =========
-    (async function boot(){
-      loadDua();
-      await Promise.allSettled([ loadWeather(), loadPrayer(), loadOnThisDay() ]);
+      const names = ["الأحد","الاثنين","الثلاثاء","الأربعاء","الخميس","الجمعة","السبت"];
+      const items = [
+        { title:"دعاء يوم الأحد", text:"اللهم افتح لي أبواب رحمتك.\nواجعل يومي سلاماً ونوراً وهداية." },
+        { title:"دعاء يوم الاثنين", text:"اللهم قوِّ قلبي على طاعتك.\nوارزقني رزقاً طيباً وبركةً في الوقت." },
+        { title:"دعاء يوم الثلاثاء", text:"اللهم زدني علماً ونقاءً.\nواصرف عني همّاً لا أطيقه." },
+        { title:"دعاء يوم الأربعاء", text:"اللهم اجعلني من الذاكرين.\nوأنزل السكينة على قلبي وأهلي." },
+        { title:"دعاء يوم الخميس", text:"اللهم طهّر سريرتي.\nواجعل ختام يومي مغفرة ورضا." },
+        { title:"دعاء يوم الجمعة", text:"اللهم صلّ على محمد وآل محمد.\nواغفر لنا وارزقنا حسن العاقبة." },
+        { title:"دعاء يوم السبت", text:"اللهم اكتب لي بداية خير.\nوقوةً في العمل، وراحةً في القلب." }
+      ];
+
+      $("duaDay").textContent = `اليوم: ${names[day]}`;
+      $("duaTitle").textContent = items[day].title;
+      $("duaText").textContent = items[day].text;
+    }
+
+    // ===== Init =====
+    (async function init(){
+      duaOfWeek();
+      await Promise.all([
+        loadWeather(),
+        loadPrayers(),
+        loadOnThisDay()
+      ]);
     })();
   </script>
 </body>
