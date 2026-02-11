@@ -2,254 +2,255 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>معلومات أكثر</title>
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;800;900&display=swap" rel="stylesheet">
 
 <style>
-:root{
-  --bg:#0b1220;
-  --card: rgba(255,255,255,.08);
-  --border: rgba(255,255,255,.15);
-  --text:#eef2ff;
-  --muted:#cbd5e1;
-}
-body.light{
-  --bg:#f4f6ff;
-  --card: rgba(0,0,0,.05);
-  --border: rgba(0,0,0,.12);
-  --text:#0b1220;
-  --muted:#475569;
-}
-
-*{box-sizing:border-box}
 body{
   margin:0;
   font-family:"Cairo",sans-serif;
-  background:var(--bg);
-  color:var(--text);
-  padding:120px 14px 30px;
+  background:#0b1220;
+  color:#fff;
+  overflow-x:hidden;
+  padding:20px;
 }
 
-/* نفس خلفية الرئيسية */
+/* نفس خلفية الصفحة الرئيسية */
 .bgVideo{
-  position:fixed; inset:0;
-  width:100%; height:100%;
+  position:fixed;
+  inset:0;
+  width:100%;
+  height:100%;
   object-fit:cover;
-  z-index:-5;
-  opacity:.35;
+  z-index:-2;
 }
 .overlay{
-  position:fixed; inset:0;
-  background:linear-gradient(120deg, rgba(11,18,32,.8), rgba(11,18,32,.7));
-  z-index:-4;
+  position:fixed;
+  inset:0;
+  background:linear-gradient(180deg,rgba(0,0,0,.5),rgba(0,0,0,.8));
+  z-index:-1;
 }
 
-.container{
-  width:min(950px,100%);
-  margin:auto;
-  display:grid;
-  gap:18px;
+/* فقاعة */
+.card{
+  backdrop-filter: blur(18px);
+  background: rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.15);
+  border-radius:28px;
+  padding:20px;
+  margin-bottom:20px;
+  box-shadow:0 10px 40px rgba(0,0,0,.5);
 }
 
-.header{
+h2{
+  margin:0 0 15px;
+  font-weight:900;
+}
+
+/* ===== iPhone Weather Style ===== */
+.weatherMain{
+  text-align:center;
+}
+.weatherMain .temp{
+  font-size:60px;
+  font-weight:900;
+}
+.weatherMain .desc{
+  opacity:.8;
+  font-size:18px;
+}
+
+.week{
+  margin-top:15px;
+}
+.dayRow{
   display:flex;
   justify-content:space-between;
   align-items:center;
-  background:var(--card);
-  border:1px solid var(--border);
-  padding:16px;
-  border-radius:18px;
-  backdrop-filter:blur(10px);
+  margin:8px 0;
+}
+.bar{
+  flex:1;
+  height:6px;
+  margin:0 10px;
+  background:rgba(255,255,255,.15);
+  border-radius:10px;
+  position:relative;
+}
+.bar span{
+  position:absolute;
+  height:100%;
+  border-radius:10px;
+  background:linear-gradient(90deg,#facc15,#f97316);
+}
+
+/* ===== Prayer Style ===== */
+.prayerRow{
+  display:flex;
+  justify-content:space-between;
+  padding:12px 0;
+  border-bottom:1px dashed rgba(255,255,255,.2);
+}
+.prayerRow:last-child{
+  border-bottom:none;
+}
+
+/* ===== On this day ===== */
+.eventBox{
+  text-align:center;
+}
+.eventBox img{
+  width:100%;
+  border-radius:20px;
+  margin:10px 0;
+}
+.eventYear{
+  font-size:20px;
+  font-weight:900;
+}
+.eventText{
+  margin-top:8px;
+  opacity:.9;
+}
+.changeBtn{
+  margin-top:10px;
+  background:rgba(255,255,255,.15);
+  border:none;
+  padding:8px 14px;
+  border-radius:20px;
+  color:#fff;
+  cursor:pointer;
+}
+
+/* ===== Dua ===== */
+.dua{
+  font-size:18px;
+  line-height:2;
+  opacity:.95;
 }
 
 .backBtn{
-  text-decoration:none;
+  display:inline-block;
+  margin-bottom:20px;
   padding:8px 14px;
-  border-radius:12px;
-  border:1px solid var(--border);
-  background:rgba(255,255,255,.08);
-  color:var(--text);
-  font-weight:900;
-}
-
-.card{
-  background:var(--card);
-  border:1px solid var(--border);
-  border-radius:18px;
-  padding:18px;
-  backdrop-filter:blur(10px);
-}
-
-.title{
-  font-size:18px;
-  font-weight:900;
-  margin-bottom:12px;
-}
-
-.loading{
-  opacity:.7;
-  font-weight:900;
-  color:var(--muted);
-}
-
-.grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(130px,1fr));
-  gap:12px;
-}
-
-.miniBox{
-  padding:12px;
-  border-radius:14px;
-  border:1px solid var(--border);
-  text-align:center;
-  font-weight:900;
-  background:rgba(255,255,255,.05);
-}
-
-.footer{
-  text-align:center;
-  margin-top:20px;
-  font-size:13px;
-  opacity:.6;
+  background:rgba(255,255,255,.15);
+  border-radius:20px;
+  text-decoration:none;
+  color:#fff;
 }
 </style>
 </head>
 
 <body>
 
-<video class="bgVideo" autoplay muted loop playsinline>
-  <source src="bg.mp4.mp4" type="video/mp4">
+<video class="bgVideo" autoplay muted loop>
+<source src="bg.mp4.mp4" type="video/mp4">
 </video>
 <div class="overlay"></div>
 
-<div class="container">
+<a href="index.html" class="backBtn">رجوع</a>
 
-  <div class="header">
-    <div style="font-weight:900;font-size:20px;">معلومات أكثر</div>
-    <a href="index.html" class="backBtn">رجوع</a>
+<!-- ===== Weather ===== -->
+<div class="card">
+  <h2>الطقس — البصرة</h2>
+  <div class="weatherMain">
+    <div class="temp" id="tempNow">--°</div>
+    <div class="desc" id="descNow">تحميل...</div>
   </div>
 
-  <!-- طقس الأسبوع -->
-  <div class="card">
-    <div class="title">طقس الأسبوع — البصرة</div>
-    <div id="weekWeather" class="loading">جاري التحميل...</div>
-  </div>
+  <div class="week" id="weekBox"></div>
+</div>
 
-  <!-- الشروق والغروب -->
-  <div class="card">
-    <div class="title">الشروق والغروب</div>
-    <div id="sunData" class="loading">جاري التحميل...</div>
-  </div>
+<!-- ===== Prayer ===== -->
+<div class="card">
+  <h2>مواقيت الصلاة (جعفري)</h2>
+  <div id="prayerBox">تحميل...</div>
+</div>
 
-  <!-- حدث مثل هذا اليوم -->
-  <div class="card">
-    <div class="title">في مثل هذا اليوم</div>
-    <div id="todayEvent" class="loading">جاري التحميل...</div>
-  </div>
+<!-- ===== On this day ===== -->
+<div class="card eventBox">
+  <h2>في مثل هذا اليوم</h2>
+  <div class="eventYear" id="eventYear">--</div>
+  <img id="eventImg" src="">
+  <div class="eventText" id="eventText">تحميل...</div>
+  <button class="changeBtn" onclick="changeEvent()">تغيير</button>
+</div>
 
-  <!-- دعاء اليوم -->
-  <div class="card">
-    <div class="title">دعاء اليوم</div>
-    <div id="dailyDua" class="loading">جاري التحميل...</div>
-  </div>
-
-  <div class="footer">
-    MUSAWI © <span id="year"></span>
-  </div>
-
+<!-- ===== Dua ===== -->
+<div class="card">
+  <h2>دعاء اليوم</h2>
+  <div class="dua" id="duaText">تحميل...</div>
 </div>
 
 <script>
-document.getElementById("year").textContent = new Date().getFullYear();
 
-/* ========== طقس الأسبوع ========== */
+/* ===== Weather API ===== */
 async function loadWeather(){
-  try{
-    const res = await fetch(
-      "https://api.open-meteo.com/v1/forecast?latitude=30.5085&longitude=47.7804&daily=temperature_2m_max,temperature_2m_min&timezone=Asia%2FBaghdad"
-    );
-    const data = await res.json();
+  const lat=30.5, lon=47.8;
+  const res=await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,weather_code&daily=temperature_2m_max,temperature_2m_min&timezone=Asia%2FBaghdad`);
+  const data=await res.json();
 
-    let html = '<div class="grid">';
-    for(let i=0;i<7;i++){
-      html += `
-        <div class="miniBox">
-          ${data.daily.time[i]}<br>
-          ${Math.round(data.daily.temperature_2m_max[i])}° /
-          ${Math.round(data.daily.temperature_2m_min[i])}°
-        </div>`;
-    }
-    html += '</div>';
-    document.getElementById("weekWeather").innerHTML = html;
-  }catch{
-    document.getElementById("weekWeather").textContent = "تعذر جلب البيانات";
+  document.getElementById("tempNow").textContent=Math.round(data.current.temperature_2m)+"°";
+  document.getElementById("descNow").textContent="غائم جزئياً";
+
+  const weekBox=document.getElementById("weekBox");
+  weekBox.innerHTML="";
+  for(let i=0;i<7;i++){
+    const max=data.daily.temperature_2m_max[i];
+    const min=data.daily.temperature_2m_min[i];
+    weekBox.innerHTML+=`
+      <div class="dayRow">
+        <span>${Math.round(max)}°</span>
+        <div class="bar"><span style="width:${max}%"></span></div>
+        <span>${Math.round(min)}°</span>
+      </div>`;
   }
 }
-
-/* ========== الشروق والغروب ========== */
-async function loadSun(){
-  try{
-    const res = await fetch(
-      "https://api.sunrise-sunset.org/json?lat=30.5085&lng=47.7804&formatted=0"
-    );
-    const data = await res.json();
-
-    const sunrise = new Date(data.results.sunrise)
-      .toLocaleTimeString("ar-IQ",{hour:'2-digit',minute:'2-digit'});
-    const sunset = new Date(data.results.sunset)
-      .toLocaleTimeString("ar-IQ",{hour:'2-digit',minute:'2-digit'});
-
-    document.getElementById("sunData").innerHTML =
-      `🌅 الشروق: ${sunrise}<br>🌇 الغروب: ${sunset}`;
-  }catch{
-    document.getElementById("sunData").textContent = "تعذر جلب البيانات";
-  }
-}
-
-/* ========== حدث اليوم من ويكيبيديا ========== */
-async function loadTodayEvent(){
-  try{
-    const today = new Date();
-    const m = today.getMonth()+1;
-    const d = today.getDate();
-
-    const res = await fetch(
-      `https://api.wikimedia.org/feed/v1/wikipedia/ar/onthisday/events/${m}/${d}`
-    );
-    const data = await res.json();
-
-    const event = data.events[0];
-    document.getElementById("todayEvent").innerHTML =
-      `<b>${event.year}</b> — ${event.text}`;
-  }catch{
-    document.getElementById("todayEvent").textContent = "تعذر جلب البيانات";
-  }
-}
-
-/* ========== دعاء اليوم ========== */
-const duas = [
-"دعاء يوم الأحد: اللهم اجعل أول يومي هذا صلاحاً...",
-"دعاء يوم الاثنين: اللهم اجعلني من المتوكلين عليك...",
-"دعاء يوم الثلاثاء: يا رب ارزقني صفاء القلب...",
-"دعاء يوم الأربعاء: اللهم ثبتني على الحق...",
-"دعاء يوم الخميس: اللهم قربني إليك...",
-"دعاء يوم الجمعة: اللهم اجعلني من أهل الجنة...",
-"دعاء يوم السبت: اللهم اجعل هذا اليوم بداية خير..."
-];
-
-function loadDua(){
-  const day = new Date().getDay();
-  document.getElementById("dailyDua").textContent = duas[day];
-}
-
 loadWeather();
-loadSun();
-loadTodayEvent();
-loadDua();
+
+/* ===== Prayer API ===== */
+async function loadPrayer(){
+  const res=await fetch("https://api.aladhan.com/v1/timingsByCity?city=Basra&country=Iraq&method=3");
+  const data=await res.json();
+  const t=data.data.timings;
+
+  const box=document.getElementById("prayerBox");
+  box.innerHTML=`
+  <div class="prayerRow"><span>الفجر</span><span>${t.Fajr}</span></div>
+  <div class="prayerRow"><span>الشروق</span><span>${t.Sunrise}</span></div>
+  <div class="prayerRow"><span>الظهر</span><span>${t.Dhuhr}</span></div>
+  <div class="prayerRow"><span>المغرب</span><span>${t.Maghrib}</span></div>
+  <div class="prayerRow"><span>منتصف الليل</span><span>${t.Midnight}</span></div>
+  `;
+}
+loadPrayer();
+
+/* ===== On this day ===== */
+const events=[
+{year:"1920",text:"ثورة العشرين في العراق",img:"https://upload.wikimedia.org/wikipedia/commons/2/27/1920_Iraqi_revolt.jpg"},
+{year:"1958",text:"ثورة 14 تموز",img:"https://upload.wikimedia.org/wikipedia/commons/4/4f/14_July_Revolution.jpg"}
+];
+let index=0;
+
+function changeEvent(){
+  index=(index+1)%events.length;
+  const e=events[index];
+  document.getElementById("eventYear").textContent=e.year;
+  document.getElementById("eventText").textContent=e.text;
+  document.getElementById("eventImg").src=e.img;
+}
+changeEvent();
+
+/* ===== Dua ===== */
+const duas={
+0:"اللهم افتح لي أبواب رحمتك 🤍",
+1:"يا رب اجعل هذا اليوم مليئاً بالبركة 🤲"
+};
+const day=new Date().getDay();
+document.getElementById("duaText").textContent=duas[day%2];
+
 </script>
 
 </body>
