@@ -11,6 +11,30 @@
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;800;900&display=swap" rel="stylesheet">
 
   <style>
+    /* زر هلال للرمضان */
+.moonBtn{
+  width: 44px;
+  height: 44px;
+  border-radius: 16px;
+  display:grid;
+  place-items:center;
+  text-decoration:none;
+  border: 1px solid rgba(255,255,255,.18);
+  background: rgba(255,255,255,.10);
+  color: rgba(255,255,255,.95);
+  font-weight: 900;
+  font-size: 22px;
+  cursor: pointer;
+  user-select:none;
+  box-shadow: 0 10px 24px rgba(0,0,0,.18);
+}
+.moonBtn:hover{ background: rgba(255,255,255,.14); }
+body.light .moonBtn{
+  border-color: rgba(0,0,0,.10);
+  background: rgba(0,0,0,.04);
+  color: rgba(10,16,28,.86);
+}
+
     :root{
       --bg:#0b1220;
       --card: rgba(255,255,255,.10);
