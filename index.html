@@ -644,10 +644,29 @@ body.light .moonBtn{
   <script>
     // سنة الفوتر + ثيم
     document.getElementById("y").textContent = new Date().getFullYear();
-    const toggleTheme = document.getElementById("toggleTheme");
-    const savedTheme = localStorage.getItem("themeMode");
-    if(savedTheme === "light") document.body.classList.add("light");
-    toggleTheme.addEventListener("click", () => {
+   <script>
+  // ===== Theme switch (checkbox) =====
+  const toggleTheme = document.getElementById("toggleTheme");
+  const savedTheme = localStorage.getItem("themeMode");
+
+  // عندنا: light = checked, dark = unchecked
+  if(savedTheme === "light"){
+    document.body.classList.add("light");
+    if(toggleTheme) toggleTheme.checked = true;
+  }else{
+    document.body.classList.remove("light");
+    if(toggleTheme) toggleTheme.checked = false;
+  }
+
+  if(toggleTheme){
+    toggleTheme.addEventListener("change", () => {
+      const isLight = toggleTheme.checked;
+      document.body.classList.toggle("light", isLight);
+      localStorage.setItem("themeMode", isLight ? "light" : "dark");
+    });
+  }
+</script>
+
       document.body.classList.toggle("light");
       localStorage.setItem("themeMode", document.body.classList.contains("light") ? "light" : "dark");
     });
