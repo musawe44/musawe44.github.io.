@@ -635,11 +635,12 @@ body.light .moonBtn{
     // سنة الفوتر + ثيم
     document.getElementById("y").textContent = new Date().getFullYear();
    <script>
-  // ===== Theme switch (checkbox) =====
+ <script>
+  // ===== Theme Switch (checkbox) =====
   const toggleTheme = document.getElementById("toggleTheme");
   const savedTheme = localStorage.getItem("themeMode");
 
-  // عندنا: light = checked, dark = unchecked
+  // light = checked
   if(savedTheme === "light"){
     document.body.classList.add("light");
     if(toggleTheme) toggleTheme.checked = true;
@@ -656,6 +657,7 @@ body.light .moonBtn{
     });
   }
 </script>
+
 
   </script>
 
