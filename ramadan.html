@@ -18,9 +18,6 @@
       --glass: rgba(255,255,255,.10);
       --glass2: rgba(255,255,255,.06);
       --shadow: 0 18px 55px rgba(0,0,0,.40);
-      --danger: rgba(244,63,94,.90);
-      --ok: rgba(34,197,94,.95);
-      --warn: rgba(250,204,21,.95);
     }
     *{ box-sizing:border-box; }
     html,body{ height:100%; }
@@ -40,15 +37,17 @@
       object-fit:cover;
       z-index:-6;
       transform: scale(1.03);
-      filter: saturate(1.06) contrast(1.05) brightness(.62);
+      /* ✅ شفافية/وضوح أكثر */
+      filter: saturate(1.08) contrast(1.05) brightness(.80);
     }
     .overlay{
       position:fixed; inset:0;
       z-index:-5;
+      /* ✅ شفافية أكثر (أغمق أقل) */
       background:
         radial-gradient(950px 540px at 80% 18%, rgba(34,197,94,.12), transparent 60%),
         radial-gradient(760px 460px at 20% 84%, rgba(59,130,246,.12), transparent 55%),
-        linear-gradient(120deg, rgba(0,0,0,.62), rgba(0,0,0,.36));
+        linear-gradient(120deg, rgba(0,0,0,.42), rgba(0,0,0,.22));
     }
 
     /* ===== Top bar ===== */
@@ -107,7 +106,7 @@
       grid-template-columns: 1fr;
     }
 
-    /* ===== Glass panels (no big container) ===== */
+    /* ===== Glass panels ===== */
     .panel{
       border-radius: 22px;
       border: 1px solid var(--border);
@@ -142,7 +141,6 @@
       line-height: 1.8;
     }
 
-    /* ===== Cards grid ===== */
     .grid2{
       display:grid;
       gap:12px;
@@ -186,7 +184,6 @@
       user-select:none;
     }
 
-    /* ===== list ===== */
     .list{
       border-radius: 20px;
       border: 1px solid rgba(255,255,255,.14);
@@ -207,7 +204,6 @@
     .name{ opacity:.95; }
     .time{ text-align:left; opacity:.95; letter-spacing:.3px; }
 
-    /* ===== Error ===== */
     .err{
       display:none;
       padding: 12px;
@@ -227,7 +223,7 @@
       align-items:center;
       justify-content:center;
       padding: 20px;
-      background: rgba(0,0,0,.48);
+      background: rgba(0,0,0,.46);
       backdrop-filter: blur(2px);
     }
     .evt.show{ display:flex; animation: fadeIn .18s ease both; }
@@ -237,7 +233,7 @@
       width:min(760px, 100%);
       border-radius: 26px;
       border: 1px solid rgba(255,255,255,.18);
-      background: rgba(0,0,0,.35);
+      background: rgba(0,0,0,.32);
       backdrop-filter: blur(14px);
       box-shadow: 0 25px 80px rgba(0,0,0,.55);
       padding: 18px 16px;
@@ -245,7 +241,6 @@
       position:relative;
       overflow:hidden;
     }
-    /* نبضات خلفية */
     .pulseBG{
       position:absolute; inset:-80px;
       background:
@@ -286,7 +281,6 @@
 </head>
 
 <body>
-  <!-- ✅ الخلفية الجديدة فقط: bg1.mp4.mp4 + كسر كاش -->
   <video class="bgVideo" autoplay muted loop playsinline>
     <source src="bg1.mp4.mp4?v=999" type="video/mp4">
   </video>
@@ -318,7 +312,6 @@
   <main class="wrap">
     <div class="err" id="errBox"></div>
 
-    <!-- العدادات -->
     <section class="panel">
       <div class="panelHd">
         <h2>العدادات (بالدقيقة + الثواني)</h2>
@@ -344,11 +337,11 @@
 
         <div class="hint">
           • بعد تفعيل الأذان مرة واحدة، يشتغل تلقائياً عند المواقيت. <br>
+          • التنبيه يغطي الشاشة لمدة 3 ثواني عند كل حدث.
         </div>
       </div>
     </section>
 
-    <!-- قائمة المواقيت -->
     <section class="panel">
       <div class="panelHd">
         <h2>المواقيت اليوم (12 ساعة)</h2>
@@ -360,23 +353,22 @@
     </section>
   </main>
 
-  <!-- ✅ ملف الأذان عندك: adhan.mp3.mp3 -->
+  <!-- ملف الأذان عندك -->
   <audio id="adhanAudio" src="adhan.mp3.mp3" preload="auto"></audio>
 
   <script>
     // ===== Settings =====
-    const BAGHDAD_TZ = "Asia/Baghdad";
     const CITY = "Basra";
     const COUNTRY = "Iraq";
 
-    // ===== Helpers =====
+    // ===== DOM =====
     const $ = (id)=>document.getElementById(id);
     const errBox = $("errBox");
     const adhanAudio = $("adhanAudio");
 
     let adhanEnabled = false;
-    let times = {};          // {Imsak:"05:xx", Fajr:"..", ...}
-    let lastHitKey = null;   // لمنع التكرار بنفس الدقيقة
+    let times = {};
+    let lastHitKey = null;
     let overlayTimer = null;
 
     function showErr(msg){
@@ -388,6 +380,51 @@
       errBox.textContent = "";
     }
 
+    // ===== Baghdad Time FIX (100%) =====
+    const BAGHDAD_TZ = "Asia/Baghdad";
+
+    function baghdadParts(date = new Date()){
+      const parts = new Intl.DateTimeFormat("en-CA", {
+        timeZone: BAGHDAD_TZ,
+        year:"numeric", month:"2-digit", day:"2-digit",
+        hour:"2-digit", minute:"2-digit", second:"2-digit",
+        hour12:false
+      }).formatToParts(date);
+
+      const get = (t) => Number(parts.find(p => p.type === t)?.value || 0);
+      return {
+        y: get("year"),
+        mo: get("month"),
+        d: get("day"),
+        h: get("hour"),
+        m: get("minute"),
+        s: get("second"),
+      };
+    }
+
+    function baghdadNowMs(){
+      const p = baghdadParts();
+      return Date.UTC(p.y, p.mo - 1, p.d, p.h, p.m, p.s);
+    }
+
+    function nowHHMM(){
+      const p = baghdadParts();
+      return `${String(p.h).padStart(2,"0")}:${String(p.m).padStart(2,"0")}`;
+    }
+
+    function minuteKey(){
+      const p = baghdadParts();
+      return `${p.y}-${String(p.mo).padStart(2,"0")}-${String(p.d).padStart(2,"0")} ${String(p.h).padStart(2,"0")}:${String(p.m).padStart(2,"0")}`;
+    }
+
+    function targetMsToday(hhmm){
+      if(!/^\d{2}:\d{2}$/.test(hhmm)) return null;
+      const p = baghdadParts();
+      const [hh, mm] = hhmm.split(":").map(Number);
+      return Date.UTC(p.y, p.mo - 1, p.d, hh, mm, 0);
+    }
+
+    // ===== Formatters =====
     function fmtDateAr(d){
       return new Intl.DateTimeFormat("ar-IQ", {
         timeZone: BAGHDAD_TZ,
@@ -396,24 +433,6 @@
         month:"long",
         year:"numeric"
       }).format(d);
-    }
-
-    function nowHHMM(){
-      return new Intl.DateTimeFormat("en-GB", {
-        timeZone: BAGHDAD_TZ,
-        hour:"2-digit",
-        minute:"2-digit",
-        hour12:false
-      }).format(new Date());
-    }
-
-    function minuteKey(){
-      return new Intl.DateTimeFormat("en-CA", {
-        timeZone: BAGHDAD_TZ,
-        year:"numeric", month:"2-digit", day:"2-digit",
-        hour:"2-digit", minute:"2-digit",
-        hour12:false
-      }).format(new Date());
     }
 
     function fmt12(hhmm){
@@ -426,21 +445,6 @@
       return `${h}:${mm} ${isPM ? "م" : "ص"}`;
     }
 
-    function parseHHMMToDateToday(hhmm){
-      if(!/^\d{2}:\d{2}$/.test(hhmm)) return null;
-
-      const now = new Date();
-      const inBaghdad = new Date(now.toLocaleString("en-US", { timeZone: BAGHDAD_TZ }));
-      const y = inBaghdad.getFullYear();
-      const mo = inBaghdad.getMonth();
-      const d = inBaghdad.getDate();
-
-      const [hh, mm] = hhmm.split(":").map(Number);
-      const dt = new Date(Date.UTC(y, mo, d, hh, mm, 0));
-      const fixed = new Date(new Date(dt).toLocaleString("en-US", { timeZone: BAGHDAD_TZ }));
-      return fixed;
-    }
-
     function diffToText(ms){
       const s = Math.max(0, Math.floor(ms/1000));
       const hh = Math.floor(s / 3600);
@@ -449,6 +453,7 @@
       return `${String(hh).padStart(2,"0")}:${String(mm).padStart(2,"0")}:${String(ss).padStart(2,"0")}`;
     }
 
+    // ===== Overlay =====
     function showOverlay(title, sub){
       const evt = $("evt");
       $("evtTitle").textContent = title;
@@ -460,6 +465,7 @@
       overlayTimer = setTimeout(()=> evt.classList.remove("show"), 3000);
     }
 
+    // ===== Adhan play =====
     async function tryPlayAdhan(){
       if(!adhanEnabled) return;
       try{
@@ -474,6 +480,7 @@
       }
     }
 
+    // ===== Fetch timings (Jafari/Shia) =====
     async function fetchTimings(){
       clearErr();
       try{
@@ -533,37 +540,31 @@
       }
     }
 
+    // ✅ Correct countdowns (Baghdad ms)
     function updateCountdowns(){
       $("nowClock").textContent = nowHHMM();
+      const nowMs = baghdadNowMs();
 
-      const now = new Date();
-      const nowBaghdad = new Date(now.toLocaleString("en-US", { timeZone: BAGHDAD_TZ }));
-
-      const imsakDT = parseHHMMToDateToday(times.Imsak || "");
-      if(imsakDT){
-        let diff = imsakDT.getTime() - nowBaghdad.getTime();
-        if(diff < 0){
-          const tomorrow = new Date(imsakDT.getTime() + 24*60*60*1000);
-          diff = tomorrow.getTime() - nowBaghdad.getTime();
-        }
-        $("imsakCount").textContent = `باقي: ${diffToText(diff)}`;
+      const imsakMs0 = targetMsToday(times.Imsak || "");
+      if(imsakMs0 != null){
+        let imsakMs = imsakMs0;
+        if(imsakMs < nowMs) imsakMs += 24*60*60*1000;
+        $("imsakCount").textContent = `باقي: ${diffToText(imsakMs - nowMs)}`;
       }else{
         $("imsakCount").textContent = "... تحميل";
       }
 
-      const iftarDT = parseHHMMToDateToday(times.Maghrib || "");
-      if(iftarDT){
-        let diff = iftarDT.getTime() - nowBaghdad.getTime();
-        if(diff < 0){
-          const tomorrow = new Date(iftarDT.getTime() + 24*60*60*1000);
-          diff = tomorrow.getTime() - nowBaghdad.getTime();
-        }
-        $("iftarCount").textContent = `باقي: ${diffToText(diff)}`;
+      const iftarMs0 = targetMsToday(times.Maghrib || "");
+      if(iftarMs0 != null){
+        let iftarMs = iftarMs0;
+        if(iftarMs < nowMs) iftarMs += 24*60*60*1000;
+        $("iftarCount").textContent = `باقي: ${diffToText(iftarMs - nowMs)}`;
       }else{
         $("iftarCount").textContent = "... تحميل";
       }
     }
 
+    // ===== Events =====
     async function tickEvents(){
       if(!times || !times.Fajr) return;
 
@@ -572,29 +573,28 @@
       if(lastHitKey === k) return;
 
       const map = {
-        Imsak: { label:"⏳ الإمساك", msg:"توقف الأكل — نية الصيام 🤍", play:false },
-        Fajr: { label:"🔔 أذان الفجر", msg:"صلاة الصبح", play:true },
-        Asr: { label:"🔔 أذان العصر", msg:"صلاة العصر", play:true },
-        Maghrib: { label:"🌙 أذان المغرب", msg:"حان وقت الإفطار", play:true },
-        Isha: { label:"✨ أذان العشاء", msg:"صلاة العشاء", play:true },
+        Imsak:   { label:"⏳ الإمساك",       msg:"توقف الأكل — نية الصيام 🤍", play:false },
+        Fajr:    { label:"🔔 أذان الفجر",   msg:"صلاة الصبح",                 play:true  },
+        Asr:     { label:"🔔 أذان العصر",   msg:"صلاة العصر",                 play:true  },
+        Maghrib: { label:"🌙 أذان المغرب",  msg:"حان وقت الإفطار",            play:true  },
+        Isha:    { label:"✨ أذان العشاء",  msg:"صلاة العشاء",                play:true  },
       };
 
       let hitKey = null;
-      if(hhmm === times.Imsak) hitKey = "Imsak";
-      else if(hhmm === times.Fajr) hitKey = "Fajr";
-      else if(hhmm === times.Asr) hitKey = "Asr";
-      else if(hhmm === times.Maghrib) hitKey = "Maghrib";
-      else if(hhmm === times.Isha) hitKey = "Isha";
+      if(hhmm === times.Imsak)       hitKey = "Imsak";
+      else if(hhmm === times.Fajr)   hitKey = "Fajr";
+      else if(hhmm === times.Asr)    hitKey = "Asr";
+      else if(hhmm === times.Maghrib)hitKey = "Maghrib";
+      else if(hhmm === times.Isha)   hitKey = "Isha";
 
       if(!hitKey) return;
 
       lastHitKey = k;
-
       showOverlay(map[hitKey].label, map[hitKey].msg);
-
       if(map[hitKey].play) await tryPlayAdhan();
     }
 
+    // ===== Buttons =====
     $("enableAdhan").addEventListener("click", async ()=>{
       clearErr();
       try{
@@ -630,6 +630,7 @@
       showOverlay("⟳ تم التحديث", "تم تحديث مواقيت اليوم");
     });
 
+    // ===== Init =====
     (async function init(){
       $("topSub").textContent = "تحميل...";
       await fetchTimings();
