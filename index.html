@@ -11,6 +11,136 @@
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;800;900&display=swap" rel="stylesheet">
 
   <style>
+ /* ===== Uiverse Theme Switch (Galahhad) ===== */
+.theme-switch{
+  position: fixed;
+  left: 12px;
+  bottom: 12px;
+  z-index: 999;
+  display: inline-flex;
+  user-select:none;
+}
+
+.theme-switch__checkbox{ display:none; }
+
+.theme-switch__container{
+  width: 78px;
+  height: 38px;
+  border-radius: 999px;
+  position: relative;
+  cursor: pointer;
+  border: 1px solid rgba(255,255,255,.16);
+  background: rgba(255,255,255,.10);
+  backdrop-filter: blur(12px);
+  box-shadow: 0 10px 24px rgba(0,0,0,.14);
+  overflow:hidden;
+}
+
+/* clouds layer (day) */
+.theme-switch__clouds{
+  position:absolute;
+  inset:0;
+  background:
+    radial-gradient(18px 12px at 18px 18px, rgba(255,255,255,.55), transparent 60%),
+    radial-gradient(20px 14px at 32px 18px, rgba(255,255,255,.42), transparent 62%),
+    radial-gradient(24px 16px at 52px 20px, rgba(255,255,255,.35), transparent 64%);
+  opacity:.65;
+  transition: opacity .35s ease;
+}
+
+/* stars layer (night) */
+.theme-switch__stars-container{
+  position:absolute;
+  inset:0;
+  display:grid;
+  place-items:center;
+  color: rgba(255,255,255,.85);
+  opacity:.0;
+  transform: translateY(6px) scale(.96);
+  transition: opacity .35s ease, transform .35s ease;
+}
+.theme-switch__stars-container svg{
+  width: 56px;
+  height: auto;
+  opacity:.9;
+}
+
+/* moving circle */
+.theme-switch__circle-container{
+  position:absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  left: 6px;
+  width: 28px;
+  height: 28px;
+  border-radius: 999px;
+  background: rgba(255,255,255,.14);
+  border: 1px solid rgba(255,255,255,.16);
+  backdrop-filter: blur(10px);
+  transition: left .35s ease, background .35s ease, border-color .35s ease;
+  display:grid;
+  place-items:center;
+}
+
+.theme-switch__sun-moon-container{
+  width: 22px;
+  height: 22px;
+  border-radius: 999px;
+  background: rgba(255,255,255,.92);
+  box-shadow: 0 0 20px rgba(255,255,255,.22);
+  position:relative;
+  transition: background .35s ease, box-shadow .35s ease;
+}
+
+/* moon + spots */
+.theme-switch__moon{
+  position:absolute;
+  inset:0;
+  border-radius: 999px;
+  background: rgba(255,255,255,.92);
+}
+.theme-switch__spot{
+  position:absolute;
+  width: 4px; height:4px;
+  border-radius: 999px;
+  background: rgba(0,0,0,.10);
+}
+.theme-switch__spot:nth-child(1){ top:6px; left:6px; }
+.theme-switch__spot:nth-child(2){ top:10px; right:6px; }
+.theme-switch__spot:nth-child(3){ bottom:6px; left:10px; }
+
+/* checked => light mode */
+.theme-switch__checkbox:checked + .theme-switch__container{
+  border-color: rgba(0,0,0,.10);
+  background: rgba(255,255,255,.65);
+  box-shadow: 0 10px 24px rgba(0,0,0,.08);
+}
+.theme-switch__checkbox:checked + .theme-switch__container .theme-switch__clouds{
+  opacity:.85;
+}
+.theme-switch__checkbox:checked + .theme-switch__container .theme-switch__stars-container{
+  opacity:0;
+  transform: translateY(6px) scale(.96);
+}
+.theme-switch__checkbox:checked + .theme-switch__container .theme-switch__circle-container{
+  left: 44px;
+  background: rgba(0,0,0,.06);
+  border-color: rgba(0,0,0,.10);
+}
+.theme-switch__checkbox:checked + .theme-switch__container .theme-switch__sun-moon-container{
+  background: rgba(255,255,255,.95);
+  box-shadow: 0 0 18px rgba(0,0,0,.08);
+}
+
+/* unchecked => dark mode */
+.theme-switch__checkbox:not(:checked) + .theme-switch__container .theme-switch__clouds{
+  opacity:.25;
+}
+.theme-switch__checkbox:not(:checked) + .theme-switch__container .theme-switch__stars-container{
+  opacity:1;
+  transform: translateY(0) scale(1);
+}
+
     /* زر هلال للرمضان */
 .moonBtn{
   width: 44px;
