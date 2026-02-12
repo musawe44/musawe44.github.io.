@@ -286,8 +286,9 @@
 </head>
 
 <body>
+  <!-- ✅ الخلفية الجديدة فقط: bg1.mp4.mp4 + كسر كاش -->
   <video class="bgVideo" autoplay muted loop playsinline>
-    <source src="bg1.mp4.mp4?v=2" type="video/mp4">
+    <source src="bg1.mp4.mp4?v=999" type="video/mp4">
   </video>
   <div class="overlay"></div>
 
@@ -360,7 +361,7 @@
     </section>
   </main>
 
-  <!-- ✅ ملف الأذان: انت قلت اسمه adhan.mp3.mp3 -->
+  <!-- ✅ ملف الأذان عندك: adhan.mp3.mp3 -->
   <audio id="adhanAudio" src="adhan.mp3.mp3" preload="auto"></audio>
 
   <script>
@@ -427,7 +428,6 @@
     }
 
     function parseHHMMToDateToday(hhmm){
-      // يرجّع Date لليوم (بتوقيت بغداد) على hh:mm
       if(!/^\d{2}:\d{2}$/.test(hhmm)) return null;
 
       const now = new Date();
@@ -437,11 +437,7 @@
       const d = inBaghdad.getDate();
 
       const [hh, mm] = hhmm.split(":").map(Number);
-      // نبنيه كـ UTC ثم نعتبره Baghdad (نشتغل على نفس inBaghdad)
       const dt = new Date(Date.UTC(y, mo, d, hh, mm, 0));
-      // نرجعه كـ "wall clock" بغداد: نحتاج نحوله لطريقة مقارنة
-      // أبسط: نرجّع Timestamp بغداد عبر فرق محلي:
-      // نستخدم toLocaleString مرة ثانية لتثبيت
       const fixed = new Date(new Date(dt).toLocaleString("en-US", { timeZone: BAGHDAD_TZ }));
       return fixed;
     }
@@ -479,7 +475,6 @@
       }
     }
 
-    // ===== Fetch timings (Jafari / Shia) =====
     async function fetchTimings(){
       clearErr();
       try{
@@ -505,14 +500,12 @@
         $("topSub").textContent = `البصرة — ${fmtDateAr(new Date())}`;
         $("pUpdated").textContent = "محدّث اليوم";
 
-        // عرض الإمساك/الإفطار
         $("imsakT").textContent = times.Imsak ? fmt12(times.Imsak) : "--:--";
         $("iftarT").textContent = times.Maghrib ? fmt12(times.Maghrib) : "--:--";
 
         $("imsakHint").textContent = "الإمساك = نهاية وقت السحور";
         $("iftarHint").textContent = "الإفطار = وقت أذان المغرب";
 
-        // قائمة المواقيت
         const rows = [
           ["⏳","الإمساك", times.Imsak],
           ["🔔","الفجر", times.Fajr],
@@ -541,19 +534,16 @@
       }
     }
 
-    // ===== Countdown updater =====
     function updateCountdowns(){
       $("nowClock").textContent = nowHHMM();
 
       const now = new Date();
       const nowBaghdad = new Date(now.toLocaleString("en-US", { timeZone: BAGHDAD_TZ }));
 
-      // الإمساك
       const imsakDT = parseHHMMToDateToday(times.Imsak || "");
       if(imsakDT){
         let diff = imsakDT.getTime() - nowBaghdad.getTime();
         if(diff < 0){
-          // إذا فات، خليّه للغد
           const tomorrow = new Date(imsakDT.getTime() + 24*60*60*1000);
           diff = tomorrow.getTime() - nowBaghdad.getTime();
         }
@@ -562,7 +552,6 @@
         $("imsakCount").textContent = "... تحميل";
       }
 
-      // الإفطار (المغرب)
       const iftarDT = parseHHMMToDateToday(times.Maghrib || "");
       if(iftarDT){
         let diff = iftarDT.getTime() - nowBaghdad.getTime();
@@ -576,15 +565,13 @@
       }
     }
 
-    // ===== Event detector (overlay + adhan) =====
     async function tickEvents(){
       if(!times || !times.Fajr) return;
 
       const hhmm = nowHHMM();
       const k = minuteKey();
-      if(lastHitKey === k) return; // نفس الدقيقة
+      if(lastHitKey === k) return;
 
-      // الأحداث اللي تريدها
       const map = {
         Imsak: { label:"⏳ الإمساك", msg:"توقف الأكل — نية الصيام 🤍", play:false },
         Fajr: { label:"🔔 أذان الفجر", msg:"صلاة الصبح", play:true },
@@ -593,7 +580,6 @@
         Isha: { label:"✨ أذان العشاء", msg:"صلاة العشاء", play:true },
       };
 
-      // تطابق؟
       let hitKey = null;
       if(hhmm === times.Imsak) hitKey = "Imsak";
       else if(hhmm === times.Fajr) hitKey = "Fajr";
@@ -605,20 +591,11 @@
 
       lastHitKey = k;
 
-      // Overlay 3s
       showOverlay(map[hitKey].label, map[hitKey].msg);
 
-      // صوت الأذان إذا لازم
       if(map[hitKey].play) await tryPlayAdhan();
-
-      // حدث الإفطار (من المغرب)
-      if(hitKey === "Maghrib"){
-        // تريد عنوان ثاني خاص بالإفطار؟ (بدون صوت إضافي)
-        // showOverlay("🍽️ الإفطار", "تقبل الله صيامكم 🤍");
-      }
     }
 
-    // ===== Enable adhan button (مع ملفك الجديد) =====
     $("enableAdhan").addEventListener("click", async ()=>{
       clearErr();
       try{
@@ -627,7 +604,6 @@
         adhanAudio.volume = 1;
         adhanAudio.currentTime = 0;
 
-        // تشغيل “unlock” (250ms)
         await adhanAudio.play();
         setTimeout(()=>{
           try{
@@ -655,16 +631,12 @@
       showOverlay("⟳ تم التحديث", "تم تحديث مواقيت اليوم");
     });
 
-    // ===== Init =====
     (async function init(){
       $("topSub").textContent = "تحميل...";
       await fetchTimings();
       updateCountdowns();
 
-      // تحديث العدادات كل ثانية
       setInterval(updateCountdowns, 1000);
-
-      // فحص الأحداث كل 1 ثانية (بس ما يتكرر بسبب minuteKey)
       setInterval(tickEvents, 1000);
     })();
   </script>
