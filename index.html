@@ -11,150 +11,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;800;900&display=swap" rel="stylesheet">
 
   <style>
-/* ===== Uiverse Theme Switch (Fixed + fits your glass UI) ===== */
-.theme-switch{
-  position: fixed;
-  left: 12px;
-  bottom: 12px;
-  z-index: 9999;
-  display: inline-flex;
-  user-select: none;
-}
-
-.theme-switch__checkbox{
-  position:absolute;
-  opacity:0;
-  pointer-events:none;
-}
-
-.theme-switch__container{
-  width: 84px;
-  height: 40px;
-  border-radius: 999px;
-  position: relative;
-  cursor: pointer;
-  overflow: hidden;
-
-  border: 1px solid rgba(255,255,255,.16);
-  background: rgba(255,255,255,.10);
-  backdrop-filter: blur(12px);
-  box-shadow: 0 10px 24px rgba(0,0,0,.14);
-}
-
-body.light .theme-switch__container{
-  border-color: rgba(0,0,0,.10);
-  background: rgba(255,255,255,.70);
-  box-shadow: 0 10px 24px rgba(0,0,0,.08);
-}
-
-/* clouds (day) */
-.theme-switch__clouds{
-  position:absolute;
-  inset:0;
-  background:
-    radial-gradient(18px 12px at 20px 18px, rgba(255,255,255,.70), transparent 60%),
-    radial-gradient(22px 14px at 36px 18px, rgba(255,255,255,.55), transparent 62%),
-    radial-gradient(26px 16px at 58px 20px, rgba(255,255,255,.40), transparent 64%);
-  opacity:.25;
-  transition: opacity .35s ease;
-}
-body.light .theme-switch__clouds{ opacity:.95; }
-
-/* stars (night) */
-.theme-switch__stars-container{
-  position:absolute;
-  inset:0;
-  display:grid;
-  place-items:center;
-  color: rgba(255,255,255,.92);
-  opacity:1;
-  transform: translateY(0) scale(1);
-  transition: opacity .35s ease, transform .35s ease;
-}
-.theme-switch__stars-container svg{
-  width: 58px;
-  height:auto;
-  opacity:.92;
-}
-body.light .theme-switch__stars-container{
-  opacity:0;
-  transform: translateY(6px) scale(.96);
-}
-
-/* moving circle */
-.theme-switch__circle-container{
-  position:absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  left: 6px;
-  width: 30px;
-  height: 30px;
-  border-radius: 999px;
-
-  background: rgba(255,255,255,.14);
-  border: 1px solid rgba(255,255,255,.16);
-  backdrop-filter: blur(10px);
-
-  display:grid;
-  place-items:center;
-  transition: left .35s ease, background .35s ease, border-color .35s ease;
-}
-body.light .theme-switch__circle-container{
-  left: 48px;
-  background: rgba(0,0,0,.06);
-  border-color: rgba(0,0,0,.10);
-}
-
-.theme-switch__sun-moon-container{
-  width: 22px;
-  height: 22px;
-  border-radius: 999px;
-  background: rgba(255,255,255,.95);
-  box-shadow: 0 0 18px rgba(255,255,255,.20);
-  position:relative;
-}
-
-.theme-switch__moon{
-  position:absolute;
-  inset:0;
-  border-radius: 999px;
-  background: rgba(255,255,255,.95);
-}
-.theme-switch__spot{
-  position:absolute;
-  width: 4px;
-  height: 4px;
-  border-radius: 999px;
-  background: rgba(0,0,0,.12);
-}
-.theme-switch__spot:nth-child(1){ top:6px; left:6px; }
-.theme-switch__spot:nth-child(2){ top:10px; right:6px; }
-.theme-switch__spot:nth-child(3){ bottom:6px; left:10px; }
-
-    /* زر هلال للرمضان */
-.moonBtn{
-  width: 44px;
-  height: 44px;
-  border-radius: 16px;
-  display:grid;
-  place-items:center;
-  text-decoration:none;
-  border: 1px solid rgba(255,255,255,.18);
-  background: rgba(255,255,255,.10);
-  color: rgba(255,255,255,.95);
-  font-weight: 900;
-  font-size: 22px;
-  cursor: pointer;
-  user-select:none;
-  box-shadow: 0 10px 24px rgba(0,0,0,.18);
-}
-.moonBtn:hover{ background: rgba(255,255,255,.14); }
-body.light .moonBtn{
-  border-color: rgba(0,0,0,.10);
-  background: rgba(0,0,0,.04);
-  color: rgba(10,16,28,.86);
-}
-
     :root{
       --bg:#0b1220;
       --card: rgba(255,255,255,.10);
@@ -469,43 +325,334 @@ body.light .moonBtn{
     }
     body.light footer{ color: rgba(10,16,28,.82); background: rgba(0,0,0,.03); }
 
-    /* ===== Theme toggle ===== */
-    .nightToggle{
+    /* ==========================================================
+       ✅ زر واحد (قائمة) للمعلومات + رمضان (Uiverse Button style)
+       ========================================================== */
+    .menuWrap{
+      position: fixed;
+      right: 12px;
+      bottom: 12px;
+      z-index: 9999;
+      display: grid;
+      gap: 10px;
+      justify-items: end;
+      pointer-events: auto;
+    }
+
+    .uimenuBtn{
+      position: relative;
+      padding: 0;
+      width: 135px;
+      height: 65px;
+      background: transparent;
+      font-size: 17px;
+      border: 1px solid #ffffff1c;
+      border-radius: 8px;
+      box-shadow: inset 0 0 10px #ffffff1c;
+      cursor: pointer;
+    }
+    .uimenuBtn::before{
+      content:"";
+      position:absolute;
+      top:50%; left:50%;
+      transform:translate(-50%,-50%);
+      width:135px; height:65px;
+      background: radial-gradient(circle at 100% -50%, #ffffff69 45%, #d4d4d44f 60%, #ffffff36 2%);
+      background-repeat:no-repeat;
+      filter: opacity(.3) blur(.3em);
+    }
+    .uimenuBtn::after{
+      content:"";
+      position:absolute;
+      top:120%; left:0;
+      transform: perspective(1.5em) rotateX(35deg) scale(1,.6);
+      height:100%;
+      width:100%;
+      background-color:#fbfd7b;
+      filter: blur(2em);
+      opacity:0;
+      pointer-events:none;
+    }
+    .uimenuBtn p{
+      display:inline-block;
+      width:135px;
+      line-height:65px;
+      font-size:17px;
+      font-weight:900;
+      color:#d6d6d6;
+      filter: blur(.02em);
+      z-index:5;
+      margin:0;
+      text-align:center;
+      position: relative;
+    }
+    .uimenuBtn:hover{
+      filter: blur(.05em);
+      animation: lightBox 1s ease-in-out forwards;
+    }
+    .uimenuBtn:hover::after{
+      animation: light 1s ease-in-out forwards;
+    }
+    .uimenuBtn:hover p{
+      animation: lightText 1s ease-in-out forwards;
+    }
+
+    @keyframes lightBox{
+      0%{ border:1px solid #fbfd7b; box-shadow:0 0 5px 0px #fbfd7b8a, inset 0 0 10px #fbfd7b8a; }
+      20%{ border:1px solid #ffffff1c; box-shadow:none; }
+      30%{ border:1px solid #fbfd7b; box-shadow:0 0 10px 0px #fbfd7b8a, inset 0 0 15px #fbfd7b8a; }
+      38%{ border:1px solid #ffffff1c; box-shadow:none; }
+      45%{ border:1px solid #fbfd7b; box-shadow:0 0 15px 0px #fbfd7b8a, inset 0 0 20px #fbfd7b8a; }
+      50%{ border:1px solid #ffffff1c; box-shadow:none; }
+      53%{ border:1px solid #fbfd7b; box-shadow:0 0 15px 0px #fbfd7b8a, inset 0 0 25px #fbfd7b8a; }
+      65%{ border:1px solid #ffffff1c; box-shadow:none; }
+      100%{ border:1px solid #fbfd7b; box-shadow:0 0 15px 0px #fbfd7b8a, inset 0 0 25px #fbfd7b8a; }
+    }
+    @keyframes light{
+      0%{ opacity:.7; }
+      20%{ opacity:0; }
+      30%{ opacity:.7; }
+      38%{ opacity:0; }
+      45%{ opacity:.7; }
+      50%{ opacity:0; }
+      53%{ opacity:.7; }
+      65%{ opacity:0; }
+      100%{ opacity:.7; }
+    }
+    @keyframes lightText{
+      0%{ color:#fbfd7b; text-shadow:0 0 5px #fbfd7b8a; }
+      20%{ color:#ffffff; text-shadow:none; }
+      30%{ color:#fbfd7b; text-shadow:0 0 10px #fbfd7b8a; }
+      38%{ color:#ffffff; text-shadow:none; }
+      45%{ color:#fbfd7b; text-shadow:0 0 15px #fbfd7b8a; }
+      50%{ color:#ffffff; text-shadow:none; }
+      53%{ color:#fbfd7b; text-shadow:0 0 15px #fbfd7b8a; }
+      65%{ color:#ffffff; text-shadow:none; }
+      100%{ color:#fbfd7b; text-shadow:0 0 15px #fbfd7b8a; }
+    }
+
+    /* dropdown panel */
+    .menuPanel{
+      width: 135px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,.16);
+      background: rgba(0,0,0,.28);
+      backdrop-filter: blur(12px);
+      box-shadow: 0 18px 50px rgba(0,0,0,.28);
+      overflow: hidden;
+      display: none;
+    }
+    body.light .menuPanel{
+      background: rgba(255,255,255,.72);
+      border-color: rgba(0,0,0,.10);
+      box-shadow: 0 18px 50px rgba(0,0,0,.12);
+    }
+    .menuPanel.show{ display:block; animation: popMenu .18s ease both; }
+    @keyframes popMenu{
+      from{ opacity:0; transform: translateY(6px) scale(.98); }
+      to{ opacity:1; transform: translateY(0) scale(1); }
+    }
+    .menuLink{
+      display:block;
+      text-decoration:none;
+      padding: 12px 12px;
+      font-weight: 900;
+      color: rgba(255,255,255,.92);
+      border-bottom: 1px solid rgba(255,255,255,.10);
+      text-align: center;
+    }
+    .menuLink:last-child{ border-bottom: none; }
+    .menuLink:hover{ background: rgba(255,255,255,.08); }
+    body.light .menuLink{ color: rgba(10,16,28,.86); border-bottom-color: rgba(0,0,0,.08); }
+    body.light .menuLink:hover{ background: rgba(0,0,0,.04); }
+
+    /* ==========================================================
+       ✅ Uiverse Theme Switch (الكود اللي دزيته أنت)
+       ========================================================== */
+    .theme-switch {
+      --toggle-size: 30px;
+      --container-width: 5.625em;
+      --container-height: 2.5em;
+      --container-radius: 6.25em;
+      --container-light-bg: #3d7eae;
+      --container-night-bg: #1d1f2c;
+      --circle-container-diameter: 3.375em;
+      --sun-moon-diameter: 2.125em;
+      --sun-bg: #ecca2f;
+      --moon-bg: #c4c9d1;
+      --spot-color: #959db1;
+      --circle-container-offset: calc((var(--circle-container-diameter) - var(--container-height)) / 2 * -1);
+      --stars-color: #fff;
+      --clouds-color: #f3fdff;
+      --back-clouds-color: #aacadf;
+      --transition: 0.5s cubic-bezier(0, -0.02, 0.4, 1.25);
+      --circle-transition: 0.3s cubic-bezier(0, -0.02, 0.35, 1.17);
+    }
+    .theme-switch,
+    .theme-switch *,
+    .theme-switch *::before,
+    .theme-switch *::after {
+      -webkit-box-sizing: border-box;
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-size: var(--toggle-size);
+    }
+    .themeSwitchPos{
       position: fixed;
       left: 12px;
       bottom: 12px;
-      z-index: 80;
-      display:flex;
-      align-items:center;
-      gap:10px;
-      padding: 10px 12px;
-      border-radius: 16px;
-      border: 1px solid rgba(255,255,255,.16);
-      background: rgba(255,255,255,.08);
-      backdrop-filter: blur(10px);
-      box-shadow: 0 10px 24px rgba(0,0,0,.12);
+      z-index: 9999;
+      user-select:none;
     }
-    body.light .nightToggle{
-      border-color: rgba(0,0,0,.10);
-      background: rgba(255,255,255,.65);
+    .theme-switch__container {
+      width: var(--container-width);
+      height: var(--container-height);
+      background-color: var(--container-light-bg);
+      border-radius: var(--container-radius);
+      overflow: hidden;
+      cursor: pointer;
+      -webkit-box-shadow: 0em -0.062em 0.062em rgba(0, 0, 0, 0.25), 0em 0.062em 0.125em rgba(255, 255, 255, 0.94);
+      box-shadow: 0em -0.062em 0.062em rgba(0, 0, 0, 0.25), 0em 0.062em 0.125em rgba(255, 255, 255, 0.94);
+      -webkit-transition: var(--transition);
+      -o-transition: var(--transition);
+      transition: var(--transition);
+      position: relative;
     }
-    .nightToggle button{
-      border: 1px solid rgba(255,255,255,.16);
-      background: rgba(255,255,255,.10);
-      color: rgba(255,255,255,.92);
-      padding: 8px 10px;
-      border-radius: 14px;
-      cursor:pointer;
-      font-family: inherit;
-      font-weight: 900;
+    .theme-switch__container::before {
+      content: "";
+      position: absolute;
+      z-index: 1;
+      inset: 0;
+      -webkit-box-shadow: 0em 0.05em 0.187em rgba(0, 0, 0, 0.25) inset, 0em 0.05em 0.187em rgba(0, 0, 0, 0.25) inset;
+      box-shadow: 0em 0.05em 0.187em rgba(0, 0, 0, 0.25) inset, 0em 0.05em 0.187em rgba(0, 0, 0, 0.25) inset;
+      border-radius: var(--container-radius);
     }
-    body.light .nightToggle button{
-      border-color: rgba(0,0,0,.10);
-      background: rgba(0,0,0,.04);
-      color: rgba(10,16,28,.86);
+    .theme-switch__checkbox { display: none; }
+
+    .theme-switch__circle-container {
+      width: var(--circle-container-diameter);
+      height: var(--circle-container-diameter);
+      background-color: rgba(255, 255, 255, 0.1);
+      position: absolute;
+      left: var(--circle-container-offset);
+      top: var(--circle-container-offset);
+      border-radius: var(--container-radius);
+      -webkit-box-shadow:
+        inset 0 0 0 3.375em rgba(255, 255, 255, 0.1),
+        inset 0 0 0 3.375em rgba(255, 255, 255, 0.1),
+        0 0 0 0.625em rgba(255, 255, 255, 0.1),
+        0 0 0 1.25em rgba(255, 255, 255, 0.1);
+      box-shadow:
+        inset 0 0 0 3.375em rgba(255, 255, 255, 0.1),
+        inset 0 0 0 3.375em rgba(255, 255, 255, 0.1),
+        0 0 0 0.625em rgba(255, 255, 255, 0.1),
+        0 0 0 1.25em rgba(255, 255, 255, 0.1);
+      display: flex;
+      -webkit-transition: var(--circle-transition);
+      -o-transition: var(--circle-transition);
+      transition: var(--circle-transition);
+      pointer-events: none;
     }
-    .nightLabel{ font-weight: 900; font-size: 13px; color: rgba(255,255,255,.92); }
-    body.light .nightLabel{ color: rgba(10,16,28,.82); }
+    .theme-switch__sun-moon-container {
+      pointer-events: auto;
+      position: relative;
+      z-index: 2;
+      width: var(--sun-moon-diameter);
+      height: var(--sun-moon-diameter);
+      margin: auto;
+      border-radius: var(--container-radius);
+      background-color: var(--sun-bg);
+      -webkit-box-shadow: 0.062em 0.062em 0.062em 0em rgba(254, 255, 239, 0.61) inset, 0em -0.062em 0.062em 0em #a1872a inset;
+      box-shadow: 0.062em 0.062em 0.062em 0em rgba(254, 255, 239, 0.61) inset, 0em -0.062em 0.062em 0em #a1872a inset;
+      -webkit-filter: drop-shadow(0.062em 0.125em 0.125em rgba(0, 0, 0, 0.25)) drop-shadow(0em 0.062em 0.125em rgba(0, 0, 0, 0.25));
+      filter: drop-shadow(0.062em 0.125em 0.125em rgba(0, 0, 0, 0.25)) drop-shadow(0em 0.062em 0.125em rgba(0, 0, 0, 0.25));
+      overflow: hidden;
+      -webkit-transition: var(--transition);
+      -o-transition: var(--transition);
+      transition: var(--transition);
+    }
+    .theme-switch__moon {
+      transform: translateX(100%);
+      width: 100%;
+      height: 100%;
+      background-color: var(--moon-bg);
+      border-radius: inherit;
+      -webkit-box-shadow: 0.062em 0.062em 0.062em 0em rgba(254, 255, 239, 0.61) inset, 0em -0.062em 0.062em 0em #969696 inset;
+      box-shadow: 0.062em 0.062em 0.062em 0em rgba(254, 255, 239, 0.61) inset, 0em -0.062em 0.062em 0em #969696 inset;
+      -webkit-transition: var(--transition);
+      -o-transition: var(--transition);
+      transition: var(--transition);
+      position: relative;
+    }
+    .theme-switch__spot {
+      position: absolute;
+      top: 0.75em;
+      left: 0.312em;
+      width: 0.75em;
+      height: 0.75em;
+      border-radius: var(--container-radius);
+      background-color: var(--spot-color);
+      -webkit-box-shadow: 0em 0.0312em 0.062em rgba(0, 0, 0, 0.25) inset;
+      box-shadow: 0em 0.0312em 0.062em rgba(0, 0, 0, 0.25) inset;
+    }
+    .theme-switch__spot:nth-of-type(2) { width: 0.375em; height: 0.375em; top: 0.937em; left: 1.375em; }
+    .theme-switch__spot:nth-last-of-type(3) { width: 0.25em; height: 0.25em; top: 0.312em; left: 0.812em; }
+
+    .theme-switch__clouds {
+      width: 1.25em;
+      height: 1.25em;
+      background-color: var(--clouds-color);
+      border-radius: var(--container-radius);
+      position: absolute;
+      bottom: -0.625em;
+      left: 0.312em;
+      box-shadow:
+        0.937em 0.312em var(--clouds-color),
+        -0.312em -0.312em var(--back-clouds-color),
+        1.437em 0.375em var(--clouds-color),
+        0.5em -0.125em var(--back-clouds-color),
+        2.187em 0 var(--clouds-color),
+        1.25em -0.062em var(--back-clouds-color),
+        2.937em 0.312em var(--clouds-color),
+        2em -0.312em var(--back-clouds-color),
+        3.625em -0.062em var(--clouds-color),
+        2.625em 0em var(--back-clouds-color),
+        4.5em -0.312em var(--clouds-color),
+        3.375em -0.437em var(--back-clouds-color),
+        4.625em -1.75em 0 0.437em var(--clouds-color),
+        4em -0.625em var(--back-clouds-color),
+        4.125em -2.125em 0 0.437em var(--back-clouds-color);
+      transition: 0.5s cubic-bezier(0, -0.02, 0.4, 1.25);
+    }
+    .theme-switch__stars-container {
+      position: absolute;
+      color: var(--stars-color);
+      top: -100%;
+      left: 0.312em;
+      width: 2.75em;
+      height: auto;
+      transition: var(--transition);
+      z-index: 2;
+    }
+
+    .theme-switch__checkbox:checked + .theme-switch__container { background-color: var(--container-night-bg); }
+    .theme-switch__checkbox:checked + .theme-switch__container .theme-switch__circle-container {
+      left: calc(100% - var(--circle-container-offset) - var(--circle-container-diameter));
+    }
+    .theme-switch__circle-container:hover { left: calc(var(--circle-container-offset) + 0.187em); }
+    .theme-switch__checkbox:checked + .theme-switch__container .theme-switch__circle-container:hover {
+      left: calc(100% - var(--circle-container-offset) - var(--circle-container-diameter) - 0.187em);
+    }
+    .theme-switch__checkbox:checked + .theme-switch__container .theme-switch__moon { transform: translate(0); }
+    .theme-switch__checkbox:checked + .theme-switch__container .theme-switch__clouds { bottom: -4.062em; }
+    .theme-switch__checkbox:checked + .theme-switch__container .theme-switch__stars-container {
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    /* نخلي الـ checkbox يمثل "Light" حتى ينسجم مع body.light */
+    body.light .theme-switch__checkbox { }
   </style>
 </head>
 
@@ -522,7 +669,6 @@ body.light .moonBtn{
     <div class="hudRow">
       <div class="hudDate" id="dateTxt">...</div>
       <div class="hudWx" id="wxTxt">جاري جلب الطقس...</div>
-      <a class="moonBtn" href="ramadan.html" title="مواعيد الإمساك والإفطار">☾</a>
     </div>
   </div>
 
@@ -609,56 +755,77 @@ body.light .moonBtn{
     © <span id="y"></span> — إِنَّ مَعَ الْعُسْرِ يُسْرًا
   </footer>
 
-<!-- From Uiverse.io by Galahhad -->
-<label class="theme-switch" title="الوضع الليلي">
-  <input id="toggleTheme" type="checkbox" class="theme-switch__checkbox">
-  <div class="theme-switch__container">
-    <div class="theme-switch__clouds"></div>
-    <div class="theme-switch__stars-container">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 144 55" fill="none">
-        <path fill-rule="evenodd" clip-rule="evenodd" d="M135.831 3.00688C135.055 3.85027 134.111 4.29946 133 4.35447C134.111 4.40947 135.055 4.85867 135.831 5.71123C136.607 6.55462 136.996 7.56303 136.996 8.72727C136.996 7.95722 137.172 7.25134 137.525 6.59129C137.886 5.93124 138.372 5.39954 138.98 5.00535C139.598 4.60199 140.268 4.39114 141 4.35447C139.88 4.2903 138.936 3.85027 138.16 3.00688C137.384 2.16348 136.996 1.16425 136.996 0C136.996 1.16425 136.607 2.16348 135.831 3.00688ZM31 23.3545C32.1114 23.2995 33.0551 22.8503 33.8313 22.0069C34.6075 21.1635 34.9956 20.1642 34.9956 19C34.9956 20.1642 35.3837 21.1635 36.1599 22.0069C36.9361 22.8503 37.8798 23.2903 39 23.3545C38.2679 23.3911 37.5976 23.602 36.9802 24.0053C36.3716 24.3995 35.8864 24.9312 35.5248 25.5913C35.172 26.2513 34.9956 26.9572 34.9956 27.7273C34.9956 26.563 34.6075 25.5546 33.8313 24.7112C33.0551 23.8587 32.1114 23.4095 31 23.3545ZM0 36.3545C1.11136 36.2995 2.05513 35.8503 2.83131 35.0069C3.6075 34.1635 3.99559 33.1642 3.99559 32C3.99559 33.1642 4.38368 34.1635 5.15987 35.0069C5.93605 35.8503 6.87982 36.2903 8 36.3545C7.26792 36.3911 6.59757 36.602 5.98015 37.0053C5.37155 37.3995 4.88644 37.9312 4.52481 38.5913C4.172 39.2513 3.99559 39.9572 3.99559 40.7273C3.99559 39.563 3.6075 38.5546 2.83131 37.7112C2.05513 36.8587 1.11136 36.4095 0 36.3545ZM56.8313 24.0069C56.0551 24.8503 55.1114 25.2995 54 25.3545C55.1114 25.4095 56.0551 25.8587 56.8313 26.7112C57.6075 27.5546 57.9956 28.563 57.9956 29.7273C57.9956 28.9572 58.172 28.2513 58.5248 27.5913C58.8864 26.9312 59.3716 26.3995 59.9802 26.0053C60.5976 25.602 61.2679 25.3911 62 25.3545C60.8798 25.2903 59.9361 24.8503 59.1599 24.0069C58.3837 23.1635 57.9956 22.1642 57.9956 21C57.9956 22.1642 57.6075 23.1635 56.8313 24.0069ZM81 25.3545C82.1114 25.2995 83.0551 24.8503 83.8313 24.0069C84.6075 23.1635 84.9956 22.1642 84.9956 21C84.9956 22.1642 85.3837 23.1635 86.1599 24.0069C86.9361 24.8503 87.8798 25.2903 89 25.3545C88.2679 25.3911 87.5976 25.602 86.9802 26.0053C86.3716 26.3995 85.8864 26.9312 85.5248 27.5913C85.172 28.2513 84.9956 28.9572 84.9956 29.7273C84.9956 28.563 84.6075 27.5546 83.8313 26.7112C83.0551 25.8587 82.1114 25.4095 81 25.3545ZM136 36.3545C137.111 36.2995 138.055 35.8503 138.831 35.0069C139.607 34.1635 139.996 33.1642 139.996 32C139.996 33.1642 140.384 34.1635 141.16 35.0069C141.936 35.8503 142.88 36.2903 144 36.3545C143.268 36.3911 142.598 36.602 141.98 37.0053C141.372 37.3995 140.886 37.9312 140.525 38.5913C140.172 39.2513 139.996 39.9572 139.996 40.7273C139.996 39.563 139.607 38.5546 138.831 37.7112C138.055 36.8587 137.111 36.4095 136 36.3545ZM101.831 49.0069C101.055 49.8503 100.111 50.2995 99 50.3545C100.111 50.4095 101.055 50.8587 101.831 51.7112C102.607 52.5546 102.996 53.563 102.996 54.7273C102.996 53.9572 103.172 53.2513 103.525 52.5913C103.886 51.9312 104.372 51.3995 104.98 51.0053C105.598 50.602 106.268 50.3911 107 50.3545C105.88 50.2903 104.936 49.8503 104.16 49.0069C103.384 48.1635 102.996 47.1642 102.996 46C102.996 47.1642 102.607 48.1635 101.831 49.0069Z" fill="currentColor"></path>
-      </svg>
+  <!-- ✅ زر القائمة (معلومات + رمضان) -->
+  <div class="menuWrap" dir="rtl">
+    <div class="menuPanel" id="menuPanel">
+      <a class="menuLink" href="info.html">معلومات أكثر</a>
+      <a class="menuLink" href="ramadan.html">رمضان</a>
     </div>
-    <div class="theme-switch__circle-container">
-      <div class="theme-switch__sun-moon-container">
-        <div class="theme-switch__moon">
-          <div class="theme-switch__spot"></div>
-          <div class="theme-switch__spot"></div>
-          <div class="theme-switch__spot"></div>
+
+    <button class="uimenuBtn" id="menuBtn" type="button" aria-label="القائمة">
+      <p>القائمة</p>
+    </button>
+  </div>
+
+  <!-- ✅ زر الثيم (Uiverse) -->
+  <div class="themeSwitchPos">
+    <label class="theme-switch" aria-label="الوضع الليلي">
+      <input type="checkbox" id="toggleTheme" class="theme-switch__checkbox">
+      <div class="theme-switch__container">
+        <div class="theme-switch__clouds"></div>
+        <div class="theme-switch__stars-container">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 144 55" fill="none">
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M135.831 3.00688C135.055 3.85027 134.111 4.29946 133 4.35447C134.111 4.40947 135.055 4.85867 135.831 5.71123C136.607 6.55462 136.996 7.56303 136.996 8.72727C136.996 7.95722 137.172 7.25134 137.525 6.59129C137.886 5.93124 138.372 5.39954 138.98 5.00535C139.598 4.60199 140.268 4.39114 141 4.35447C139.88 4.2903 138.936 3.85027 138.16 3.00688C137.384 2.16348 136.996 1.16425 136.996 0C136.996 1.16425 136.607 2.16348 135.831 3.00688ZM31 23.3545C32.1114 23.2995 33.0551 22.8503 33.8313 22.0069C34.6075 21.1635 34.9956 20.1642 34.9956 19C34.9956 20.1642 35.3837 21.1635 36.1599 22.0069C36.9361 22.8503 37.8798 23.2903 39 23.3545C38.2679 23.3911 37.5976 23.602 36.9802 24.0053C36.3716 24.3995 35.8864 24.9312 35.5248 25.5913C35.172 26.2513 34.9956 26.9572 34.9956 27.7273C34.9956 26.563 34.6075 25.5546 33.8313 24.7112C33.0551 23.8587 32.1114 23.4095 31 23.3545ZM0 36.3545C1.11136 36.2995 2.05513 35.8503 2.83131 35.0069C3.6075 34.1635 3.99559 33.1642 3.99559 32C3.99559 33.1642 4.38368 34.1635 5.15987 35.0069C5.93605 35.8503 6.87982 36.2903 8 36.3545C7.26792 36.3911 6.59757 36.602 5.98015 37.0053C5.37155 37.3995 4.88644 37.9312 4.52481 38.5913C4.172 39.2513 3.99559 39.9572 3.99559 40.7273C3.99559 39.563 3.6075 38.5546 2.83131 37.7112C2.05513 36.8587 1.11136 36.4095 0 36.3545ZM56.8313 24.0069C56.0551 24.8503 55.1114 25.2995 54 25.3545C55.1114 25.4095 56.0551 25.8587 56.8313 26.7112C57.6075 27.5546 57.9956 28.563 57.9956 29.7273C57.9956 28.9572 58.172 28.2513 58.5248 27.5913C58.8864 26.9312 59.3716 26.3995 59.9802 26.0053C60.5976 25.602 61.2679 25.3911 62 25.3545C60.8798 25.2903 59.9361 24.8503 59.1599 24.0069C58.3837 23.1635 57.9956 22.1642 57.9956 21C57.9956 22.1642 57.6075 23.1635 56.8313 24.0069ZM81 25.3545C82.1114 25.2995 83.0551 24.8503 83.8313 24.0069C84.6075 23.1635 84.9956 22.1642 84.9956 21C84.9956 22.1642 85.3837 23.1635 86.1599 24.0069C86.9361 24.8503 87.8798 25.2903 89 25.3545C88.2679 25.3911 87.5976 25.602 86.9802 26.0053C86.3716 26.3995 85.8864 26.9312 85.5248 27.5913C85.172 28.2513 84.9956 28.9572 84.9956 29.7273C84.9956 28.563 84.6075 27.5546 83.8313 26.7112C83.0551 25.8587 82.1114 25.4095 81 25.3545ZM136 36.3545C137.111 36.2995 138.055 35.8503 138.831 35.0069C139.607 34.1635 139.996 33.1642 139.996 32C139.996 33.1642 140.384 34.1635 141.16 35.0069C141.936 35.8503 142.88 36.2903 144 36.3545C143.268 36.3911 142.598 36.602 141.98 37.0053C141.372 37.3995 140.886 37.9312 140.525 38.5913C140.172 39.2513 139.996 39.9572 139.996 40.7273C139.996 39.563 139.607 38.5546 138.831 37.7112C138.055 36.8587 137.111 36.4095 136 36.3545ZM101.831 49.0069C101.055 49.8503 100.111 50.2995 99 50.3545C100.111 50.4095 101.055 50.8587 101.831 51.7112C102.607 52.5546 102.996 53.563 102.996 54.7273C102.996 53.9572 103.172 53.2513 103.525 52.5913C103.886 51.9312 104.372 51.3995 104.98 51.0053C105.598 50.602 106.268 50.3911 107 50.3545C105.88 50.2903 104.936 49.8503 104.16 49.0069C103.384 48.1635 102.996 47.1642 102.996 46C102.996 47.1642 102.607 48.1635 101.831 49.0069Z" fill="currentColor"></path>
+          </svg>
+        </div>
+        <div class="theme-switch__circle-container">
+          <div class="theme-switch__sun-moon-container">
+            <div class="theme-switch__moon">
+              <div class="theme-switch__spot"></div>
+              <div class="theme-switch__spot"></div>
+              <div class="theme-switch__spot"></div>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
+    </label>
   </div>
-</label>
 
   <script>
-    // سنة الفوتر + ثيم
+    // سنة الفوتر
     document.getElementById("y").textContent = new Date().getFullYear();
-   <script>
- <script>
-  // ===== Theme Switch (checkbox) =====
-  const toggleTheme = document.getElementById("toggleTheme");
-  const savedTheme = localStorage.getItem("themeMode");
 
-  // light = checked
-  if(savedTheme === "light"){
-    document.body.classList.add("light");
-    if(toggleTheme) toggleTheme.checked = true;
-  }else{
-    document.body.classList.remove("light");
-    if(toggleTheme) toggleTheme.checked = false;
-  }
+    // ✅ ربط الثيم: checkbox = Light
+    const toggleTheme = document.getElementById("toggleTheme");
+    const savedTheme = localStorage.getItem("themeMode");
+    const isLight = savedTheme === "light";
 
-  if(toggleTheme){
-    toggleTheme.addEventListener("change", () => {
-      const isLight = toggleTheme.checked;
-      document.body.classList.toggle("light", isLight);
-      localStorage.setItem("themeMode", isLight ? "light" : "dark");
+    document.body.classList.toggle("light", isLight);
+    if (toggleTheme) toggleTheme.checked = isLight;
+
+    if(toggleTheme){
+      toggleTheme.addEventListener("change", () => {
+        const light = toggleTheme.checked;
+        document.body.classList.toggle("light", light);
+        localStorage.setItem("themeMode", light ? "light" : "dark");
+      });
+    }
+
+    // ✅ زر القائمة (معلومات + رمضان)
+    const menuBtn = document.getElementById("menuBtn");
+    const menuPanel = document.getElementById("menuPanel");
+
+    function closeMenu(){ menuPanel.classList.remove("show"); }
+
+    menuBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      menuPanel.classList.toggle("show");
     });
-  }
-</script>
 
-
+    document.addEventListener("click", closeMenu);
+    document.addEventListener("keydown", (e) => {
+      if(e.key === "Escape") closeMenu();
+    });
   </script>
 
   <!-- ✅ ترتيب الملفات (مهم) -->
