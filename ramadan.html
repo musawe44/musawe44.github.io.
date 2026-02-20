@@ -19,8 +19,6 @@
       --glass2: rgba(255,255,255,.06);
       --border: rgba(255,255,255,.16);
       --shadow: 0 22px 60px rgba(0,0,0,.45);
-      --ok: rgba(34,197,94,.95);
-      --warn: rgba(245,158,11,.95);
       --danger: rgba(244,63,94,.95);
     }
 
@@ -32,7 +30,7 @@
       background: var(--bg);
       color: var(--text);
       overflow-x:hidden;
-      padding: 18px 14px 22px;
+      padding: 18px 14px 26px;
     }
 
     /* ===== Background video only ===== */
@@ -50,36 +48,51 @@
       background:
         radial-gradient(900px 520px at 80% 20%, rgba(34,197,94,.12), transparent 60%),
         radial-gradient(800px 500px at 20% 80%, rgba(59,130,246,.12), transparent 55%),
-        linear-gradient(120deg, rgba(11,18,32,.55), rgba(11,18,32,.35));
+        linear-gradient(120deg, rgba(11,18,32,.62), rgba(11,18,32,.40));
       pointer-events:none;
     }
 
     .wrap{
-      width:min(980px, 100%);
+      width:min(1080px, 100%);
       margin:0 auto;
     }
 
-    /* ===== Top bar ===== */
+    /* ===== New page look (Hero + layout) ===== */
+    .hero{
+      border-radius: 24px;
+      border: 1px solid var(--border);
+      background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.05));
+      backdrop-filter: blur(14px);
+      box-shadow: 0 18px 50px rgba(0,0,0,.28);
+      padding: 14px 14px 16px;
+      overflow:hidden;
+      position:relative;
+    }
+    .hero::before{
+      content:"";
+      position:absolute;
+      inset:-120px -120px auto auto;
+      width:260px; height:260px;
+      background: radial-gradient(circle at 30% 30%, rgba(255,255,255,.14), transparent 60%);
+      transform: rotate(18deg);
+      pointer-events:none;
+    }
     .topBar{
       display:flex;
       align-items:center;
       justify-content:space-between;
       gap:10px;
-      padding: 12px 12px;
-      border-radius: 18px;
-      border: 1px solid var(--border);
-      background: var(--glass);
-      backdrop-filter: blur(12px);
-      box-shadow: 0 12px 30px rgba(0,0,0,.18);
     }
     .topTitle{
       font-weight: 900;
       letter-spacing:.2px;
       font-size: 16px;
       opacity:.95;
+      text-align:center;
+      flex:1;
     }
     .btn{
-      border: 1px solid var(--border);
+      border: 1px solid rgba(255,255,255,.18);
       background: rgba(255,255,255,.08);
       color: var(--text);
       padding: 10px 12px;
@@ -91,17 +104,29 @@
     }
     .btn:hover{ background: rgba(255,255,255,.12); }
 
-    /* ===== Clock ===== */
+    .heroGrid{
+      margin-top: 12px;
+      display:grid;
+      gap:14px;
+      grid-template-columns: 1.1fr .9fr;
+      align-items:stretch;
+    }
+    @media (max-width: 920px){
+      .heroGrid{ grid-template-columns: 1fr; }
+      .topTitle{ text-align:right; }
+    }
+
+    /* ===== Clock (kept functionality) ===== */
     .clockCard{
-      margin-top: 14px;
       border-radius: 22px;
-      border: 1px solid var(--border);
-      background: var(--glass2);
+      border: 1px solid rgba(255,255,255,.18);
+      background: rgba(255,255,255,.06);
       backdrop-filter: blur(14px);
-      box-shadow: var(--shadow);
-      padding: 18px 16px;
+      box-shadow: 0 16px 55px rgba(0,0,0,.35);
+      padding: 18px 16px 14px;
       position:relative;
       overflow:hidden;
+      min-height: 200px;
     }
     .clockGhost{
       position:absolute;
@@ -142,12 +167,12 @@
       white-space:nowrap;
     }
 
-    /* ===== Main next event ===== */
+    /* ===== Cards area ===== */
     .grid{
       margin-top: 14px;
       display:grid;
       gap:14px;
-      grid-template-columns: 1.2fr .8fr;
+      grid-template-columns: 1.25fr .75fr;
       align-items:start;
     }
     @media (max-width: 900px){
@@ -156,10 +181,10 @@
 
     .card{
       border-radius: 22px;
-      border: 1px solid var(--border);
-      background: var(--glass2);
+      border: 1px solid rgba(255,255,255,.18);
+      background: rgba(255,255,255,.06);
       backdrop-filter: blur(14px);
-      box-shadow: var(--shadow);
+      box-shadow: 0 18px 60px rgba(0,0,0,.38);
       padding: 16px;
       overflow:hidden;
       position:relative;
@@ -226,7 +251,6 @@
     .miniTitle{ margin:0; font-weight:900; font-size:14px; color: rgba(255,255,255,.88); }
     .miniVal{ margin:8px 0 0; font-weight:900; font-size:18px; }
 
-    /* ===== Table ===== */
     .table{
       margin-top: 10px;
       border-radius: 18px;
@@ -245,6 +269,23 @@
     .row:last-child{ border-bottom:none; }
     .rName{ font-weight:900; }
     .rTime{ font-weight:900; color: rgba(255,255,255,.92); }
+
+    .hint{
+      margin-top: 12px;
+      padding: 12px 12px;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06);
+      font-weight: 900;
+      color: rgba(255,255,255,.90);
+      line-height: 1.9;
+    }
+    .hint b{ color:#fff; }
+
+    .danger{
+      border-color: rgba(244,63,94,.35);
+      background: rgba(244,63,94,.12);
+    }
 
     /* ===== Overlay message (3s) ===== */
     .eventOverlay{
@@ -297,22 +338,93 @@
       50%{ transform: scaleX(1); opacity:1; }
     }
 
-    /* ===== Small hint/errors ===== */
-    .hint{
-      margin-top: 12px;
-      padding: 12px 12px;
-      border-radius: 16px;
-      border: 1px solid rgba(255,255,255,.14);
+    /* =========================================================
+       ✅ e-card (طبق الأصل) — مدموج داخل نفس الصفحة
+       ========================================================= */
+    .e-card.playing{
+      position: relative;
+      width: min(420px, 100%);
+      height: 220px;
+      border-radius: 20px;
+      overflow: hidden;
+      color: #fff;
       background: rgba(255,255,255,.06);
-      font-weight: 900;
-      color: rgba(255,255,255,.90);
-      line-height: 1.9;
+      border: 1px solid rgba(255,255,255,.14);
+      box-shadow: 0 18px 55px rgba(0,0,0,.45);
+      backdrop-filter: blur(14px);
     }
-    .hint b{ color:#fff; }
+    .e-card .image{
+      position:absolute;
+      inset:0;
+      background:
+        radial-gradient(700px 420px at 20% 20%, rgba(59,130,246,.25), transparent 60%),
+        radial-gradient(700px 420px at 80% 80%, rgba(34,197,94,.22), transparent 60%),
+        linear-gradient(135deg, rgba(0,0,0,.25), rgba(0,0,0,.05));
+      opacity:.95;
+    }
+    .e-card .wave{
+      position:absolute;
+      left: -40%;
+      top: 55%;
+      width: 180%;
+      height: 180%;
+      border-radius: 45%;
+      background: rgba(255,255,255,.08);
+      filter: blur(.2px);
+      transform: rotate(0deg);
+    }
+    .e-card .wave:nth-child(3){ opacity:.10; top: 60%; }
+    .e-card .wave:nth-child(4){ opacity:.06; top: 66%; }
 
-    .danger{
-      border-color: rgba(244,63,94,.35);
-      background: rgba(244,63,94,.12);
+    .e-card.playing .wave{
+      animation: drift 7s linear infinite;
+    }
+    .e-card.playing .wave:nth-child(3){ animation-duration: 10s; }
+    .e-card.playing .wave:nth-child(4){ animation-duration: 13s; }
+
+    @keyframes drift{
+      from{ transform: translateX(0) rotate(0deg); }
+      to  { transform: translateX(10%) rotate(360deg); }
+    }
+
+    .e-card .infotop{
+      position:relative;
+      z-index: 2;
+      height:100%;
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+      align-items:center;
+      padding: 18px 16px;
+      text-align:center;
+      gap: 10px;
+      direction:ltr; /* مثل أمثلتك الأصلية عادةً */
+    }
+    .e-card .icon{
+      width: 44px;
+      height: 44px;
+      opacity: .95;
+    }
+    .e-card .role{
+      font-weight: 800;
+      letter-spacing:.2px;
+      font-size: 15px;
+      opacity: .92;
+    }
+    .e-card .name{
+      font-weight: 900;
+      font-size: 18px;
+      background: rgba(255,255,255,.10);
+      border: 1px solid rgba(255,255,255,.14);
+      padding: 8px 12px;
+      border-radius: 999px;
+    }
+
+    /* Place e-card nicely in hero */
+    .designerCardWrap{
+      display:flex;
+      justify-content:center;
+      align-items:center;
     }
   </style>
 </head>
@@ -320,26 +432,67 @@
 <body>
   <!-- Background video -->
   <video class="bgVideo" autoplay muted loop playsinline>
-    <source src="bg1.mp4.mp4" type="video/mp4">
+    <!-- إذا ملفك اسمه bg1.mp4.mp4 رجّعها مثل ما هي -->
+    <source src="bg1.mp4" type="video/mp4">
   </video>
   <div class="overlay"></div>
 
   <div class="wrap">
-    <div class="topBar">
-      <button class="btn" onclick="location.href='index.html'">رجوع</button>
-      <div class="topTitle">رمضان — البصرة (حسب الإمساكية)</div>
-      <button class="btn" id="soundBtn">تفعيل صوت الأذان</button>
-    </div>
 
-    <section class="clockCard">
-      <div class="clockGhost" id="clockGhost">--:--</div>
-      <div class="clock" id="clock">--:--</div>
-      <div class="subRow">
-        <span class="pill" id="todayDate">...</span>
-        <span class="pill" id="rangeHint">...</span>
+    <!-- ===== New look: Hero ===== -->
+    <header class="hero">
+      <div class="topBar">
+        <button class="btn" onclick="location.href='index.html'">رجوع</button>
+        <div class="topTitle">رمضان — البصرة (حسب الإمساكية)</div>
+        <button class="btn" id="soundBtn">تفعيل صوت الأذان</button>
       </div>
-    </section>
 
+      <div class="heroGrid">
+        <!-- Clock -->
+        <section class="clockCard">
+          <div class="clockGhost" id="clockGhost">--:--</div>
+          <div class="clock" id="clock">--:--</div>
+          <div class="subRow">
+            <span class="pill" id="todayDate">...</span>
+            <span class="pill" id="rangeHint">...</span>
+          </div>
+        </section>
+
+        <!-- e-card -->
+        <div class="designerCardWrap">
+          <div class="e-card playing">
+            <div class="image"></div>
+
+            <div class="wave"></div>
+            <div class="wave"></div>
+            <div class="wave"></div>
+
+            <div class="infotop">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="icon" aria-hidden="true">
+                <path fill="currentColor" d="M19.4133 4.89862L14.5863 2.17544C12.9911 1.27485 11.0089 1.27485 9.41368 2.17544L4.58674
+                4.89862C2.99153 5.7992 2 7.47596 2 9.2763V14.7235C2 16.5238 2.99153 18.2014 4.58674 19.1012L9.41368
+                21.8252C10.2079 22.2734 11.105 22.5 12.0046 22.5C12.6952 22.5 13.3874 22.3657 14.0349 22.0954C14.2204
+                22.018 14.4059 21.9273 14.5872 21.8252L19.4141 19.1012C19.9765 18.7831 20.4655 18.3728 20.8651
+                17.8825C21.597 16.9894 22 15.8671 22 14.7243V9.27713C22 7.47678 21.0085 5.7992 19.4133 4.89862ZM4.10784
+                14.7235V9.2763C4.10784 8.20928 4.6955 7.21559 5.64066 6.68166L10.4676 3.95848C10.9398 3.69152 11.4701
+                3.55804 11.9996 3.55804C12.5291 3.55804 13.0594 3.69152 13.5324 3.95848L18.3593 6.68166C19.3045 7.21476
+                19.8922 8.20928 19.8922 9.2763V9.75997C19.1426 9.60836 18.377 9.53091 17.6022 9.53091C14.7929 9.53091
+                12.1041 10.5501 10.0309 12.3999C8.36735 13.8847 7.21142 15.8012 6.68783 17.9081L5.63981 17.3165C4.69466
+                16.7834 4.10699 15.7897 4.10699 14.7235H4.10784ZM10.4676 20.0413L8.60933 18.9924C8.94996 17.0479 9.94402
+                15.2665 11.4515 13.921C13.1353 12.4181 15.3198 11.5908 17.6022 11.5908C18.3804 11.5908 19.1477 11.6864
+                19.8922 11.8742V14.7235C19.8922 15.2278 19.7589 15.7254 19.5119 16.1662C18.7615 15.3596 17.6806 14.8528
+                 16.4783 14.8528C14.2136 14.8528 12.3781 16.6466 12.3781 18.8598C12.3781 19.3937 12.4861 19.9021 12.68
+                 20.3676C11.9347 20.5316 11.1396 20.4203 10.4684 20.0413H10.4676Z"></path>
+              </svg>
+              <div class="role">UI / EX Designer</div>
+              <div class="name">MikeAndrewDesigner</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- ===== Main content ===== -->
     <section class="grid">
       <!-- Main -->
       <div class="card">
@@ -426,12 +579,12 @@
 
   <!-- Audio -->
   <audio id="adhanAudio" preload="auto">
-    <source src="adhan.mp3.mp3" type="audio/mpeg">
+    <!-- إذا ملفك اسمه adhan.mp3.mp3 رجّعها مثل ما هي -->
+    <source src="adhan.mp3" type="audio/mpeg">
   </audio>
 
   <script>
-    // ========= إمساكية البصرة (30 يوم) من PDF =========
-    // md = MM/DD (بتوقيت بغداد)
+    // ========= إمساكية البصرة (30 يوم) =========
     const IMSAKIAH = [
       {"md":"02/19","day":1,"maghrib":"05:55","fajr":"05:05"},
       {"md":"02/20","day":2,"maghrib":"05:56","fajr":"05:04"},
@@ -502,17 +655,9 @@
       return {h, m};
     }
 
-    // build a Date (UTC-based) representing Baghdad date/time safely:
     function makeBaghdadDate(y, mo, d, h, m, s=0){
-      // نستخدم UTC ثم نضيف فرق بغداد (+3) كطريقة ثابتة حتى ما يصير لخبطه في جهاز الزائر
-      // Baghdad = UTC+3 (بدون DST غالباً)
       const utc = Date.UTC(y, mo-1, d, h-3, m, s, 0);
       return new Date(utc);
-    }
-
-    function diffTo(targetDate, nowDate){
-      const ms = targetDate - nowDate;
-      return ms;
     }
 
     function fmtLeft(ms){
@@ -562,7 +707,6 @@
 
     soundBtn.addEventListener("click", async ()=>{
       try{
-        // تفاعل المستخدم يسمح للصوت
         await adhanAudio.play();
         adhanAudio.pause();
         adhanAudio.currentTime = 0;
@@ -579,17 +723,14 @@
     });
 
     // ========= Dhuhr fetch (Basra) =========
-    // نستعمل AlAdhan API: المدينة البصرة (Iraq) — نحاول نجيب وقت الظهر يومياً
     async function fetchDhuhr(y, mo, d){
       try{
         const dateStr = `${String(d).padStart(2,"0")}-${String(mo).padStart(2,"0")}-${y}`;
-        // method=0 غالباً Shia Ithna-Ashari
         const url = `https://api.aladhan.com/v1/timingsByCity/${dateStr}?city=Basra&country=Iraq&method=0`;
         const res = await fetch(url, {cache:"no-store"});
         const data = await res.json();
         const dhuhr = data?.data?.timings?.Dhuhr;
         if(!dhuhr) return null;
-        // dhuhr قد يأتي مثل "12:05" أو "12:05 (AST)" → ناخذ أول 5
         return String(dhuhr).slice(0,5);
       }catch(e){
         return null;
@@ -607,7 +748,6 @@
     }
 
     // ========= Events engine =========
-    // سنمنع التكرار داخل نفس الدقيقة
     let lastFireKey = "";
 
     function fireEventOnce(key, title){
@@ -622,7 +762,6 @@
         adhanAudio.currentTime = 0;
         await adhanAudio.play();
       }catch(e){
-        // إذا المتصفح رجع منع، نطفيه حتى ما يزعج
         soundEnabled = false;
         localStorage.setItem("adhanSoundEnabled","0");
         refreshSoundBtn();
@@ -642,35 +781,31 @@
 
     // ========= Main tick =========
     let cachedDhuhr = null;
-    let cachedDhuhrFor = ""; // md
-    let todayRow = null;
+    let cachedDhuhrFor = "";
 
     async function tick(){
       const p = baghdadParts(new Date());
 
-      // clock
       const timeStr = `${String(p.hh).padStart(2,"0")}:${String(p.mm).padStart(2,"0")}:${String(p.ss).padStart(2,"0")}`;
       elClock.textContent = timeStr;
       elGhost.textContent = `${String(p.hh).padStart(2,"0")}:${String(p.mm).padStart(2,"0")}`;
       elDate.textContent = arDateLabel();
 
-      // range label
       elRange.textContent = "توقيت البصرة — رمضان";
 
-      // find row for today
-      todayRow = IMSAKIAH.find(r => r.md === p.md) || null;
+      const todayRow = IMSAKIAH.find(r => r.md === p.md) || null;
       outRange.style.display = todayRow ? "none" : "block";
 
-      // if out range: still show dhuhr if possible
       if(!todayRow){
         tFajr.textContent = "--:--";
         tMaghrib.textContent = "--:--";
       }else{
-        tFajr.textContent = to12h(parseHHMM(todayRow.fajr).h, parseHHMM(todayRow.fajr).m);
-        tMaghrib.textContent = to12h(parseHHMM(todayRow.maghrib).h, parseHHMM(todayRow.maghrib).m);
+        const f = parseHHMM(todayRow.fajr);
+        const mg = parseHHMM(todayRow.maghrib);
+        tFajr.textContent = to12h(f.h, f.m);
+        tMaghrib.textContent = to12h(mg.h, mg.m);
       }
 
-      // fetch dhuhr once per day
       if(cachedDhuhrFor !== p.md){
         cachedDhuhrFor = p.md;
         cachedDhuhr = await fetchDhuhr(p.y, p.mo, p.d);
@@ -682,10 +817,8 @@
         tDhuhr.textContent = "--:--";
       }
 
-      // build today timings dates
       const now = makeBaghdadDate(p.y, p.mo, p.d, p.hh, p.mm, p.ss);
 
-      // Fajr/Maghrib from imsakiah (if available)
       let fajrDate = null, maghribDate=null, imsakDate=null, iftarDate=null;
 
       if(todayRow){
@@ -695,35 +828,29 @@
         fajrDate = makeBaghdadDate(p.y, p.mo, p.d, f.h, f.m, 0);
         maghribDate = makeBaghdadDate(p.y, p.mo, p.d, mg.h, mg.m, 0);
 
-        // imsak = fajr - 3 minutes
         imsakDate = new Date(fajrDate.getTime() - 3*60*1000);
-        // iftar = maghrib
         iftarDate = maghribDate;
       }
 
-      // Dhuhr from API (if available)
       let dhuhrDate = null;
       if(cachedDhuhr){
         const dh = parseHHMM(cachedDhuhr);
         dhuhrDate = makeBaghdadDate(p.y, p.mo, p.d, dh.h, dh.m, 0);
       }
 
-      // show remaining to imsak/iftar
       if(imsakDate){
-        const msI = diffTo(imsakDate, now);
+        const msI = imsakDate - now;
         toImsak.textContent = msI > 0 ? fmtLeft(msI) : "انتهى ✅";
       }else{
         toImsak.textContent = "--:--:--";
       }
       if(iftarDate){
-        const msF = diffTo(iftarDate, now);
+        const msF = iftarDate - now;
         toIftar.textContent = msF > 0 ? fmtLeft(msF) : "انتهى ✅";
       }else{
         toIftar.textContent = "--:--:--";
       }
 
-      // determine next main adhan event among: Maghrib -> Dhuhr -> Fajr (cyclic)
-      // Actually chronological for today: Fajr, Dhuhr, Maghrib. If all passed => next is tomorrow Fajr (requires tomorrow row).
       let next = null;
 
       const events = [];
@@ -735,9 +862,8 @@
 
       next = events.find(e => e.when > now) || null;
 
-      // if all passed: tomorrow fajr from next row (if exists)
       if(!next){
-        const tomorrow = makeBaghdadDate(p.y, p.mo, p.d, 12, 0, 0); // midday to get date parts safe
+        const tomorrow = makeBaghdadDate(p.y, p.mo, p.d, 12, 0, 0);
         const tp = baghdadParts(new Date(tomorrow.getTime() + 24*60*60*1000));
         const row2 = IMSAKIAH.find(r=> r.md === tp.md) || null;
         if(row2){
@@ -745,7 +871,6 @@
           const nextFajr = makeBaghdadDate(tp.y, tp.mo, tp.d, f2.h, f2.m, 0);
           next = {key:"FAJR_TOM", name:"أذان الصبح (غداً)", when: nextFajr};
         }else{
-          // fallback: just show none
           next = null;
         }
       }
@@ -755,7 +880,7 @@
         const nh = baghdadParts(next.when);
         elNextTime.textContent = `الوقت: ${to12h(nh.hh, nh.mm)}`;
 
-        const left = diffTo(next.when, now);
+        const left = next.when - now;
         const total = Math.max(0, Math.floor(left/1000));
         const h = Math.floor(total/3600);
         const m = Math.floor((total%3600)/60);
@@ -772,11 +897,8 @@
         setHint("ما لَكَينا وقت الأذان القادم (تأكد من التاريخ ضمن الإمساكية).", true);
       }
 
-      // ==== Fire overlays & adhan ====
-      // نستخدم مفتاح: YYYY-MM-DD HH:MM EVENT
       const keyBase = `${p.y}-${String(p.mo).padStart(2,"0")}-${String(p.d).padStart(2,"0")} ${String(p.hh).padStart(2,"0")}:${String(p.mm).padStart(2,"0")}`;
 
-      // Imsak
       if(imsakDate){
         const ip = baghdadParts(imsakDate);
         if(p.hh === ip.hh && p.mm === ip.mm && p.ss === 0){
@@ -784,7 +906,6 @@
         }
       }
 
-      // Fajr adhan
       if(fajrDate){
         const fp = baghdadParts(fajrDate);
         if(p.hh === fp.hh && p.mm === fp.mm && p.ss === 0){
@@ -793,7 +914,6 @@
         }
       }
 
-      // Dhuhr adhan
       if(dhuhrDate){
         const dp = baghdadParts(dhuhrDate);
         if(p.hh === dp.hh && p.mm === dp.mm && p.ss === 0){
@@ -802,19 +922,16 @@
         }
       }
 
-      // Maghrib adhan + iftar
       if(maghribDate){
         const mp = baghdadParts(maghribDate);
         if(p.hh === mp.hh && p.mm === mp.mm && p.ss === 0){
           fireEventOnce(keyBase+" MAGHRIB", "أذان المغرب");
           await playAdhanIfAllowed();
-          // إفطار بنفس اللحظة
           fireEventOnce(keyBase+" IFTAR", "وقت الإفطار");
         }
       }
     }
 
-    // start
     tick();
     setInterval(tick, 1000);
   </script>
