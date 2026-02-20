@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>رمضان — البصرة</title>
+  <title>صفحة الأذان — البصرة</title>
   <meta name="theme-color" content="#0b1220">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -21,7 +21,6 @@
       --shadow: 0 22px 60px rgba(0,0,0,.45);
       --danger: rgba(244,63,94,.95);
     }
-
     *{box-sizing:border-box}
     html,body{height:100%}
     body{
@@ -33,7 +32,7 @@
       padding: 18px 14px 26px;
     }
 
-    /* ===== Background video only ===== */
+    /* Background video */
     .bgVideo{
       position:fixed; inset:0;
       width:100%; height:100%;
@@ -52,33 +51,9 @@
       pointer-events:none;
     }
 
-    .wrap{
-      width:min(980px, 100%);
-      margin:0 auto;
-      position:relative;
-    }
+    .wrap{ width:min(1020px, 100%); margin:0 auto; }
 
-    /* ===== Free clock (NO box) ===== */
-    .freeClock{
-      text-align:center;
-      font-weight: 900;
-      letter-spacing:.6px;
-      line-height:1;
-      margin: 6px 0 14px;
-      user-select:none;
-      text-shadow: 0 18px 55px rgba(0,0,0,.55);
-    }
-    .freeClock .time{
-      font-size: clamp(44px, 6vw, 78px);
-    }
-    .freeClock .date{
-      margin-top: 10px;
-      font-size: 14px;
-      font-weight: 900;
-      color: rgba(255,255,255,.86);
-    }
-
-    /* ===== Top bar ===== */
+    /* Top bar */
     .topBar{
       display:flex;
       align-items:center;
@@ -112,7 +87,25 @@
     }
     .btn:hover{ background: rgba(255,255,255,.12); }
 
-    /* ===== Main card ===== */
+    /* Free clock */
+    .freeClock{
+      text-align:center;
+      font-weight: 900;
+      letter-spacing:.6px;
+      line-height:1;
+      margin: 10px 0 16px;
+      user-select:none;
+      text-shadow: 0 18px 55px rgba(0,0,0,.55);
+    }
+    .freeClock .time{ font-size: clamp(44px, 6vw, 78px); }
+    .freeClock .date{
+      margin-top: 10px;
+      font-size: 14px;
+      font-weight: 900;
+      color: rgba(255,255,255,.86);
+    }
+
+    /* Cards */
     .card{
       margin-top: 14px;
       border-radius: 22px;
@@ -124,15 +117,19 @@
       overflow:hidden;
       position:relative;
     }
-
     .bigLabel{
       font-size: 18px;
       font-weight: 900;
       margin:0 0 10px;
       opacity:.95;
     }
+    .subLabel{
+      margin: 0 0 10px;
+      font-weight: 900;
+      color: rgba(255,255,255,.86);
+    }
 
-    /* Bigger Next Adhan window */
+    /* Next adhan big */
     .nextName{
       font-weight: 900;
       font-size: clamp(26px, 3.2vw, 36px);
@@ -145,14 +142,13 @@
       font-size: 18px;
       color: rgba(255,255,255,.92);
     }
-
-    .countdown{
+    .countdownRow{
       margin-top: 14px;
       display:flex;
       gap:10px;
       flex-wrap:wrap;
     }
-    .cdChip{
+    .chip{
       min-width: 94px;
       padding: 12px 12px;
       border-radius: 16px;
@@ -160,9 +156,10 @@
       background: rgba(255,255,255,.06);
       text-align:center;
     }
-    .cdNum{ font-weight: 900; font-size: 22px; line-height:1; }
-    .cdLab{ font-weight: 900; font-size: 12px; color: rgba(255,255,255,.80); margin-top:6px; }
+    .num{ font-weight: 900; font-size: 22px; line-height:1; }
+    .lab{ font-weight: 900; font-size: 12px; color: rgba(255,255,255,.80); margin-top:6px; }
 
+    /* Imsak/Iftar */
     .miniRow{
       margin-top: 14px;
       display:grid;
@@ -179,9 +176,10 @@
       padding: 12px;
     }
     .miniTitle{ margin:0; font-weight:900; font-size:14px; color: rgba(255,255,255,.88); }
-    .miniVal{ margin:8px 0 0; font-weight:900; font-size:20px; letter-spacing:.5px; }
+    .miniVal{ margin:8px 0 0; font-weight:900; font-size:18px; color: rgba(255,255,255,.95); }
+    .miniCd{ margin:6px 0 0; font-weight:900; font-size:20px; letter-spacing:.5px; }
 
-    /* ===== Table under minis ===== */
+    /* Today table */
     .tableWrap{
       margin-top: 14px;
       border-radius: 18px;
@@ -198,25 +196,67 @@
       border-bottom: 1px dashed rgba(255,255,255,.14);
     }
     .row:last-child{ border-bottom:none; }
-
     .rLeft{
       display:flex;
       align-items:center;
       gap:10px;
       font-weight:900;
     }
-    .iconSmall{
-      width: 18px;
-      height: 18px;
-      opacity:.9;
-      flex:0 0 auto;
+    .rTime{ font-weight:900; color: rgba(255,255,255,.92); }
+    .iconSmall{ width: 18px; height: 18px; opacity:.9; flex:0 0 auto; }
+
+    /* Calendar (remaining days) */
+    .calHead{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-bottom: 10px;
     }
-    .rTime{
+    .calMeta{
       font-weight:900;
+      color: rgba(255,255,255,.86);
+      font-size: 13px;
+    }
+    .calTable{
+      width:100%;
+      border-collapse: collapse;
+      overflow:hidden;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.04);
+    }
+    .calTable th, .calTable td{
+      padding: 10px 10px;
+      border-bottom: 1px dashed rgba(255,255,255,.14);
+      font-weight: 900;
+      font-size: 13px;
       color: rgba(255,255,255,.92);
+      white-space:nowrap;
+    }
+    .calTable th{
+      color: rgba(255,255,255,.80);
+      background: rgba(255,255,255,.04);
+      text-align:center;
+    }
+    .calTable td{ text-align:center; }
+    .calTable tr:last-child td{ border-bottom:none; }
+
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding: 8px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06);
+      font-weight:900;
+      font-size: 13px;
+      color: rgba(255,255,255,.88);
     }
 
-    /* ===== Range error ===== */
+    /* Hints */
     .hint{
       margin-top: 12px;
       padding: 12px 12px;
@@ -233,7 +273,7 @@
       background: rgba(244,63,94,.12);
     }
 
-    /* ===== Overlay message (3s) ===== */
+    /* Overlay message */
     .eventOverlay{
       position:fixed; inset:0;
       z-index: 999;
@@ -287,7 +327,6 @@
 </head>
 
 <body>
-  <!-- Background video -->
   <video class="bgVideo" autoplay muted loop playsinline>
     <source src="bg1.mp4" type="video/mp4">
   </video>
@@ -296,55 +335,53 @@
   <div class="wrap">
     <div class="topBar">
       <button class="btn" onclick="location.href='index.html'">رجوع</button>
-      <div class="topTitle">رمضان — البصرة (حسب الإمساكية)</div>
+      <div class="topTitle">صفحة الأذان — البصرة (رمضان)</div>
       <button class="btn" id="soundBtn">تفعيل صوت الأذان</button>
     </div>
 
-    <!-- ✅ الساعة بدون إطار، حرّة بالنص فوق -->
     <div class="freeClock">
       <div class="time" id="clock">--:--:--</div>
       <div class="date" id="todayDate">...</div>
       <div class="date" id="rangeHint">توقيت البصرة — رمضان</div>
     </div>
 
-    <!-- ✅ نافذة الأذان القادم (مكبرة + كل شيء تحتها) -->
+    <!-- 1) الأذان التالي -->
     <section class="card">
-      <p class="bigLabel">الأذان القادم</p>
+      <p class="bigLabel">الأذان التالي</p>
 
       <p class="nextName" id="nextName">...تحميل</p>
-      <p class="nextTime" id="nextTime">...</p>
+      <p class="nextTime" id="nextTime">—</p>
 
-      <div class="countdown">
-        <div class="cdChip">
-          <div class="cdNum" id="cdH">--</div>
-          <div class="cdLab">ساعة</div>
-        </div>
-        <div class="cdChip">
-          <div class="cdNum" id="cdM">--</div>
-          <div class="cdLab">دقيقة</div>
-        </div>
-        <div class="cdChip">
-          <div class="cdNum" id="cdS">--</div>
-          <div class="cdLab">ثانية</div>
-        </div>
+      <p class="subLabel">العدّ التنازلي للأذان التالي</p>
+      <div class="countdownRow">
+        <div class="chip"><div class="num" id="cdH">--</div><div class="lab">ساعة</div></div>
+        <div class="chip"><div class="num" id="cdM">--</div><div class="lab">دقيقة</div></div>
+        <div class="chip"><div class="num" id="cdS">--</div><div class="lab">ثانية</div></div>
       </div>
 
+      <!-- 2) الإمساك والإفطار -->
       <div class="miniRow">
         <div class="mini">
-          <p class="miniTitle">المتبقي للإمساك</p>
-          <p class="miniVal" id="toImsak">00:00:00</p>
+          <p class="miniTitle">وقت الإمساك (يوميًا)</p>
+          <p class="miniVal" id="imsakAt">--:--</p>
+          <p class="miniTitle" style="margin-top:8px">المتبقي للإمساك</p>
+          <p class="miniCd" id="toImsak">00:00:00</p>
         </div>
+
         <div class="mini">
-          <p class="miniTitle">المتبقي للإفطار</p>
-          <p class="miniVal" id="toIftar">00:00:00</p>
+          <p class="miniTitle">وقت الإفطار (يوميًا)</p>
+          <p class="miniVal" id="iftarAt">--:--</p>
+          <p class="miniTitle" style="margin-top:8px">المتبقي للإفطار</p>
+          <p class="miniCd" id="toIftar">00:00:00</p>
         </div>
       </div>
 
-      <!-- ✅ جدول الصلاة تحت العدادات + رموز -->
+      <!-- 3) موعد أذان اليوم (نفس ترتيبك القديم: صبح/ظهر/مغرب) -->
+      <p class="bigLabel" style="margin-top:16px">موعد أذان اليوم</p>
       <div class="tableWrap" aria-label="جدول اليوم">
         <div class="row">
           <div class="rLeft">
-            <!-- Sun icon -->
+            <!-- Sun -->
             <svg class="iconSmall" viewBox="0 0 24 24" fill="none" aria-hidden="true">
               <path d="M12 18a6 6 0 1 0 0-12 6 6 0 0 0 0 12Z" stroke="currentColor" stroke-width="2"/>
               <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
@@ -356,7 +393,7 @@
 
         <div class="row">
           <div class="rLeft">
-            <!-- Moon icon -->
+            <!-- Moon -->
             <svg class="iconSmall" viewBox="0 0 24 24" fill="none" aria-hidden="true">
               <path d="M21 14.5A8.5 8.5 0 0 1 9.5 3 7.5 7.5 0 1 0 21 14.5Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
             </svg>
@@ -367,7 +404,7 @@
 
         <div class="row">
           <div class="rLeft">
-            <!-- Sunset icon -->
+            <!-- Sunset -->
             <svg class="iconSmall" viewBox="0 0 24 24" fill="none" aria-hidden="true">
               <path d="M4 18h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
               <path d="M6 18a6 6 0 0 1 12 0" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
@@ -379,11 +416,35 @@
         </div>
       </div>
 
-      <!-- رسائل / أخطاء -->
       <div class="hint danger" id="outRange">
-        خارج نطاق الإمساكية لهذا التاريخ. راح نعرض الظهر من الإنترنت، لكن الصبح/المغرب يحتاجون تاريخ ضمن 30 يوم.
+        خارج نطاق الإمساكية لهذا التاريخ. الصبح/المغرب يعتمدون على بيانات الإمساكية.
       </div>
       <div class="hint danger" id="hintBox"></div>
+    </section>
+
+    <!-- 4) روزنامة متغيّرة للأيام المتبقية -->
+    <section class="card">
+      <div class="calHead">
+        <p class="bigLabel" style="margin:0">روزنامة رمضان المتبقية</p>
+        <span class="badge" id="remainBadge">متبقي: — يوم</span>
+        <span class="calMeta">توقيت البصرة — رموز: 🌙 (إمساك) ☀️ (صبح) 🌓 (ظهر) 🌇 (مغرب)</span>
+      </div>
+
+      <table class="calTable" id="calTable">
+        <thead>
+          <tr>
+            <th>اليوم</th>
+            <th>التاريخ</th>
+            <th>🌙 الإمساك</th>
+            <th>☀️ الصبح</th>
+            <th>🌓 الظهر</th>
+            <th>🌇 المغرب</th>
+          </tr>
+        </thead>
+        <tbody id="calBody">
+          <tr><td colspan="6">...تحميل</td></tr>
+        </tbody>
+      </table>
     </section>
   </div>
 
@@ -403,6 +464,7 @@
 
   <script>
     // ========= إمساكية البصرة (30 يوم) =========
+    // md = MM/DD (بتوقيت بغداد)
     const IMSAKIAH = [
       {"md":"02/19","day":1,"maghrib":"05:55","fajr":"05:05"},
       {"md":"02/20","day":2,"maghrib":"05:56","fajr":"05:04"},
@@ -436,9 +498,9 @@
       {"md":"03/20","day":30,"maghrib":"06:15","fajr":"04:33"}
     ];
 
-    // ========= Helpers: Baghdad time =========
     const TZ = "Asia/Baghdad";
 
+    // ========= Helpers: Baghdad time =========
     function baghdadParts(date = new Date()){
       const fmt = new Intl.DateTimeFormat("en-GB", {
         timeZone: TZ,
@@ -473,7 +535,7 @@
       return {h, m};
     }
 
-    // Baghdad = UTC+3 (ثابت)
+    // بغداد = UTC+3 (ثابت)
     function makeBaghdadDate(y, mo, d, h, m, s=0){
       const utc = Date.UTC(y, mo-1, d, h-3, m, s, 0);
       return new Date(utc);
@@ -500,6 +562,8 @@
     const cdM = document.getElementById("cdM");
     const cdS = document.getElementById("cdS");
 
+    const imsakAt = document.getElementById("imsakAt");
+    const iftarAt = document.getElementById("iftarAt");
     const toImsak = document.getElementById("toImsak");
     const toIftar = document.getElementById("toIftar");
 
@@ -509,6 +573,9 @@
 
     const hintBox = document.getElementById("hintBox");
     const outRange = document.getElementById("outRange");
+
+    const remainBadge = document.getElementById("remainBadge");
+    const calBody = document.getElementById("calBody");
 
     const overlay = document.getElementById("eventOverlay");
     const ovTitle = document.getElementById("eventTitle");
@@ -540,21 +607,6 @@
         showOverlay("تعذر تفعيل الصوت", "جرّب ترفع الصوت/تمنح صلاحية الصوت بالمتصفح");
       }
     });
-
-    // ========= Dhuhr fetch (Basra) =========
-    async function fetchDhuhr(y, mo, d){
-      try{
-        const dateStr = `${String(d).padStart(2,"0")}-${String(mo).padStart(2,"0")}-${y}`;
-        const url = `https://api.aladhan.com/v1/timingsByCity/${dateStr}?city=Basra&country=Iraq&method=0`;
-        const res = await fetch(url, {cache:"no-store"});
-        const data = await res.json();
-        const dhuhr = data?.data?.timings?.Dhuhr;
-        if(!dhuhr) return null;
-        return String(dhuhr).slice(0,5);
-      }catch(e){
-        return null;
-      }
-    }
 
     // ========= Overlay =========
     let overlayTimer = null;
@@ -596,150 +648,246 @@
       hintBox.innerHTML = "";
     }
 
-    // ========= Main tick =========
-    let cachedDhuhr = null;
-    let cachedDhuhrFor = "";
+    // ========= Dhuhr calendar fetch (month) =========
+    // نخزن الظهر بصيغة md -> "HH:MM"
+    const dhuhrMap = new Map();
+    const fetchedMonths = new Set();
 
-    async function tick(){
-      const p = baghdadParts(new Date());
+    async function fetchMonthCalendarDhuhr(year, month){
+      const key = `${year}-${String(month).padStart(2,"0")}`;
+      if(fetchedMonths.has(key)) return;
+      fetchedMonths.add(key);
 
-      // Free clock
-      elClock.textContent = `${String(p.hh).padStart(2,"0")}:${String(p.mm).padStart(2,"0")}:${String(p.ss).padStart(2,"0")}`;
-      elDate.textContent = arDateLabel();
-      elRange.textContent = "توقيت البصرة — رمضان";
+      try{
+        const url = `https://api.aladhan.com/v1/calendarByCity?city=Basra&country=Iraq&method=0&month=${month}&year=${year}`;
+        const res = await fetch(url, {cache:"no-store"});
+        if(!res.ok) return;
+        const data = await res.json();
+        const arr = data?.data;
+        if(!Array.isArray(arr)) return;
 
-      // Find row for today
-      const todayRow = IMSAKIAH.find(r => r.md === p.md) || null;
-      outRange.style.display = todayRow ? "none" : "block";
-
-      // Fajr/Maghrib from imsakiah
-      if(!todayRow){
-        tFajr.textContent = "--:--";
-        tMaghrib.textContent = "--:--";
-      }else{
-        const f = parseHHMM(todayRow.fajr);
-        const mg = parseHHMM(todayRow.maghrib);
-        tFajr.textContent = to12h(f.h, f.m);
-        tMaghrib.textContent = to12h(mg.h, mg.m);
-      }
-
-      // fetch Dhuhr once per day
-      if(cachedDhuhrFor !== p.md){
-        cachedDhuhrFor = p.md;
-        cachedDhuhr = await fetchDhuhr(p.y, p.mo, p.d);
-      }
-      if(cachedDhuhr){
-        const dh = parseHHMM(cachedDhuhr);
-        tDhuhr.textContent = to12h(dh.h, dh.m);
-      }else{
-        tDhuhr.textContent = "--:--";
-      }
-
-      // Build today timings dates
-      const now = makeBaghdadDate(p.y, p.mo, p.d, p.hh, p.mm, p.ss);
-
-      let fajrDate = null, maghribDate=null, imsakDate=null, iftarDate=null;
-
-      if(todayRow){
-        const f = parseHHMM(todayRow.fajr);
-        const mg = parseHHMM(todayRow.maghrib);
-
-        fajrDate = makeBaghdadDate(p.y, p.mo, p.d, f.h, f.m, 0);
-        maghribDate = makeBaghdadDate(p.y, p.mo, p.d, mg.h, mg.m, 0);
-
-        imsakDate = new Date(fajrDate.getTime() - 3*60*1000);
-        iftarDate = maghribDate;
-      }
-
-      // Dhuhr date
-      let dhuhrDate = null;
-      if(cachedDhuhr){
-        const dh = parseHHMM(cachedDhuhr);
-        dhuhrDate = makeBaghdadDate(p.y, p.mo, p.d, dh.h, dh.m, 0);
-      }
-
-      // ✅ Countdowns (always)
-      toImsak.textContent = imsakDate ? fmtLeft(imsakDate - now) : "00:00:00";
-      toIftar.textContent = iftarDate ? fmtLeft(iftarDate - now) : "00:00:00";
-
-      // Next event (Fajr, Dhuhr, Maghrib)
-      const events = [];
-      if(fajrDate) events.push({key:"FAJR", name:"أذان الصبح", when:fajrDate});
-      if(dhuhrDate) events.push({key:"DHUHR", name:"أذان الظهر", when:dhuhrDate});
-      if(maghribDate) events.push({key:"MAGHRIB", name:"أذان المغرب", when:maghribDate});
-      events.sort((a,b)=> a.when - b.when);
-
-      let next = events.find(e => e.when > now) || null;
-
-      // If all passed: tomorrow fajr (if exists)
-      if(!next){
-        const tomorrowBase = makeBaghdadDate(p.y, p.mo, p.d, 12, 0, 0);
-        const tp = baghdadParts(new Date(tomorrowBase.getTime() + 24*60*60*1000));
-        const row2 = IMSAKIAH.find(r=> r.md === tp.md) || null;
-        if(row2){
-          const f2 = parseHHMM(row2.fajr);
-          const nextFajr = makeBaghdadDate(tp.y, tp.mo, tp.d, f2.h, f2.m, 0);
-          next = {key:"FAJR_TOM", name:"أذان الصبح (غداً)", when: nextFajr};
+        for(const dayObj of arr){
+          const g = dayObj?.date?.gregorian;
+          const dd = g?.day;
+          const mm = g?.month?.number;
+          const timings = dayObj?.timings;
+          const dhuhr = timings?.Dhuhr;
+          if(!dd || !mm || !dhuhr) continue;
+          const md = `${String(mm).padStart(2,"0")}/${String(dd).padStart(2,"0")}`;
+          dhuhrMap.set(md, String(dhuhr).slice(0,5));
         }
-      }
-
-      if(next){
-        elNextName.textContent = next.name;
-        const nh = baghdadParts(next.when);
-        elNextTime.textContent = `الوقت: ${to12h(nh.hh, nh.mm)}`;
-
-        const left = Math.max(0, next.when - now);
-        const total = Math.floor(left/1000);
-        const h = Math.floor(total/3600);
-        const m = Math.floor((total%3600)/60);
-        const s = total%60;
-        cdH.textContent = String(h).padStart(2,"0");
-        cdM.textContent = String(m).padStart(2,"0");
-        cdS.textContent = String(s).padStart(2,"0");
-        clearHint();
-      }else{
-        elNextName.textContent = "لا توجد بيانات";
-        elNextTime.textContent = "—";
-        cdH.textContent = cdM.textContent = cdS.textContent = "--";
-        setHint("ما لَكَينا وقت الأذان القادم (تأكد من التاريخ ضمن الإمساكية).", true);
-      }
-
-      // Fire overlays & adhan at exact second 0
-      const keyBase = `${p.y}-${String(p.mo).padStart(2,"0")}-${String(p.d).padStart(2,"0")} ${String(p.hh).padStart(2,"0")}:${String(p.mm).padStart(2,"0")}`;
-
-      if(imsakDate){
-        const ip = baghdadParts(imsakDate);
-        if(p.hh === ip.hh && p.mm === ip.mm && p.ss === 0){
-          fireEventOnce(keyBase+" IMSAK", "وقت الإمساك");
-        }
-      }
-
-      if(fajrDate){
-        const fp = baghdadParts(fajrDate);
-        if(p.hh === fp.hh && p.mm === fp.mm && p.ss === 0){
-          fireEventOnce(keyBase+" FAJR", "أذان الصبح");
-          await playAdhanIfAllowed();
-        }
-      }
-
-      if(dhuhrDate){
-        const dp = baghdadParts(dhuhrDate);
-        if(p.hh === dp.hh && p.mm === dp.mm && p.ss === 0){
-          fireEventOnce(keyBase+" DHUHR", "أذان الظهر");
-          await playAdhanIfAllowed();
-        }
-      }
-
-      if(maghribDate){
-        const mp = baghdadParts(maghribDate);
-        if(p.hh === mp.hh && p.mm === mp.mm && p.ss === 0){
-          fireEventOnce(keyBase+" MAGHRIB", "أذان المغرب");
-          await playAdhanIfAllowed();
-          fireEventOnce(keyBase+" IFTAR", "وقت الإفطار");
-        }
+      }catch(e){
+        // تجاهل
       }
     }
 
+    // ========= Build remaining calendar =========
+    let calendarBuiltForMd = "";
+    function buildRemainingCalendar(todayMd){
+      // ابحث بداية اليوم ضمن الإمساكية
+      const idx = IMSAKIAH.findIndex(r=>r.md === todayMd);
+      if(idx < 0){
+        remainBadge.textContent = "متبقي: — يوم";
+        calBody.innerHTML = `<tr><td colspan="6">لا توجد بيانات لهذا التاريخ ضمن الإمساكية</td></tr>`;
+        return;
+      }
+
+      const remaining = IMSAKIAH.slice(idx); // من اليوم إلى النهاية
+      remainBadge.textContent = `متبقي: ${remaining.length} يوم`;
+
+      // ابنِ الصفوف
+      const rows = remaining.map(r=>{
+        const f = parseHHMM(r.fajr);
+        const mg = parseHHMM(r.maghrib);
+
+        // امساك = صبح - 3 دقايق (نحسب فقط وقت، بدون تاريخ)
+        let imH = f.h, imM = f.m - 3;
+        if(imM < 0){ imM += 60; imH = (imH + 23) % 24; }
+
+        const dhuhr = dhuhrMap.get(r.md) || "--:--";
+
+        return `
+          <tr>
+            <td>${r.day}</td>
+            <td>${r.md}</td>
+            <td>${to12h(imH, imM)}</td>
+            <td>${to12h(f.h, f.m)}</td>
+            <td>${dhuhr !== "--:--" ? to12h(parseHHMM(dhuhr).h, parseHHMM(dhuhr).m) : "--:--"}</td>
+            <td>${to12h(mg.h, mg.m)}</td>
+          </tr>
+        `;
+      }).join("");
+
+      calBody.innerHTML = rows || `<tr><td colspan="6">—</td></tr>`;
+    }
+
+    // ========= Main tick =========
+    let cachedDhuhrForMd = "";
+    let cachedDhuhr = null;
+
+    let tickRunning = false;
+
+    async function tick(){
+      if(tickRunning) return;
+      tickRunning = true;
+
+      try{
+        const p = baghdadParts(new Date());
+
+        // Clock
+        elClock.textContent = `${String(p.hh).padStart(2,"0")}:${String(p.mm).padStart(2,"0")}:${String(p.ss).padStart(2,"0")}`;
+        elDate.textContent = arDateLabel();
+        elRange.textContent = "توقيت البصرة — رمضان";
+
+        // Today row
+        const todayRow = IMSAKIAH.find(r => r.md === p.md) || null;
+        outRange.style.display = todayRow ? "none" : "block";
+
+        // Fetch Dhuhr month calendars (current month + next month)
+        // حتى الروزنامة يكون بيها الظهر للأيام المتبقية
+        await fetchMonthCalendarDhuhr(p.y, p.mo);
+        const nextMonth = p.mo === 12 ? 1 : p.mo + 1;
+        const nextYear = p.mo === 12 ? p.y + 1 : p.y;
+        await fetchMonthCalendarDhuhr(nextYear, nextMonth);
+
+        // Dhuhr today from map (أثبت وأسرع)
+        if(cachedDhuhrForMd !== p.md){
+          cachedDhuhrForMd = p.md;
+          cachedDhuhr = dhuhrMap.get(p.md) || null;
+        }
+
+        // Today prayers show (same order old)
+        if(todayRow){
+          const f = parseHHMM(todayRow.fajr);
+          const mg = parseHHMM(todayRow.maghrib);
+          tFajr.textContent = to12h(f.h, f.m);
+          tMaghrib.textContent = to12h(mg.h, mg.m);
+        }else{
+          tFajr.textContent = "--:--";
+          tMaghrib.textContent = "--:--";
+        }
+        if(cachedDhuhr){
+          const dh = parseHHMM(cachedDhuhr);
+          tDhuhr.textContent = to12h(dh.h, dh.m);
+        }else{
+          tDhuhr.textContent = "--:--";
+        }
+
+        // Build day dates
+        const now = makeBaghdadDate(p.y, p.mo, p.d, p.hh, p.mm, p.ss);
+
+        let fajrDate = null, dhuhrDate = null, maghribDate = null;
+        let imsakDate = null, iftarDate = null;
+
+        if(todayRow){
+          const f = parseHHMM(todayRow.fajr);
+          const mg = parseHHMM(todayRow.maghrib);
+
+          fajrDate = makeBaghdadDate(p.y, p.mo, p.d, f.h, f.m, 0);
+          maghribDate = makeBaghdadDate(p.y, p.mo, p.d, mg.h, mg.m, 0);
+
+          imsakDate = new Date(fajrDate.getTime() - 3*60*1000);
+          iftarDate = maghribDate;
+
+          // عرض أوقات الإمساك والإفطار
+          const ip = baghdadParts(imsakDate);
+          imsakAt.textContent = to12h(ip.hh, ip.mm);
+          const mp = baghdadParts(maghribDate);
+          iftarAt.textContent = to12h(mp.hh, mp.mm);
+        }else{
+          imsakAt.textContent = "--:--";
+          iftarAt.textContent = "--:--";
+        }
+
+        if(cachedDhuhr){
+          const dh = parseHHMM(cachedDhuhr);
+          dhuhrDate = makeBaghdadDate(p.y, p.mo, p.d, dh.h, dh.m, 0);
+        }
+
+        // Countdowns for imsak/iftar
+        toImsak.textContent = imsakDate ? fmtLeft(imsakDate - now) : "00:00:00";
+        toIftar.textContent = iftarDate ? fmtLeft(iftarDate - now) : "00:00:00";
+
+        // Next adhan logic (فقط الصلوات: صبح/ظهر/مغرب)
+        const events = [];
+        if(fajrDate) events.push({key:"FAJR", name:"أذان الصبح", when:fajrDate});
+        if(dhuhrDate) events.push({key:"DHUHR", name:"أذان الظهر", when:dhuhrDate});
+        if(maghribDate) events.push({key:"MAGHRIB", name:"أذان المغرب", when:maghribDate});
+        events.sort((a,b)=> a.when - b.when);
+
+        let next = events.find(e => e.when > now) || null;
+
+        // If all passed -> tomorrow fajr (if exists in imsakiah)
+        if(!next){
+          const tomorrowBase = makeBaghdadDate(p.y, p.mo, p.d, 12, 0, 0);
+          const tp = baghdadParts(new Date(tomorrowBase.getTime() + 24*60*60*1000));
+          const row2 = IMSAKIAH.find(r=> r.md === tp.md) || null;
+
+          if(row2){
+            const f2 = parseHHMM(row2.fajr);
+            const nextFajr = makeBaghdadDate(tp.y, tp.mo, tp.d, f2.h, f2.m, 0);
+            next = {key:"FAJR_TOM", name:"أذان الصبح (غداً)", when: nextFajr};
+          }
+        }
+
+        if(next){
+          elNextName.textContent = next.name;
+          const nh = baghdadParts(next.when);
+          elNextTime.textContent = `ساعة الأذان: ${to12h(nh.hh, nh.mm)}`;
+
+          const left = Math.max(0, next.when - now);
+          const total = Math.floor(left/1000);
+          const h = Math.floor(total/3600);
+          const m = Math.floor((total%3600)/60);
+          const s = total%60;
+          cdH.textContent = String(h).padStart(2,"0");
+          cdM.textContent = String(m).padStart(2,"0");
+          cdS.textContent = String(s).padStart(2,"0");
+          clearHint();
+        }else{
+          elNextName.textContent = "لا توجد بيانات";
+          elNextTime.textContent = "—";
+          cdH.textContent = cdM.textContent = cdS.textContent = "--";
+          setHint("ما لَكَينا الأذان التالي (تأكد من التاريخ ضمن الإمساكية).", true);
+        }
+
+        // Build / update remaining calendar once per day change
+        if(calendarBuiltForMd !== p.md){
+          calendarBuiltForMd = p.md;
+          buildRemainingCalendar(p.md);
+        }
+
+        // Fire overlays + adhan sound عند وقت الأذان (ثانية 0)
+        const keyBase = `${p.y}-${String(p.mo).padStart(2,"0")}-${String(p.d).padStart(2,"0")} ${String(p.hh).padStart(2,"0")}:${String(p.mm).padStart(2,"0")}`;
+
+        if(fajrDate){
+          const fp = baghdadParts(fajrDate);
+          if(p.hh === fp.hh && p.mm === fp.mm && p.ss === 0){
+            fireEventOnce(keyBase+" FAJR", "أذان الصبح");
+            await playAdhanIfAllowed();
+          }
+        }
+        if(dhuhrDate){
+          const dp = baghdadParts(dhuhrDate);
+          if(p.hh === dp.hh && p.mm === dp.mm && p.ss === 0){
+            fireEventOnce(keyBase+" DHUHR", "أذان الظهر");
+            await playAdhanIfAllowed();
+          }
+        }
+        if(maghribDate){
+          const mp = baghdadParts(maghribDate);
+          if(p.hh === mp.hh && p.mm === mp.mm && p.ss === 0){
+            fireEventOnce(keyBase+" MAGHRIB", "أذان المغرب");
+            await playAdhanIfAllowed();
+          }
+        }
+
+      } finally {
+        tickRunning = false;
+      }
+    }
+
+    // start
     tick();
     setInterval(tick, 1000);
   </script>
