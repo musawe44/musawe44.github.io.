@@ -33,23 +33,27 @@
     }
 
     /* Background video */
-    .bgVideo{
-      position:fixed; inset:0;
-      width:100%; height:100%;
-      object-fit:cover;
-      z-index:-10;
-      filter:saturate(1.05) contrast(1.04);
-      transform: scale(1.02);
-    }
-    .overlay{
-      position:fixed; inset:0;
-      z-index:-9;
-      background:
-        radial-gradient(900px 520px at 80% 20%, rgba(34,197,94,.12), transparent 60%),
-        radial-gradient(800px 500px at 20% 80%, rgba(59,130,246,.12), transparent 55%),
-        linear-gradient(120deg, rgba(11,18,32,.58), rgba(11,18,32,.38));
-      pointer-events:none;
-    }
+.bgVideo{
+  position:fixed;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  z-index:-10;
+  filter:saturate(1.05) contrast(1.04);
+  transform: scale(1.02);
+}
+
+.overlay{
+  position:fixed;
+  inset:0;
+  z-index:-9;
+  background:
+    radial-gradient(900px 520px at 80% 20%, rgba(34,197,94,.12), transparent 60%),
+    radial-gradient(800px 500px at 20% 80%, rgba(59,130,246,.12), transparent 55%),
+    linear-gradient(120deg, rgba(11,18,32,.58), rgba(11,18,32,.38));
+  pointer-events:none;
+}
 
     .wrap{ width:min(1020px, 100%); margin:0 auto; }
 
