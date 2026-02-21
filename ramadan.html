@@ -392,14 +392,14 @@
       <!-- Imsak / Iftar -->
       <div class="miniRow">
         <div class="mini glass">
-          <p class="miniTitle">وقت الإمساك (يوميًا)</p>
+          <p class="miniTitle">وقت الإمساك  </p>
           <p class="miniVal" id="imsakAt">--:--</p>
           <p class="miniTitle" style="margin-top:10px">المتبقي للإمساك</p>
           <p class="miniCd" id="toImsak">--:--:--</p>
         </div>
 
         <div class="mini glass">
-          <p class="miniTitle">وقت الإفطار (يوميًا)</p>
+          <p class="miniTitle">وقت الإفطار </p>
           <p class="miniVal" id="iftarAt">--:--</p>
           <p class="miniTitle" style="margin-top:10px">المتبقي للإفطار</p>
           <p class="miniCd" id="toIftar">--:--:--</p>
@@ -880,28 +880,27 @@
         }
 
         /* ===== الإفطار ===== */
-        if (todayMaghribDate) {
-          if (now < todayMaghribDate) {
-            // إفطار اليوم
-            const mp = baghdadParts(todayMaghribDate);
-            iftarAt.textContent = to12hPM(mp.hh, mp.mm);
-            toIftar.textContent = fmtLeft(todayMaghribDate - now);
-
-          } else {
-            // بعد الإفطار: جدّد لإفطار باچر
-            if (nextDayMaghribDate) {
-              const mp2 = baghdadParts(nextDayMaghribDate);
-              iftarAt.textContent = to12hPM(mp2.hh, mp2.mm);
-              toIftar.textContent = fmtLeft(nextDayMaghribDate - now);
-            } else {
-              iftarAt.textContent = "--:--";
-              toIftar.textContent = "--:--:--";
-            }
-          }
-        } else {
-          iftarAt.textContent = "--:--";
-          toIftar.textContent = "--:--:--";
-        }
+if (todayMaghribDate) {
+  if (now.getTime() < todayMaghribDate.getTime()) {
+    // إفطار اليوم
+    const mp = baghdadParts(todayMaghribDate);
+    iftarAt.textContent = to12hPM(mp.hh, mp.mm);
+    toIftar.textContent = fmtLeft(todayMaghribDate.getTime() - now.getTime());
+  } else {
+    // بعد الإفطار: يتجدد إفطار باچر
+    if (nextDayMaghribDate) {
+      const mp2 = baghdadParts(nextDayMaghribDate);
+      iftarAt.textContent = to12hPM(mp2.hh, mp2.mm);
+      toIftar.textContent = fmtLeft(nextDayMaghribDate.getTime() - now.getTime());
+    } else {
+      iftarAt.textContent = "--:--";
+      toIftar.textContent = "--:--:--";
+    }
+  }
+} else {
+  iftarAt.textContent = "--:--";
+  toIftar.textContent = "--:--:--";
+}
 
         // ✅✅ الأذان التالي (تسلسل ثابت)
         // قبل الصبح -> الصبح (اليوم)
