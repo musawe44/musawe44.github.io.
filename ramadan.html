@@ -556,6 +556,12 @@
       return `${h}:${String(mm).padStart(2,"0")} ${ampm}`;
     }
 
+    // ✅ الإفطار دائماً مساء (م)
+    function to12hPM(hh, mm){
+      let h = hh % 12; if(h===0) h = 12;
+      return `${h}:${String(mm).padStart(2,"0")} م`;
+    }
+
     function parseHHMM(hhmm){
       const [h,m] = String(hhmm).slice(0,5).split(":").map(x=>+x);
       return {h, m};
@@ -810,14 +816,9 @@
 
           tFajr.textContent = to12h(f.h, f.m);
           tMaghrib.textContent = to12h(mg.h, mg.m);
-
-          const ip = baghdadParts(imsakDate);
-          imsakAt.textContent = to12h(ip.hh, ip.mm);
         }else{
           tFajr.textContent = "--:--";
           tMaghrib.textContent = "--:--";
-          imsakAt.textContent = "--:--";
-          iftarAt.textContent = "--:--";
         }
 
         if(cachedDhuhr){
@@ -828,66 +829,113 @@
           tDhuhr.textContent = "--:--";
         }
 
-        // ✅ الإمساك: إذا خلص، يبقى "انتهى" (أو تقدر تخليه يروح لباچر إذا تحب)
-        if(imsakDate){
-          const ms = imsakDate - now;
-          toImsak.textContent = ms > 0 ? fmtLeft(ms) : "انتهى ✅";
-        }else{
+        // ====== ✅ الإمساك/الإفطار (يوم بيومه + يتجدد بعد الإفطار) ======
+        let todayMaghribDate = iftarDate; // مغرب اليوم
+        let todayImsakDate   = imsakDate; // إمساك اليوم
+
+        // تجهيز باچر من الإمساكية
+        const tp = addDaysBaghdad(p, 1);
+        const row2 = IMSAKIAH.find(r => r.md === tp.md) || null;
+
+        let nextDayMaghribDate = null;
+        let nextDayImsakDate   = null;
+
+        if (row2) {
+          const f2  = parseHHMM(row2.fajr);
+          const mg2 = parseHHMM(row2.maghrib);
+
+          const nextFajrDate = makeBaghdadDate(tp.y, tp.mo, tp.d, f2.h, f2.m, 0);
+          nextDayImsakDate   = new Date(nextFajrDate.getTime() - 3*60*1000);
+          nextDayMaghribDate = makeBaghdadDate(tp.y, tp.mo, tp.d, mg2.h, mg2.m, 0);
+        }
+
+        /* ===== الإمساك ===== */
+        if (todayImsakDate && todayMaghribDate) {
+          if (now < todayImsakDate) {
+            // قبل إمساك اليوم
+            const ip = baghdadParts(todayImsakDate);
+            imsakAt.textContent = to12h(ip.hh, ip.mm);
+            toImsak.textContent = fmtLeft(todayImsakDate - now);
+
+          } else if (now >= todayImsakDate && now < todayMaghribDate) {
+            // بين الإمساك والإفطار: خليه منتهي
+            const ip = baghdadParts(todayImsakDate);
+            imsakAt.textContent = to12h(ip.hh, ip.mm);
+            toImsak.textContent = "انتهى ✅";
+
+          } else {
+            // بعد الإفطار: جدّد لإمساك باچر
+            if (nextDayImsakDate) {
+              const ip2 = baghdadParts(nextDayImsakDate);
+              imsakAt.textContent = to12h(ip2.hh, ip2.mm);
+              toImsak.textContent = fmtLeft(nextDayImsakDate - now);
+            } else {
+              imsakAt.textContent = "--:--";
+              toImsak.textContent = "--:--:--";
+            }
+          }
+        } else {
+          imsakAt.textContent = "--:--";
           toImsak.textContent = "--:--:--";
         }
 
-        // ✅ الإفطار: من الصباح للمساء دائمًا (اليوم أو باچر)
-        let iftarTarget = iftarDate; // مغرب اليوم
-        let iftarSuffix = "";
+        /* ===== الإفطار ===== */
+        if (todayMaghribDate) {
+          if (now < todayMaghribDate) {
+            // إفطار اليوم
+            const mp = baghdadParts(todayMaghribDate);
+            iftarAt.textContent = to12hPM(mp.hh, mp.mm);
+            toIftar.textContent = fmtLeft(todayMaghribDate - now);
 
-        if (iftarTarget && (iftarTarget - now) <= 0) {
-          // بعد المغرب: خلي الإفطار يصير مغرب باچر
-          const tp = addDaysBaghdad(p, 1);
-          const row2 = IMSAKIAH.find(r => r.md === tp.md) || null;
-          if (row2) {
-            const mg2 = parseHHMM(row2.maghrib);
-            iftarTarget = makeBaghdadDate(tp.y, tp.mo, tp.d, mg2.h, mg2.m, 0);
-            iftarSuffix = " (غداً)";
+          } else {
+            // بعد الإفطار: جدّد لإفطار باچر
+            if (nextDayMaghribDate) {
+              const mp2 = baghdadParts(nextDayMaghribDate);
+              iftarAt.textContent = to12hPM(mp2.hh, mp2.mm);
+              toIftar.textContent = fmtLeft(nextDayMaghribDate - now);
+            } else {
+              iftarAt.textContent = "--:--";
+              toIftar.textContent = "--:--:--";
+            }
           }
-        }
-
-        if (iftarTarget) {
-          const mp2 = baghdadParts(iftarTarget);
-          iftarAt.textContent = to12h(mp2.hh, mp2.mm) + iftarSuffix;
-
-          const msF = iftarTarget - now;
-          toIftar.textContent = msF > 0 ? fmtLeft(msF) : "00:00:00";
         } else {
           iftarAt.textContent = "--:--";
           toIftar.textContent = "--:--:--";
         }
 
-        // ✅ الأذان التالي (صح: قبل المغرب -> المغرب، بعده -> فجر باچر...)
-        const events = [];
-        if(fajrDate)    events.push({key:"FAJR",   name:"أذان الصبح",  when:fajrDate});
-        if(dhuhrDate)   events.push({key:"DHUHR",  name:"أذان الظهر",  when:dhuhrDate});
-        if(maghribDate) events.push({key:"MAGHRIB",name:"أذان المغرب", when:maghribDate});
-        events.sort((a,b)=> a.when - b.when);
+        // ✅✅ الأذان التالي (تسلسل ثابت)
+        // قبل الصبح -> الصبح (اليوم)
+        // بعد الصبح -> الظهر
+        // بعد الظهر -> المغرب
+        // بعد المغرب -> صبح باچر
+        let next = null;
 
-        let next = events.find(e => e.when > now) || null;
-
-        if(!next){
-          const tp = addDaysBaghdad(p, 1);
-          const row2 = IMSAKIAH.find(r=> r.md === tp.md) || null;
-          if(row2){
-            const f2 = parseHHMM(row2.fajr);
-            const nextFajr = makeBaghdadDate(tp.y, tp.mo, tp.d, f2.h, f2.m, 0);
-            next = {key:"FAJR_TOM", name:"أذان الصبح (غداً)", when: nextFajr};
+        if (fajrDate || dhuhrDate || maghribDate) {
+          if (fajrDate && now < fajrDate) {
+            next = { key: "FAJR", name: "أذان الصبح", when: fajrDate };
+          }
+          else if (dhuhrDate && now < dhuhrDate) {
+            next = { key: "DHUHR", name: "أذان الظهر", when: dhuhrDate };
+          }
+          else if (maghribDate && now < maghribDate) {
+            next = { key: "MAGHRIB", name: "أذان المغرب", when: maghribDate };
+          }
+          else {
+            if (row2) {
+              const f2 = parseHHMM(row2.fajr);
+              const nextFajr = makeBaghdadDate(tp.y, tp.mo, tp.d, f2.h, f2.m, 0);
+              next = { key: "FAJR_TOM", name: "أذان الصبح (غداً)", when: nextFajr };
+            }
           }
         }
 
-        if(next){
+        if (next) {
           elNextName.textContent = next.name;
           const nh = baghdadParts(next.when);
           elNextTime.textContent = `ساعة الأذان: ${to12h(nh.hh, nh.mm)}`;
           setCountdown(next.when - now);
           clearHint();
-        }else{
+        } else {
           elNextName.textContent = "لا توجد بيانات";
           elNextTime.textContent = "—";
           cdH.textContent = cdM.textContent = cdS.textContent = "--";
