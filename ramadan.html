@@ -3,150 +3,154 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>رمضان — الإمساك والإفطار</title>
-
-  <!-- ضع أيقونة تبويب لو تريد -->
-  <!-- <link rel="icon" type="image/png" href="icon.png"> -->
-
+  <title>رمضان</title>
   <style>
     :root{
-      --card-bg: rgba(255,255,255,.14);
-      --card-border: rgba(255,255,255,.18);
-      --text: #ffffff;
-      --muted: rgba(255,255,255,.75);
+      --bg1:#0b1b2a; --bg2:#0b2a2d;
+      --card: rgba(255,255,255,.14);
+      --border: rgba(255,255,255,.18);
+      --text:#fff; --muted: rgba(255,255,255,.75);
       --shadow: 0 12px 40px rgba(0,0,0,.25);
+      --ok: rgba(0,255,170,.25);
+      --warn: rgba(255,200,0,.20);
+      --today: rgba(0,170,255,.22);
     }
     body{
-      margin:0;
-      min-height:100vh;
+      margin:0; min-height:100vh;
       font-family: system-ui, -apple-system, "Segoe UI", Tahoma, Arial, sans-serif;
-      color: var(--text);
+      color:var(--text);
       background:
         radial-gradient(1200px 600px at 20% 20%, rgba(255,255,255,.20), transparent 60%),
         radial-gradient(900px 500px at 80% 40%, rgba(255,255,255,.12), transparent 60%),
-        linear-gradient(135deg, #0b1b2a, #0b2a2d);
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      padding:24px;
+        linear-gradient(135deg, var(--bg1), var(--bg2));
+      display:flex; justify-content:center; align-items:flex-start;
+      padding:22px;
     }
-    .wrap{ width:min(980px, 100%); }
+    .wrap{ width:min(1100px,100%); }
+
     .top{
-      text-align:center;
-      margin-bottom:18px;
+      text-align:center; margin-bottom:14px;
+    }
+    .dateLine{
+      font-size:18px; font-weight:800; color:var(--muted);
+      margin-bottom:6px;
     }
     .clock{
-      font-weight:800;
+      font-weight:900; letter-spacing:1px;
       font-size: clamp(44px, 7vw, 92px);
-      letter-spacing: 1px;
       text-shadow: 0 6px 18px rgba(0,0,0,.35);
-    }
-    .sub{
-      margin-top:6px;
-      font-size: 16px;
-      color: var(--muted);
-      font-weight:600;
-    }
-
-    .card{
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      border-radius: 22px;
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      padding: 22px;
-    }
-
-    .center{
-      text-align:center;
-      padding: 22px 18px 18px;
-    }
-
-    .label{
-      color: var(--muted);
-      font-weight:700;
-      letter-spacing:.2px;
-    }
-
-    .nextTitle{
-      margin: 10px 0 8px;
-      font-size: clamp(28px, 3.6vw, 48px);
-      font-weight:900;
-    }
-
-    .nextTime{
-      font-size: 18px;
-      color: var(--muted);
-      font-weight:700;
-      margin-bottom: 14px;
-    }
-
-    .countdown{
-      display:flex;
-      gap:12px;
-      justify-content:center;
-      flex-wrap:wrap;
-      margin: 12px 0 6px;
-    }
-    .pill{
-      width: 110px;
-      background: rgba(255,255,255,.14);
-      border: 1px solid rgba(255,255,255,.18);
-      border-radius: 16px;
-      padding: 12px 10px;
-      text-align:center;
-      box-shadow: 0 8px 20px rgba(0,0,0,.18);
-    }
-    .pill .num{ font-size: 34px; font-weight:900; line-height:1; }
-    .pill .txt{ margin-top:6px; font-weight:700; color: var(--muted); }
-
-    .grid{
-      margin-top: 18px;
-      display:grid;
-      grid-template-columns: 1fr 1fr;
-      gap:14px;
-    }
-    @media (max-width: 720px){
-      .grid{ grid-template-columns: 1fr; }
-      .pill{ width: 100px; }
-    }
-    .mini{
-      padding: 16px;
-    }
-    .mini h3{
-      margin:0 0 10px;
-      font-size: 18px;
-      font-weight:900;
-    }
-    .row{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:10px;
-      margin: 6px 0;
-      color: var(--muted);
-      font-weight:700;
-    }
-    .big{
-      color: var(--text);
-      font-weight:900;
-      font-size: 28px;
-      margin-top: 8px;
-    }
-
-    .foot{
-      margin-top: 16px;
-      text-align:center;
-      color: rgba(255,255,255,.7);
-      font-weight:700;
     }
     .badge{
       display:inline-block;
       padding: 6px 12px;
       border-radius: 999px;
-      border: 1px solid rgba(255,255,255,.18);
+      border: 1px solid var(--border);
       background: rgba(255,255,255,.10);
+      color: var(--muted);
+      font-weight:800;
+      margin-top: 8px;
+    }
+
+    .grid{
+      display:grid; gap:14px;
+      grid-template-columns: 1fr 1fr;
+      margin-top: 14px;
+    }
+    @media (max-width: 860px){ .grid{ grid-template-columns: 1fr; } }
+
+    .card{
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      padding: 16px;
+    }
+    .card h2{
+      margin:0 0 10px;
+      font-size:18px;
+      font-weight:900;
+    }
+
+    .center{ text-align:center; }
+    .label{ color:var(--muted); font-weight:800; }
+    .bigTitle{ font-size:32px; font-weight:950; margin: 8px 0 4px; }
+    .small{ color:var(--muted); font-weight:800; }
+
+    .pills{
+      margin-top: 10px;
+      display:flex; justify-content:center; gap:10px; flex-wrap:wrap;
+    }
+    .pill{
+      width: 110px;
+      background: rgba(255,255,255,.14);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 10px;
+      text-align:center;
+      box-shadow: 0 8px 20px rgba(0,0,0,.18);
+    }
+    .pill .num{ font-size:30px; font-weight:950; line-height:1; }
+    .pill .txt{ margin-top:6px; color:var(--muted); font-weight:800; }
+
+    .stats{
+      display:flex; gap:10px; flex-wrap:wrap;
+      margin-top:10px;
+      justify-content:space-between;
+    }
+    .stat{
+      flex: 1 1 160px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 12px;
+      background: rgba(255,255,255,.10);
+    }
+    .stat .k{ color:var(--muted); font-weight:850; }
+    .stat .v{ margin-top:6px; font-size:22px; font-weight:950; }
+
+    .tableWrap{
+      max-height: 520px;
+      overflow:auto;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: rgba(0,0,0,.10);
+    }
+    table{
+      width:100%;
+      border-collapse: collapse;
+      min-width: 620px;
+    }
+    th, td{
+      padding: 10px 12px;
+      border-bottom: 1px solid rgba(255,255,255,.12);
+      text-align:right;
+      font-weight:800;
+    }
+    th{ color: var(--muted); position: sticky; top: 0; background: rgba(0,0,0,.25); backdrop-filter: blur(8px); }
+    tr.done{ opacity: .55; text-decoration: line-through; }
+    tr.today{ background: var(--today); }
+    tr:hover{ background: rgba(255,255,255,.08); }
+
+    .tag{
+      display:inline-block;
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,.10);
+      color: var(--muted);
+      font-weight:900;
+      font-size: 12px;
+      white-space:nowrap;
+    }
+    .tag.ok{ background: var(--ok); color: rgba(255,255,255,.9); }
+    .tag.warn{ background: var(--warn); color: rgba(255,255,255,.9); }
+
+    .foot{
+      margin-top: 12px;
+      text-align:center;
+      color: rgba(255,255,255,.7);
+      font-weight:800;
     }
   </style>
 </head>
@@ -154,71 +158,94 @@
 <body>
   <div class="wrap">
     <div class="top">
-      <div class="clock" id="liveClock">--:--:--</div>
-      <div class="sub" id="todayLine">—</div>
-      <div class="sub"><span class="badge" id="cityLine">توقيت: —</span></div>
-    </div>
-
-    <div class="card center">
-      <div class="label">الأذان التالي</div>
-      <div class="nextTitle" id="nextName">—</div>
-      <div class="nextTime" id="nextAt">—</div>
-
-      <div class="label" style="margin-top:10px">المدة المتبقية</div>
-      <div class="countdown">
-        <div class="pill">
-          <div class="num" id="h">--</div>
-          <div class="txt">ساعة</div>
-        </div>
-        <div class="pill">
-          <div class="num" id="m">--</div>
-          <div class="txt">دقيقة</div>
-        </div>
-        <div class="pill">
-          <div class="num" id="s">--</div>
-          <div class="txt">ثانية</div>
-        </div>
-      </div>
+      <div class="dateLine" id="dateLine">—</div>
+      <div class="clock" id="clock">--:--:--</div>
+      <div class="badge" id="metaLine">—</div>
     </div>
 
     <div class="grid">
-      <div class="card mini">
-        <h3>وقت الإفطار اليوم</h3>
-        <div class="row"><span>المغرب</span><span id="maghribTime">—</span></div>
-        <div class="row"><span>المتبقي للإفطار</span><span id="maghribLeft">—</span></div>
-        <div class="big" id="maghribStatus">—</div>
+      <div class="card center">
+        <div class="label">الأذان التالي</div>
+        <div class="bigTitle" id="nextName">—</div>
+        <div class="small" id="nextAt">—</div>
+
+        <div class="label" style="margin-top:10px">الوقت المتبقي</div>
+        <div class="pills">
+          <div class="pill"><div class="num" id="h">--</div><div class="txt">ساعة</div></div>
+          <div class="pill"><div class="num" id="m">--</div><div class="txt">دقيقة</div></div>
+          <div class="pill"><div class="num" id="s">--</div><div class="txt">ثانية</div></div>
+        </div>
+
+        <div class="stats">
+          <div class="stat">
+            <div class="k">اليوم من رمضان</div>
+            <div class="v" id="ramDay">—</div>
+          </div>
+          <div class="stat">
+            <div class="k">الأيام المتبقية</div>
+            <div class="v" id="daysLeft">—</div>
+          </div>
+          <div class="stat">
+            <div class="k">الإفطار اليوم (المغرب)</div>
+            <div class="v" id="iftarToday">—</div>
+          </div>
+        </div>
       </div>
 
-      <div class="card mini">
-        <h3>وقت الإمساك اليوم</h3>
-        <div class="row"><span>الفجر</span><span id="fajrTime">—</span></div>
-        <div class="row"><span>المتبقي للإمساك</span><span id="fajrLeft">—</span></div>
-        <div class="big" id="fajrStatus">—</div>
+      <div class="card">
+        <h2>روزنامة رمضان (الإمساك / الإفطار)</h2>
+        <div class="tableWrap">
+          <table>
+            <thead>
+              <tr>
+                <th>اليوم</th>
+                <th>التاريخ (ميلادي)</th>
+                <th>الإمساك (الفجر)</th>
+                <th>الإفطار (المغرب)</th>
+                <th>الحالة</th>
+              </tr>
+            </thead>
+            <tbody id="tbody"></tbody>
+          </table>
+        </div>
+        <div class="foot">الأيام اللي تمت تنشطب تلقائيًا ✅ واليوم الحالي يبين بلون مختلف.</div>
       </div>
-    </div>
-
-    <div class="foot">
-      ملاحظة: لو الأوقات عندك بصيغة <b>ص/م</b> أو <b>AM/PM</b> الكود يحولها تلقائيًا إلى 24 ساعة حتى ما يصير “المغرب صباحًا”.
     </div>
   </div>
 
 <script>
-/** ========= إعداداتك هنا ========= **/
+/* ===================== إعداداتك ===================== */
 
-// اسم المدينة المعروض
+// مدينة / عنوان
 const CITY_NAME = "البصرة";
+const TIME_ZONE = "Asia/Baghdad";
 
-// أوقات اليوم (تقدر تضعها 24h مثل "17:57" أو بصيغة ص/م مثل "5:57 م")
-const prayerTimesToday = {
-  fajr:    "5:01 ص",
-  sunrise: "6:18 ص",
-  dhuhr:   "12:10 م",
-  asr:     "3:35 م",
-  maghrib: "5:57 م",   // الإفطار (المغرب) — أهم شيء يكون مساءً صحيح
-  isha:    "7:15 م"
-};
+// تاريخ أول يوم رمضان (ميلادي) — عدّله حسب سنة رمضان عندك
+// مثال: 2026-02-18 (مجرد مثال) — أنت غيّره للصحيح
+const RAMADAN_START_GREG = "2026-02-18";
 
-// ترتيب الصلوات لعرض "الأذان التالي"
+// عدد أيام رمضان (عادة 29 أو 30) — خله 30 إذا تريد جدول كامل
+const RAMADAN_DAYS = 30;
+
+/*
+  جدول الأوقات لكل يوم.
+  IMPORTANT: الأفضل تخليها بصيغة 24 ساعة:
+    fajr: "05:01"
+    maghrib: "17:57"
+
+  إذا عندك بصيغة "ص/م" يمشي هم:
+    "5:01 ص"
+    "5:57 م"
+*/
+const ramadanTimes = Array.from({length: RAMADAN_DAYS}, (_, i) => {
+  // 🔁 هذا مجرد مثال ثابت — استبدله بجدول مدينتك الحقيقي لو عندك
+  return {
+    fajr: "05:01",     // الإمساك
+    maghrib: "17:57"   // الإفطار
+  };
+});
+
+// ترتيب صلوات اليوم لاختيار “الأذان التالي”
 const PRAYER_ORDER = [
   { key: "fajr",    name: "أذان الفجر" },
   { key: "dhuhr",   name: "أذان الظهر" },
@@ -227,24 +254,34 @@ const PRAYER_ORDER = [
   { key: "isha",    name: "أذان العشاء" },
 ];
 
-/** ========= دوال مساعدة ========= **/
+/* ضع أوقات الظهر/العصر/العشاء (اليوم) — لو تريدها ثابتة */
+const fixedOtherPrayers = {
+  dhuhr: "12:10",
+  asr:   "15:35",
+  isha:  "19:15"
+};
+
+
+/* ===================== أدوات وقت/تاريخ بتوقيت محدد ===================== */
+
+function nowInTZ(tz){
+  const parts = new Intl.DateTimeFormat("en-US", {
+    timeZone: tz,
+    year:"numeric", month:"2-digit", day:"2-digit",
+    hour:"2-digit", minute:"2-digit", second:"2-digit",
+    hour12: false
+  }).formatToParts(new Date());
+
+  const get = (t) => parts.find(p => p.type === t)?.value;
+  return new Date(`${get("year")}-${get("month")}-${get("day")}T${get("hour")}:${get("minute")}:${get("second")}`);
+}
 
 function pad2(n){ return String(n).padStart(2,"0"); }
 
-function formatTime12(date){
-  // عرض عربي 12 ساعة
-  const h = date.getHours();
-  const m = date.getMinutes();
-  const mer = h >= 12 ? "م" : "ص";
-  const hh = ((h + 11) % 12) + 1;
-  return `${hh}:${pad2(m)} ${mer}`;
-}
-
 function to24h(timeStr){
-  // يدعم: "17:57" أو "5:57 م" أو "5:01 ص" أو "5:57 PM" أو "5:57 AM"
   const s = String(timeStr).trim();
 
-  // 24h already
+  // 24h
   if (/^\d{1,2}:\d{2}$/.test(s)) return s;
 
   // Arabic ص/م
@@ -272,12 +309,11 @@ function to24h(timeStr){
   throw new Error("صيغة وقت غير مدعومة: " + timeStr);
 }
 
-function makeDateToday(hhmm){
-  const [h,m] = hhmm.split(":").map(Number);
-  const d = new Date();
-  d.setSeconds(0,0);
-  d.setHours(h,m,0,0);
-  return d;
+function makeDateInTZ(baseNow, tz, dateISO, hhmm){
+  // baseNow فقط حتى نضمن نفس اليوم/السنة من tz
+  // dateISO: "YYYY-MM-DD"
+  const t24 = to24h(hhmm);
+  return new Date(`${dateISO}T${t24}:00`);
 }
 
 function diffParts(ms){
@@ -288,80 +324,163 @@ function diffParts(ms){
   return {h,m,s};
 }
 
-function getNextPrayer(){
-  const now = new Date();
+function formatTime12(date){
+  const h = date.getHours();
+  const m = date.getMinutes();
+  const mer = h >= 12 ? "م" : "ص";
+  const hh = ((h + 11) % 12) + 1;
+  return `${hh}:${pad2(m)} ${mer}`;
+}
+
+/* ===================== حساب يوم رمضان + بناء الجدول ===================== */
+
+function gregDateISOFromStart(dayIndex){
+  const start = new Date(RAMADAN_START_GREG + "T00:00:00");
+  const d = new Date(start.getTime() + dayIndex * 86400000);
+  const y = d.getFullYear();
+  const m = pad2(d.getMonth()+1);
+  const da = pad2(d.getDate());
+  return `${y}-${m}-${da}`;
+}
+
+function getRamadanDayIndex(nowTZ){
+  // يحسب رقم اليوم (0-based) حسب تاريخ tz
+  const todayISO = new Intl.DateTimeFormat("en-CA", { timeZone: TIME_ZONE, year:"numeric", month:"2-digit", day:"2-digit" }).format(new Date());
+  const start = new Date(RAMADAN_START_GREG + "T00:00:00");
+  const today = new Date(todayISO + "T00:00:00");
+  const diffDays = Math.floor((today - start) / 86400000);
+  return diffDays; // قد يكون <0 قبل رمضان أو >=RAMADAN_DAYS بعده
+}
+
+function buildTable(nowTZ){
+  const tbody = document.getElementById("tbody");
+  tbody.innerHTML = "";
+
+  const dayIndex = getRamadanDayIndex(nowTZ);
+
+  for (let i=0; i<RAMADAN_DAYS; i++){
+    const iso = gregDateISOFromStart(i);
+    const times = ramadanTimes[i] || {fajr:"—", maghrib:"—"};
+
+    const tr = document.createElement("tr");
+
+    // شطب الأيام اللي تمت
+    if (i < dayIndex) tr.classList.add("done");
+    // تمييز اليوم الحالي
+    if (i === dayIndex) tr.classList.add("today");
+
+    const status =
+      i < dayIndex ? `<span class="tag ok">تم</span>` :
+      i === dayIndex ? `<span class="tag warn">اليوم</span>` :
+      `<span class="tag">متبقي</span>`;
+
+    tr.innerHTML = `
+      <td>اليوم ${i+1}</td>
+      <td>${iso}</td>
+      <td>${times.fajr}</td>
+      <td>${times.maghrib}</td>
+      <td>${status}</td>
+    `;
+    tbody.appendChild(tr);
+  }
+}
+
+/* ===================== الأذان التالي لليوم ===================== */
+
+function getNextPrayer(nowTZ, todayISO, todayTimes){
+  // todayTimes: fajr/maghrib + fixedOtherPrayers
+  const merged = { ...fixedOtherPrayers, ...todayTimes };
 
   const items = PRAYER_ORDER.map(p => {
-    const t24 = to24h(prayerTimesToday[p.key]);
-    return { key: p.key, name: p.name, date: makeDateToday(t24) };
+    const t = merged[p.key];
+    const date = makeDateInTZ(nowTZ, TIME_ZONE, todayISO, t);
+    return { key:p.key, name:p.name, date };
   }).sort((a,b)=>a.date-b.date);
 
-  // أول صلاة قادمة اليوم
-  let next = items.find(x => x.date > now);
+  let next = items.find(x => x.date > nowTZ);
 
-  // إذا خلصت صلوات اليوم، التالي فجر الغد
   if (!next){
-    const fajr = items.find(x => x.key === "fajr") || items[0];
-    next = { ...fajr, date: new Date(fajr.date.getTime() + 24*60*60*1000) };
-    next.name = "أذان الفجر (غدًا)";
+    // فجر الغد
+    const tomorrow = new Date(new Date(todayISO + "T00:00:00").getTime() + 86400000);
+    const y = tomorrow.getFullYear();
+    const m = pad2(tomorrow.getMonth()+1);
+    const d = pad2(tomorrow.getDate());
+    const tomorrowISO = `${y}-${m}-${d}`;
+    const fajrT = merged.fajr;
+    next = {
+      key: "fajr",
+      name: "أذان الفجر (غدًا)",
+      date: makeDateInTZ(nowTZ, TIME_ZONE, tomorrowISO, fajrT)
+    };
   }
 
   return next;
 }
 
+/* ===================== تحديث الواجهة ===================== */
+
 function update(){
-  const now = new Date();
+  const nowTZ = nowInTZ(TIME_ZONE);
 
-  // الساعة الكبيرة
-  const hh = pad2(now.getHours());
-  const mm = pad2(now.getMinutes());
-  const ss = pad2(now.getSeconds());
-  document.getElementById("liveClock").textContent = `${hh}:${mm}:${ss}`;
+  // التاريخ (ميلادي + هجري)
+  const greg = new Intl.DateTimeFormat("ar-IQ", {
+    timeZone: TIME_ZONE, weekday:"long", year:"numeric", month:"long", day:"numeric"
+  }).format(new Date());
 
-  // سطر اليوم
-  const days = ["الأحد","الإثنين","الثلاثاء","الأربعاء","الخميس","الجمعة","السبت"];
-  const months = ["يناير","فبراير","مارس","أبريل","مايو","يونيو","يوليو","أغسطس","سبتمبر","أكتوبر","نوفمبر","ديسمبر"];
-  const todayLine = `${days[now.getDay()]}، ${now.getDate()} ${months[now.getMonth()]} ${now.getFullYear()}`;
-  document.getElementById("todayLine").textContent = todayLine;
-  document.getElementById("cityLine").textContent = `توقيت: ${CITY_NAME} — رمضان`;
+  const hijri = new Intl.DateTimeFormat("ar-SA-u-ca-islamic", {
+    timeZone: TIME_ZONE, weekday:"long", year:"numeric", month:"long", day:"numeric"
+  }).format(new Date());
 
-  // عرض أوقات الفجر/المغرب
-  document.getElementById("fajrTime").textContent = prayerTimesToday.fajr;
-  document.getElementById("maghribTime").textContent = prayerTimesToday.maghrib;
+  document.getElementById("dateLine").textContent = `${greg} — ${hijri}`;
 
-  // حساب القادم
-  const next = getNextPrayer();
+  // الساعة
+  document.getElementById("clock").textContent =
+    `${pad2(nowTZ.getHours())}:${pad2(nowTZ.getMinutes())}:${pad2(nowTZ.getSeconds())}`;
+
+  // تحديد اليوم من رمضان
+  const dayIndex = getRamadanDayIndex(nowTZ);
+  const ramDayEl = document.getElementById("ramDay");
+  const leftEl = document.getElementById("daysLeft");
+  const meta = document.getElementById("metaLine");
+
+  if (dayIndex < 0){
+    ramDayEl.textContent = "قبل رمضان";
+    leftEl.textContent = "—";
+    meta.textContent = `توقيت: ${CITY_NAME} — ${TIME_ZONE}`;
+  } else if (dayIndex >= RAMADAN_DAYS){
+    ramDayEl.textContent = "انتهى رمضان";
+    leftEl.textContent = "0";
+    meta.textContent = `توقيت: ${CITY_NAME} — ${TIME_ZONE}`;
+  } else {
+    ramDayEl.textContent = `${dayIndex+1} / ${RAMADAN_DAYS}`;
+    leftEl.textContent = `${RAMADAN_DAYS - (dayIndex+1)}`;
+    meta.textContent = `توقيت: ${CITY_NAME} — اليوم ${dayIndex+1}`;
+  }
+
+  // بناء الجدول (مرة كل تحديث - خفيف، وإذا تريد أخف نخليه كل دقيقة)
+  buildTable(nowTZ);
+
+  // إذا داخل رمضان: احسب الأذان التالي + المتبقي
+  const todayISO = new Intl.DateTimeFormat("en-CA", {
+    timeZone: TIME_ZONE, year:"numeric", month:"2-digit", day:"2-digit"
+  }).format(new Date());
+
+  let todayTimes = { fajr: "05:00", maghrib: "17:45" };
+  if (dayIndex >= 0 && dayIndex < RAMADAN_DAYS){
+    todayTimes = ramadanTimes[dayIndex];
+  }
+
+  // الإفطار اليوم
+  document.getElementById("iftarToday").textContent = (dayIndex>=0 && dayIndex<RAMADAN_DAYS) ? todayTimes.maghrib : "—";
+
+  const next = getNextPrayer(nowTZ, todayISO, todayTimes);
   document.getElementById("nextName").textContent = next.name;
-  document.getElementById("nextAt").textContent = `ساعة الأذان: ${formatTime12(next.date)}`;
+  document.getElementById("nextAt").textContent = `موعده: ${formatTime12(next.date)}`;
 
-  const msLeft = next.date - now;
-  const parts = diffParts(msLeft);
+  const parts = diffParts(next.date - nowTZ);
   document.getElementById("h").textContent = pad2(parts.h);
   document.getElementById("m").textContent = pad2(parts.m);
   document.getElementById("s").textContent = pad2(parts.s);
-
-  // المتبقي للإفطار (المغرب) والإمساك (الفجر)
-  const maghribDate = makeDateToday(to24h(prayerTimesToday.maghrib));
-  const fajrDate = makeDateToday(to24h(prayerTimesToday.fajr));
-
-  // الإفطار
-  if (now < maghribDate){
-    const d = diffParts(maghribDate - now);
-    document.getElementById("maghribLeft").textContent = `${pad2(d.h)}:${pad2(d.m)}:${pad2(d.s)}`;
-    document.getElementById("maghribStatus").textContent = "المتبقي للإفطار";
-  } else {
-    document.getElementById("maghribLeft").textContent = "00:00:00";
-    document.getElementById("maghribStatus").textContent = "انتهى";
-  }
-
-  // الإمساك (إذا الفجر فات، نعرض فجر الغد)
-  let targetFajr = fajrDate;
-  if (now >= fajrDate){
-    targetFajr = new Date(fajrDate.getTime() + 24*60*60*1000);
-  }
-  const d2 = diffParts(targetFajr - now);
-  document.getElementById("fajrLeft").textContent = `${pad2(d2.h)}:${pad2(d2.m)}:${pad2(d2.s)}`;
-  document.getElementById("fajrStatus").textContent = (now < fajrDate) ? "المتبقي للإمساك" : "المتبقي للإمساك (غدًا)";
 }
 
 update();
