@@ -4,9 +4,9 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>رمضان</title>
+
   <style>
     :root{
-      --bg1:#0b1b2a; --bg2:#0b2a2d;
       --card: rgba(255,255,255,.14);
       --border: rgba(255,255,255,.18);
       --text:#fff; --muted: rgba(255,255,255,.75);
@@ -15,22 +15,35 @@
       --warn: rgba(255,200,0,.20);
       --today: rgba(0,170,255,.22);
     }
+
+    /* ✅ خلفية صورة */
     body{
       margin:0; min-height:100vh;
       font-family: system-ui, -apple-system, "Segoe UI", Tahoma, Arial, sans-serif;
       color:var(--text);
-      background:
-        radial-gradient(1200px 600px at 20% 20%, rgba(255,255,255,.20), transparent 60%),
-        radial-gradient(900px 500px at 80% 40%, rgba(255,255,255,.12), transparent 60%),
-        linear-gradient(135deg, var(--bg1), var(--bg2));
-      display:flex; justify-content:center; align-items:flex-start;
+
+      background-image: url("bg.jpg");
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+
+      display:flex;
+      justify-content:center;
+      align-items:flex-start;
       padding:22px;
     }
-    .wrap{ width:min(1100px,100%); }
 
-    .top{
-      text-align:center; margin-bottom:14px;
+    /* طبقة خفيفة حتى النص يوضح فوق الصورة */
+    body::before{
+      content:"";
+      position:fixed; inset:0;
+      background: rgba(0,0,0,.45);
+      pointer-events:none;
     }
+
+    .wrap{ width:min(1100px,100%); position:relative; z-index:1; }
+
+    .top{ text-align:center; margin-bottom:14px; }
     .dateLine{
       font-size:18px; font-weight:800; color:var(--muted);
       margin-bottom:6px;
@@ -51,6 +64,28 @@
       margin-top: 8px;
     }
 
+    .soundRow{
+      margin-top: 10px;
+      display:flex;
+      gap:10px;
+      justify-content:center;
+      flex-wrap:wrap;
+      align-items:center;
+    }
+    .btn{
+      padding:10px 14px;
+      border-radius:12px;
+      border:1px solid rgba(255,255,255,.2);
+      background:rgba(255,255,255,.12);
+      color:#fff;
+      font-weight:900;
+      cursor:pointer;
+    }
+    .soundStatus{
+      color: rgba(255,255,255,.75);
+      font-weight:800;
+    }
+
     .grid{
       display:grid; gap:14px;
       grid-template-columns: 1fr 1fr;
@@ -67,11 +102,7 @@
       -webkit-backdrop-filter: blur(10px);
       padding: 16px;
     }
-    .card h2{
-      margin:0 0 10px;
-      font-size:18px;
-      font-weight:900;
-    }
+    .card h2{ margin:0 0 10px; font-size:18px; font-weight:900; }
 
     .center{ text-align:center; }
     .label{ color:var(--muted); font-weight:800; }
@@ -127,7 +158,14 @@
       text-align:right;
       font-weight:800;
     }
-    th{ color: var(--muted); position: sticky; top: 0; background: rgba(0,0,0,.25); backdrop-filter: blur(8px); }
+    th{
+      color: var(--muted);
+      position: sticky;
+      top: 0;
+      background: rgba(0,0,0,.35);
+      backdrop-filter: blur(8px);
+    }
+
     tr.done{ opacity: .55; text-decoration: line-through; }
     tr.today{ background: var(--today); }
     tr:hover{ background: rgba(255,255,255,.08); }
@@ -143,13 +181,13 @@
       font-size: 12px;
       white-space:nowrap;
     }
-    .tag.ok{ background: var(--ok); color: rgba(255,255,255,.9); }
-    .tag.warn{ background: var(--warn); color: rgba(255,255,255,.9); }
+    .tag.ok{ background: var(--ok); color: rgba(255,255,255,.95); }
+    .tag.warn{ background: var(--warn); color: rgba(255,255,255,.95); }
 
     .foot{
       margin-top: 12px;
       text-align:center;
-      color: rgba(255,255,255,.7);
+      color: rgba(255,255,255,.75);
       font-weight:800;
     }
   </style>
@@ -160,6 +198,12 @@
     <div class="top">
       <div class="dateLine" id="dateLine">—</div>
       <div class="clock" id="clock">--:--:--</div>
+
+      <div class="soundRow">
+        <button class="btn" id="enableSound">تفعيل صوت الأذان</button>
+        <span class="soundStatus" id="soundStatus">الصوت: غير مفعّل</span>
+      </div>
+
       <div class="badge" id="metaLine">—</div>
     </div>
 
@@ -213,39 +257,38 @@
     </div>
   </div>
 
+  <!-- ✅ ملف صوت الأذان -->
+  <audio id="adhanAudio" src="adhan.mp3" preload="auto"></audio>
+
 <script>
 /* ===================== إعداداتك ===================== */
 
-// مدينة / عنوان
 const CITY_NAME = "البصرة";
 const TIME_ZONE = "Asia/Baghdad";
 
-// تاريخ أول يوم رمضان (ميلادي) — عدّله حسب سنة رمضان عندك
-// مثال: 2026-02-18 (مجرد مثال) — أنت غيّره للصحيح
+// ✅ عدّل تاريخ أول يوم رمضان (ميلادي) حسب سنتك
 const RAMADAN_START_GREG = "2026-02-18";
 
-// عدد أيام رمضان (عادة 29 أو 30) — خله 30 إذا تريد جدول كامل
+// ✅ عدد أيام رمضان
 const RAMADAN_DAYS = 30;
 
 /*
-  جدول الأوقات لكل يوم.
-  IMPORTANT: الأفضل تخليها بصيغة 24 ساعة:
-    fajr: "05:01"
-    maghrib: "17:57"
-
-  إذا عندك بصيغة "ص/م" يمشي هم:
-    "5:01 ص"
-    "5:57 م"
+  ✅ جدول الأوقات لكل يوم (فجر/مغرب)
+  - الأفضل بصيغة 24 ساعة: "05:01" و "17:57"
+  - أو تقدر تكتب "5:01 ص" و "5:57 م"
 */
-const ramadanTimes = Array.from({length: RAMADAN_DAYS}, (_, i) => {
-  // 🔁 هذا مجرد مثال ثابت — استبدله بجدول مدينتك الحقيقي لو عندك
-  return {
-    fajr: "05:01",     // الإمساك
-    maghrib: "17:57"   // الإفطار
-  };
-});
+const ramadanTimes = Array.from({length: RAMADAN_DAYS}, () => ({
+  fajr: "05:01",
+  maghrib: "17:57"
+}));
 
-// ترتيب صلوات اليوم لاختيار “الأذان التالي”
+/* ✅ باقي الصلوات (ثابتة) */
+const fixedOtherPrayers = {
+  dhuhr: "12:10",
+  asr:   "15:35",
+  isha:  "19:15"
+};
+
 const PRAYER_ORDER = [
   { key: "fajr",    name: "أذان الفجر" },
   { key: "dhuhr",   name: "أذان الظهر" },
@@ -254,15 +297,26 @@ const PRAYER_ORDER = [
   { key: "isha",    name: "أذان العشاء" },
 ];
 
-/* ضع أوقات الظهر/العصر/العشاء (اليوم) — لو تريدها ثابتة */
-const fixedOtherPrayers = {
-  dhuhr: "12:10",
-  asr:   "15:35",
-  isha:  "19:15"
-};
+/* ===================== صوت الأذان ===================== */
+let soundEnabled = false;
+let lastPlayedKey = null;
 
+document.getElementById("enableSound").addEventListener("click", async () => {
+  try{
+    const a = document.getElementById("adhanAudio");
+    // محاولة تشغيل قصيرة لتفعيل الإذن
+    await a.play();
+    a.pause();
+    a.currentTime = 0;
 
-/* ===================== أدوات وقت/تاريخ بتوقيت محدد ===================== */
+    soundEnabled = true;
+    document.getElementById("soundStatus").textContent = "الصوت: مفعّل ✅";
+  }catch(e){
+    document.getElementById("soundStatus").textContent = "الصوت: فشل التفعيل (المتصفح منع التشغيل)";
+  }
+});
+
+/* ===================== أدوات وقت/تاريخ ===================== */
 
 function nowInTZ(tz){
   const parts = new Intl.DateTimeFormat("en-US", {
@@ -281,10 +335,8 @@ function pad2(n){ return String(n).padStart(2,"0"); }
 function to24h(timeStr){
   const s = String(timeStr).trim();
 
-  // 24h
   if (/^\d{1,2}:\d{2}$/.test(s)) return s;
 
-  // Arabic ص/م
   let m = s.match(/^(\d{1,2}):(\d{2})\s*(ص|م)$/);
   if (m){
     let h = parseInt(m[1],10);
@@ -295,7 +347,6 @@ function to24h(timeStr){
     return `${pad2(h)}:${min}`;
   }
 
-  // English AM/PM
   m = s.match(/^(\d{1,2}):(\d{2})\s*(AM|PM)$/i);
   if (m){
     let h = parseInt(m[1],10);
@@ -307,13 +358,6 @@ function to24h(timeStr){
   }
 
   throw new Error("صيغة وقت غير مدعومة: " + timeStr);
-}
-
-function makeDateInTZ(baseNow, tz, dateISO, hhmm){
-  // baseNow فقط حتى نضمن نفس اليوم/السنة من tz
-  // dateISO: "YYYY-MM-DD"
-  const t24 = to24h(hhmm);
-  return new Date(`${dateISO}T${t24}:00`);
 }
 
 function diffParts(ms){
@@ -332,7 +376,7 @@ function formatTime12(date){
   return `${hh}:${pad2(m)} ${mer}`;
 }
 
-/* ===================== حساب يوم رمضان + بناء الجدول ===================== */
+/* ===================== رمضان: تواريخ + جدول ===================== */
 
 function gregDateISOFromStart(dayIndex){
   const start = new Date(RAMADAN_START_GREG + "T00:00:00");
@@ -343,30 +387,31 @@ function gregDateISOFromStart(dayIndex){
   return `${y}-${m}-${da}`;
 }
 
-function getRamadanDayIndex(nowTZ){
-  // يحسب رقم اليوم (0-based) حسب تاريخ tz
-  const todayISO = new Intl.DateTimeFormat("en-CA", { timeZone: TIME_ZONE, year:"numeric", month:"2-digit", day:"2-digit" }).format(new Date());
-  const start = new Date(RAMADAN_START_GREG + "T00:00:00");
-  const today = new Date(todayISO + "T00:00:00");
-  const diffDays = Math.floor((today - start) / 86400000);
-  return diffDays; // قد يكون <0 قبل رمضان أو >=RAMADAN_DAYS بعده
+function getTodayISO(){
+  return new Intl.DateTimeFormat("en-CA", {
+    timeZone: TIME_ZONE, year:"numeric", month:"2-digit", day:"2-digit"
+  }).format(new Date());
 }
 
-function buildTable(nowTZ){
+function getRamadanDayIndex(){
+  const todayISO = getTodayISO();
+  const start = new Date(RAMADAN_START_GREG + "T00:00:00");
+  const today = new Date(todayISO + "T00:00:00");
+  return Math.floor((today - start) / 86400000);
+}
+
+function buildTable(){
   const tbody = document.getElementById("tbody");
   tbody.innerHTML = "";
 
-  const dayIndex = getRamadanDayIndex(nowTZ);
+  const dayIndex = getRamadanDayIndex();
 
   for (let i=0; i<RAMADAN_DAYS; i++){
     const iso = gregDateISOFromStart(i);
     const times = ramadanTimes[i] || {fajr:"—", maghrib:"—"};
-
     const tr = document.createElement("tr");
 
-    // شطب الأيام اللي تمت
     if (i < dayIndex) tr.classList.add("done");
-    // تمييز اليوم الحالي
     if (i === dayIndex) tr.classList.add("today");
 
     const status =
@@ -385,16 +430,15 @@ function buildTable(nowTZ){
   }
 }
 
-/* ===================== الأذان التالي لليوم ===================== */
+/* ===================== الأذان التالي + تشغيل الصوت ===================== */
 
 function getNextPrayer(nowTZ, todayISO, todayTimes){
-  // todayTimes: fajr/maghrib + fixedOtherPrayers
   const merged = { ...fixedOtherPrayers, ...todayTimes };
 
   const items = PRAYER_ORDER.map(p => {
     const t = merged[p.key];
-    const date = makeDateInTZ(nowTZ, TIME_ZONE, todayISO, t);
-    return { key:p.key, name:p.name, date };
+    const d = new Date(`${todayISO}T${to24h(t)}:00`);
+    return { key:p.key, name:p.name, date:d };
   }).sort((a,b)=>a.date-b.date);
 
   let next = items.find(x => x.date > nowTZ);
@@ -406,21 +450,44 @@ function getNextPrayer(nowTZ, todayISO, todayTimes){
     const m = pad2(tomorrow.getMonth()+1);
     const d = pad2(tomorrow.getDate());
     const tomorrowISO = `${y}-${m}-${d}`;
-    const fajrT = merged.fajr;
+
     next = {
       key: "fajr",
       name: "أذان الفجر (غدًا)",
-      date: makeDateInTZ(nowTZ, TIME_ZONE, tomorrowISO, fajrT)
+      date: new Date(`${tomorrowISO}T${to24h(merged.fajr)}:00`)
     };
   }
 
   return next;
 }
 
-/* ===================== تحديث الواجهة ===================== */
+function maybePlayAdhan(nowTZ, todayISO, todayTimes){
+  if (!soundEnabled) return;
+
+  const merged = { ...fixedOtherPrayers, ...todayTimes };
+
+  for (const p of PRAYER_ORDER){
+    const d = new Date(`${todayISO}T${to24h(merged[p.key])}:00`);
+    const diff = Math.abs(d.getTime() - nowTZ.getTime());
+
+    // ضمن 1.5 ثانية => شغّل مرة واحدة
+    if (diff <= 1500 && lastPlayedKey !== p.key){
+      const a = document.getElementById("adhanAudio");
+      a.currentTime = 0;
+      a.play().catch(()=>{});
+      lastPlayedKey = p.key;
+    }
+  }
+}
+
+/* ===================== تحديث الصفحة ===================== */
+
+let tableBuilt = false;
 
 function update(){
   const nowTZ = nowInTZ(TIME_ZONE);
+  const todayISO = getTodayISO();
+  const dayIndex = getRamadanDayIndex();
 
   // التاريخ (ميلادي + هجري)
   const greg = new Intl.DateTimeFormat("ar-IQ", {
@@ -437,8 +504,7 @@ function update(){
   document.getElementById("clock").textContent =
     `${pad2(nowTZ.getHours())}:${pad2(nowTZ.getMinutes())}:${pad2(nowTZ.getSeconds())}`;
 
-  // تحديد اليوم من رمضان
-  const dayIndex = getRamadanDayIndex(nowTZ);
+  // بيانات رمضان
   const ramDayEl = document.getElementById("ramDay");
   const leftEl = document.getElementById("daysLeft");
   const meta = document.getElementById("metaLine");
@@ -446,33 +512,23 @@ function update(){
   if (dayIndex < 0){
     ramDayEl.textContent = "قبل رمضان";
     leftEl.textContent = "—";
-    meta.textContent = `توقيت: ${CITY_NAME} — ${TIME_ZONE}`;
   } else if (dayIndex >= RAMADAN_DAYS){
     ramDayEl.textContent = "انتهى رمضان";
     leftEl.textContent = "0";
-    meta.textContent = `توقيت: ${CITY_NAME} — ${TIME_ZONE}`;
   } else {
     ramDayEl.textContent = `${dayIndex+1} / ${RAMADAN_DAYS}`;
     leftEl.textContent = `${RAMADAN_DAYS - (dayIndex+1)}`;
-    meta.textContent = `توقيت: ${CITY_NAME} — اليوم ${dayIndex+1}`;
   }
+  meta.textContent = `توقيت: ${CITY_NAME} — ${TIME_ZONE}`;
 
-  // بناء الجدول (مرة كل تحديث - خفيف، وإذا تريد أخف نخليه كل دقيقة)
-  buildTable(nowTZ);
-
-  // إذا داخل رمضان: احسب الأذان التالي + المتبقي
-  const todayISO = new Intl.DateTimeFormat("en-CA", {
-    timeZone: TIME_ZONE, year:"numeric", month:"2-digit", day:"2-digit"
-  }).format(new Date());
-
-  let todayTimes = { fajr: "05:00", maghrib: "17:45" };
+  // جدول اليوم (فجر/مغرب)
+  let todayTimes = { fajr:"05:01", maghrib:"17:57" };
   if (dayIndex >= 0 && dayIndex < RAMADAN_DAYS){
     todayTimes = ramadanTimes[dayIndex];
   }
-
-  // الإفطار اليوم
   document.getElementById("iftarToday").textContent = (dayIndex>=0 && dayIndex<RAMADAN_DAYS) ? todayTimes.maghrib : "—";
 
+  // الأذان التالي
   const next = getNextPrayer(nowTZ, todayISO, todayTimes);
   document.getElementById("nextName").textContent = next.name;
   document.getElementById("nextAt").textContent = `موعده: ${formatTime12(next.date)}`;
@@ -481,10 +537,23 @@ function update(){
   document.getElementById("h").textContent = pad2(parts.h);
   document.getElementById("m").textContent = pad2(parts.m);
   document.getElementById("s").textContent = pad2(parts.s);
+
+  // ✅ تشغيل صوت الأذان
+  maybePlayAdhan(nowTZ, todayISO, todayTimes);
+
+  // بناء الجدول مرة أول تشغيل (ولو تحب نخليه يحدث يوميًا)
+  if (!tableBuilt){
+    buildTable();
+    tableBuilt = true;
+  }
 }
 
+// تحديث كل ثانية
 update();
 setInterval(update, 1000);
+
+// تحديث الجدول كل 5 دقائق (حتى إذا تغيّر اليوم)
+setInterval(() => { buildTable(); }, 5 * 60 * 1000);
 </script>
 </body>
 </html>
